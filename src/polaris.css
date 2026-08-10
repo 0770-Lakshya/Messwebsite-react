@@ -1,0 +1,415 @@
+
+/* .h-9 {
+    height: 3.25rem;
+} */
+
+:root {
+  /* fonts */
+  --font-sans: "Plus Jakarta Sans", "Outfit", "Inter", sans-serif;
+  --font-display: "Outfit", "Plus Jakarta Sans", sans-serif;
+  --font-serif: "Fraunces", "Playfair Display", Georgia, serif;
+  --font-hero: "Bebas Neue", "Outfit", sans-serif;
+
+  /* shadcn tokens */
+  --background: #ffffff;
+  --foreground: #0f1115;
+  --card: transparent;
+  --card-foreground: #0f1115;
+  --popover: rgba(255, 255, 255, .95);
+  --popover-foreground: #0f1115;
+  --primary: #45347d;
+  --primary-foreground: #ffffff;
+  --secondary: rgba(0, 0, 0, .06);
+  --secondary-foreground: #1c1e22;
+  --muted: rgba(0, 0, 0, .04);
+  --muted-foreground: #6b6e76;
+  --accent: rgba(28, 30, 34, .92);
+  --accent-foreground: #ffffff;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, .08);
+  --input-background: #f3f3f5;
+  --radius: .75rem;
+
+  /* Polaris custom purple palette */
+  --color-primary-50:  #f5f2fa;
+  --color-primary-100: #ebe6f4;
+  --color-primary-200: #d6cbe7;
+  --color-primary-300: #bcaed5;
+  --color-primary-400: #a28fc3;
+  --color-primary-500: #8e7db4;
+  --color-primary-600: #45347d;
+  --color-primary-700: #362866;
+  --color-bg-tint:     #f6f6f3;
+  --color-purple-primary:  #45347d;
+  --color-purple-secondary:#8e7db4;
+  --color-purple-glow:      rgba(69, 52, 125, .18);
+  --color-purple-soft-glow: rgba(142, 125, 180, .22);
+
+  /* appetite accents (warm food colors) */
+  --color-hunger-yellow: #ffe27a;
+  --bg-hunger-yellow: #fffa e8;
+  --bg-hunger-green:  #f0fbe8;
+  --color-hunger-green: #5aa93c;
+  --color-hunger-yellow-deep: #d99c1b;
+}
+
+.dark {
+  --background: #0f1115;
+  --foreground: #f5f2fa;
+  --card: #1a1230;
+  --card-foreground: #f5f2fa;
+  --popover: rgba(15, 17, 21, .95);
+  --popover-foreground: #f5f2fa;
+  --primary: #8e7db4;
+  --primary-foreground: #0f1115;
+  --secondary: rgba(255, 255, 255, .08);
+  --secondary-foreground: #f5f2fa;
+  --muted: rgba(255, 255, 255, .06);
+  --muted-foreground: #9ca3af;
+  --accent: rgba(245, 242, 250, .92);
+  --accent-foreground: #0a0714;
+  --border: rgba(255, 255, 255, .1);
+  --input-background: rgba(255, 255, 255, .06);
+}
+
+/* ---------- base ---------- */
+* {
+  border-color: var(--border);
+}
+
+html {
+  font-family: var(--font-sans);
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background .3s ease, color .3s ease;
+}
+
+::selection {
+  background: rgba(37, 65, 178, .22);
+  color: #1c1e22;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display);
+}
+
+h1 { font-weight: 800; }
+h2 { font-weight: 700; }
+h3 { font-weight: 600; }
+
+.hero-font {
+  font-family: var(--font-hero);
+  letter-spacing: .02em;
+}
+
+.serif {
+  font-family: var(--font-serif);
+}
+
+/* ---------- brand text gradient ---------- */
+.gradient-text {
+  background-image: linear-gradient(to right, #45347D, #8E7DB4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dark .gradient-text {
+  background-image: linear-gradient(to right, #a28fc3, #8E7DB4);
+}
+
+/* ---------- navbar ---------- */
+.polaris-nav {
+  background: rgba(255, 255, 255, .95);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+}
+
+.dark .polaris-nav {
+  background: rgba(15, 17, 21, .95);
+}
+
+.polaris-nav a.nav-link {
+  color: var(--muted-foreground);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  transition: all .25s ease;
+  white-space: nowrap;
+}
+
+.polaris-nav a.nav-link:hover {
+  color: #45347D;
+  background: rgba(69, 52, 125, .05);
+}
+
+.polaris-nav a.nav-link.active {
+  color: #45347d;
+  background: rgba(69, 52, 125, .10);
+}
+
+/* nav icon badge — each item gets its own color */
+.nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-right: 6px;
+}
+
+/* ---------- buttons ---------- */
+.btn-primary {
+  background: #45347d;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 14px;
+  display: inline-block;
+  transition: all .25s ease;
+  box-shadow: 0 10px 28px -10px rgba(69, 52, 125, .45);
+}
+
+.btn-primary:hover {
+  background: #362866;
+  box-shadow: 0 10px 30px -6px rgba(69, 52, 125, .55), 0 4px 10px rgba(69, 52, 125, .28);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 14px;
+  display: inline-block;
+  transition: all .25s ease;
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  background: rgba(69, 52, 125, .08);
+  color: #45347d;
+}
+
+/* ---------- glass cards ("Polaris glow") ---------- */
+.polaris-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, .9),
+              0 4px 18px -8px rgba(69, 52, 125, .2),
+              0 12px 36px -10px rgba(69, 52, 125, .25),
+              0 28px 60px -15px rgba(69, 52, 125, .2);
+}
+
+.dark .polaris-card {
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, .06),
+              0 4px 18px -8px rgba(69, 52, 125, .35),
+              0 12px 36px -10px rgba(69, 52, 125, .30);
+}
+
+.polaris-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, .95),
+              0 6px 22px -8px rgba(69, 52, 125, .28),
+              0 18px 44px -10px rgba(69, 52, 125, .32),
+              0 36px 72px -15px rgba(69, 52, 125, .24);
+}
+
+/* ---------- section header underline (nav-style) ---------- */
+.section-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 6px;
+  position: relative;
+  border-bottom: 1.5px solid rgba(54, 40, 102, .40);
+}
+
+.hover-underline {
+  position: relative;
+}
+
+/* ---------- hero image ---------- */
+.hero-image {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+/* ---------- pills / chips ---------- */
+.pill {
+  display: inline-block;
+  border-radius: 9999px;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  background: rgba(69, 52, 125, .10);
+  color: #45347d;
+}
+
+.dark .pill {
+  background: rgba(142, 125, 180, .18);
+  color: #bcaed5;
+}
+
+/* ---------- appetite accent cards (light yellow / light green) ---------- */
+.card-appetite-yellow {
+  background: linear-gradient(160deg, #fffdf2 0%, #fff7cf 55%, #ffefad 100%);
+  border: 1px solid rgba(217, 156, 27, .25);
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, .95),
+              0 8px 22px -10px rgba(217, 156, 27, .25),
+              0 12px 36px -10px rgba(69, 52, 125, .18);
+}
+
+.card-appetite-green {
+  background: linear-gradient(160deg, #fbfef6 0%, #f0fbe8 55%, #e4f6d8 100%);
+  border: 1px solid rgba(90, 169, 60, .25);
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, .95),
+              0 8px 22px -10px rgba(90, 169, 60, .25),
+              0 12px 36px -10px rgba(69, 52, 125, .18);
+}
+
+.dark .card-appetite-yellow {
+  background: linear-gradient(160deg, #332b12 0%, #3a3013 55%, #453a15 100%);
+  border: 1px solid rgba(255, 226, 122, .22);
+}
+
+.dark .card-appetite-green {
+  background: linear-gradient(160deg, #16240f 0%, #1b2d13 55%, #203615 100%);
+  border: 1px solid rgba(90, 169, 60, .25);
+}
+
+.text-hunger-yellow {
+  color: var(--color-hunger-yellow-deep);
+}
+
+.text-hunger-green {
+  color: var(--color-hunger-green);
+}
+
+.pill-yellow {
+  display: inline-block;
+  border-radius: 9999px;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  background: rgba(255, 226, 122, .35);
+  color: var(--color-hunger-yellow-deep);
+}
+
+.pill-green {
+  display: inline-block;
+  border-radius: 9999px;
+  padding: 4px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  background: rgba(90, 169, 60, .12);
+  color: var(--color-hunger-green);
+}
+
+/* appetite banner — used under the hero */
+.appetite-strip {
+  background: linear-gradient(to right, rgba(255, 226, 122, .18), rgba(90, 169, 60, .14), rgba(255, 226, 122, .18));
+  border-top: 1px solid rgba(217, 156, 27, .18);
+  border-bottom: 1px solid rgba(90, 169, 60, .18);
+}
+
+/* ---------- tables ---------- */
+.polaris-table thead {
+  background: var(--secondary);
+  color: var(--muted-foreground);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.polaris-table tbody tr {
+  border-top: 1px solid var(--border);
+  transition: background .1s ease;
+}
+
+.polaris-table tbody tr:hover {
+  background: rgba(69, 52, 125, .05);
+}
+
+/* ---------- section tint band ---------- */
+.bg-tint {
+  background: var(--color-bg-tint);
+}
+
+.dark .bg-tint {
+  background: var(--card);
+}
+
+/* ---------- theme toggle ---------- */
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--foreground);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all .2s ease;
+}
+
+.theme-toggle:hover {
+  background: rgba(69, 52, 125, .08);
+}
+
+/* ---------- footer ---------- */
+.polaris-footer {
+  border-top: 1px solid var(--border);
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+
+/* avatar grid - make sure flex is set */
+.avatar-initials {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+/* .mb-14{
+  background : linear-gradient(160deg, #fffdf2 0%, #fff7cf 55%, #e4f6d8 100%);
+} */
