@@ -13,13 +13,13 @@ export function MenuError({ error }) {
 export function LoadingSkeleton() {
   return (
     <div className="mx-auto max-w-4xl space-y-4">
-      <div className="h-10 w-56 animate-pulse rounded-full bg-[#45347D]/10 dark:bg-white/10" />
+      <div className="h-10 w-56 animate-pulse rounded-full bg-[#45347D]/10" />
       {[0, 1, 2, 3].map((i) => (
         <div key={i} className="polaris-card p-6">
-          <div className="mb-4 h-5 w-40 animate-pulse rounded-full bg-[#45347D]/10 dark:bg-white/10" />
+          <div className="mb-4 h-5 w-40 animate-pulse rounded-full bg-[#45347D]/10" />
           <div className="grid grid-cols-1 gap-y-2 sm:grid-cols-2">
             {[0, 1, 2, 3].map((j) => (
-              <div key={j} className="h-4 animate-pulse rounded-full bg-[#45347D]/5 dark:bg-white/5" />
+              <div key={j} className="h-4 animate-pulse rounded-full bg-[#45347D]/5" />
             ))}
           </div>
         </div>

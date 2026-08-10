@@ -10,7 +10,7 @@ The official dining portal of IIT Bhilai, rebuilt from Django into a static Reac
 | Menu parsed server-side with pandas / Redis cache | Parsed in the browser with SheetJS, cached in `localStorage` (same 20-min check logic) |
 | Leadership / committee / notices hardcoded in `views.py` | `src/data/siteData.js` — single file to edit |
 | Django admin for announcements | No backend — announcements are constants in `siteData.js` (see suggestions below) |
-| `/complaints` was a placeholder | Full page with QR code for the complaint form |
+| `/complaints` was a placeholder | Google-login-gated QR code: no QR shown until you sign in |
 
 ## Getting started
 
@@ -26,8 +26,19 @@ npm run preview  # preview the production build
 All editable content lives in **`src/data/siteData.js`**:
 - `LEADERSHIP`, `COMMITTEE`, `NOTICES` — team and notice-board content
 - `MEAL_TIMINGS` — the appetite strip timings
-- `COMPLAINTS.url` — ⚠️ replace with your real Google Form link (QR code + button point to it)
+- `COMPLAINTS.url` — ⚠️ replace with your real Google Form link (QR code points to it)
 - `ANNOUNCEMENTS` — empty by default; add objects `{ title, message, kind, color }`
+
+### Google sign-in for complaints
+
+The complaints page requires a Google account before it shows the QR code.
+Before deploying:
+
+1. Go to https://console.cloud.google.com/apis/credentials → **Create Credentials** → **OAuth client ID** →
+   application type **Web application**.
+2. Add `http://localhost:5173` (dev) and your production domain (e.g. `https://your-site.com`) under
+   **Authorized JavaScript origins**.
+3. Paste the generated Client ID into `GOOGLE_CLIENT_ID` in `src/data/siteData.js`.
 
 The menu is fetched live from the same public Google Sheet as before
 (the URL and sheet formats `1&3 Week` / `2&4` are in `src/lib/menu.js`).
@@ -53,4 +64,4 @@ No Docker, Redis, or SQLite required — nothing to run 24/7, so hosting is free
 3. **Photos** — `Coordinator.jpg`, `member*.jpg`, and `pakadarpanalaya.jpg` were missing even in the
    Django version; add them to `public/images/` to replace the new gradient-initials fallbacks.
 4. **Complaints form** — create a Google Form and paste its link into `COMPLAINTS.url` in `siteData.js`;
-   print the QR code at the mess entrance.
+   the QR code is shown only after Google sign-in (needs `GOOGLE_CLIENT_ID`, see above).

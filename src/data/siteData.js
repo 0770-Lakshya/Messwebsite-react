@@ -6,25 +6,25 @@ export const LEADERSHIP = [
   {
     name: 'Director, IIT Bhilai',
     role: 'Dr Rajiv Prakash',
-    quote: 'A well-nourished campus is a thriving campus.',
+    quote: '',
     photo: 'images/director.jpg',
   },
   {
     name: 'Dean of Student Affairs, IIT Bhilai',
     role: 'Dr Shudhanwa Patra',
-    quote: 'Your well-being at the mess is my priority.',
+    quote: '',
     photo: 'images/dosa.jpg',
   },
   {
     name: 'Faculty In-Charge (FIC), Mess',
     role: 'Dr Yagnesh Shadangi',
-    quote: 'Good food, great conversations, better days.',
+    quote: '',
     photo: 'images/fic.jpg',
   },
   {
     name: 'Mess Coordinator, IIT Bhilai',
     role: 'Manish Kumar',
-    quote: 'We listen, we improve, we serve.',
+    quote: '',
     photo: null,
   },
 ]
@@ -43,9 +43,9 @@ export const COMMITTEE = [
     photo: null,
   },
   {
-    name: 'Member',
-    role: 'Feedback In-Charge — Complaints & Suggestions',
-    email: 'ficmess@iitbhilai.ac.in',
+    name: 'Lakshya soni',
+    role: 'Website Incharge',
+    // email: 'ficmess@iitbhilai.ac.in',
     photo: null,
   },
 ]
@@ -103,9 +103,12 @@ export const CONTACT = {
   ],
 }
 
+// Google OAuth — create credentials at https://console.cloud.google.com/apis/credentials
+// (OAuth 2.0 Client ID, Web application) and paste the Client ID here.
+export const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'
+
 export const COMPLAINTS = {
   description:
-    'Spot a problem at the mess? Scan the QR code at the mess entrance, or use the button below to file a complaint anonymously. The mess committee reviews every submission.',
+    'Spot a problem at the mess? Sign in with your Institute Google account, then scan the QR code at the mess entrance to file a complaint. The mess committee reviews every submission.',
   url: 'https://forms.gle/YOUR_FEEDBACK_FORM', // TODO: replace with your real Google Form link
-  email: 'messcoordinator@iitbhilai.ac.in',
 }
