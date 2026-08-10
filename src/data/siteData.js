@@ -81,7 +81,13 @@ export const NOTICES = [
   },
 ]
 
-export const ANNOUNCEMENTS = []
+export const ANNOUNCEMENTS = [{
+    title: 'Special Independence Day Dinner — 15 Aug',
+    message: 'Join us for a festive dinner with special dishes across all counters. Timings: 8:00–10:00 PM.',
+    kind: 'special', // 🎉 special | 🕒 timing | 🍛 meal | 📢 general
+    color: '#d97706', // matches your CSS palette
+  },
+]
 
 export const MEAL_TIMINGS = [
   { label: 'Breakfast', time: '8:00 – 10:00 AM', emoji: '🍌', color: 'text-hunger-yellow' },
