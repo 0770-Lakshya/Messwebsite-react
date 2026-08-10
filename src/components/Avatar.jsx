@@ -5,7 +5,16 @@ const GRADIENTS = [
   'linear-gradient(135deg, #2541b2, #60a5fa)',
 ]
 
+// "/images/x.jpg" is served from public/; normalize relative paths to absolute
+// so they work from any route (e.g. /menu, /committee).
+function normalizeSrc(photo) {
+  if (!photo) return null
+  if (photo.startsWith('http') || photo.startsWith('/')) return photo
+  return '/' + photo
+}
+
 export default function Avatar({ photo, name, size = 'w-24 h-24', textSize = 'text-2xl', index = 0 }) {
+  const src = normalizeSrc(photo)
   const initials = (name || '?')
     .split(/[\s,]+/)
     .filter(Boolean)
@@ -14,14 +23,14 @@ export default function Avatar({ photo, name, size = 'w-24 h-24', textSize = 'te
     .join('')
     .toUpperCase()
 
-  if (photo) {
+  if (src) {
     return (
       <div
         className={`relative ${size} shrink-0 overflow-hidden rounded-full border-4 object-cover`}
         style={{ borderColor: 'var(--primary)' }}
       >
         <img
-          src={photo}
+          src={src}
           alt={name}
           className="h-full w-full object-cover"
           onError={(e) => {

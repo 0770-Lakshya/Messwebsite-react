@@ -37,7 +37,7 @@ export default function Home() {
         </div>
         <div className="polaris-card polaris-card-hover mx-auto mt-10 aspect-[16/9] max-w-4xl overflow-hidden">
           <img
-            src="images/pakadarpanalaya.jpg"
+            src="/images/pakadarpanalaya.jpg"
             alt="Pakadarpanalaya Mess, IIT Bhilai"
             className="hero-image h-full w-full"
             onError={(e) => {
@@ -97,7 +97,7 @@ export default function Home() {
       <section
         className="mb-14"
         style={{
-          backgroundImage: "url('images/notice_bg.png')",
+          backgroundImage: "url('/images/notice_bg.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           opacity: 0.8,
@@ -163,7 +163,7 @@ export default function Home() {
           {LEADERSHIP.map((person, i) => (
             <div key={person.name} className="polaris-card polaris-card-hover flex flex-col items-center p-6 text-center">
               <div className="mb-4">
-                <Avatar photo={person.photo ? `images/${person.photo}` : null} name={person.name} size="w-28 h-28 sm:w-32 sm:h-32" textSize="text-4xl" index={i} />
+                <Avatar photo={person.photo} name={person.name} size="w-28 h-28 sm:w-32 sm:h-32" textSize="text-4xl" index={i} />
               </div>
               <h3 className="font-display font-bold">{person.name}</h3>
               <p className="polaris-muted mb-3 text-xs">{person.role}</p>

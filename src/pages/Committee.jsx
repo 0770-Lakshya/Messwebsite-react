@@ -16,7 +16,7 @@ export default function Committee() {
           <div key={member.email} className="polaris-card p-6 text-center">
             <div className="mx-auto">
               <Avatar
-                photo={member.photo ? `images/${member.photo}` : null}
+                photo={member.photo}
                 name={member.name}
                 size="w-24 h-24"
                 textSize="text-2xl"
