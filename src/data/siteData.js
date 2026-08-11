@@ -108,7 +108,7 @@ export const COMMITTEE = [
   {
     name: 'Sanjay Kumar Verma',
     role: 'Member',
-    photo: null,
+    photo: "images/sanjay.png",
   },
   {
     name: 'Akash Netam',
