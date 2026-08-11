@@ -118,10 +118,10 @@ export const COMMITTEE = [
 ]
 
 export const MESS_INCHARGE = {
-  name: 'Dr Yagnesh Shadangi',
-  role: 'Faculty In-Charge (FIC), Mess',
-  email: 'ficmess@iitbhilai.ac.in',
-  photo: 'images/fic.jpg',
+  name: 'Mahesh Koli',
+  role: 'Mess Incharge',
+  email: null,
+  photo: 'images/incharge.jpg',
 }
 
 export const NOTICES = [
@@ -185,10 +185,13 @@ export const CONTACT = {
 
 // Google OAuth — create credentials at https://console.cloud.google.com/apis/credentials
 // (OAuth 2.0 Client ID, Web application) and paste the Client ID here.
-export const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'
+export const GOOGLE_CLIENT_ID = '233144735739-1or3fmoqnn6rkhf4t2s52k62m4evnc63.apps.googleusercontent.com'
+
+// Only emails ending with this domain may use the complaints desk.
+export const ALLOWED_EMAIL_DOMAIN = 'iitbhilai.ac.in'
 
 export const COMPLAINTS = {
   description:
-    'Spot a problem at the mess? Sign in with your Institute Google account, then scan the QR code at the mess entrance to file a complaint. The mess committee reviews every submission.',
+    'Spot a problem or complain at the mess? Sign in with your Institute Google account, then scan the QR code  to file a complaint. We ensures that every submission must be reveiwed .',
   url: 'https://forms.gle/YOUR_FEEDBACK_FORM', // TODO: replace with your real Google Form link
 }

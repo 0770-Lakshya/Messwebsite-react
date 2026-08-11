@@ -1,12 +1,52 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
 import { QRCodeSVG } from 'qrcode.react'
-import { COMPLAINTS } from '../data/siteData'
+import { ALLOWED_EMAIL_DOMAIN, COMPLAINTS } from '../data/siteData'
+
+const SESSION_KEY = 'mess_complaints_user'
+
+function isAllowed(email) {
+  return typeof email === 'string' && email.toLowerCase().endsWith('@' + ALLOWED_EMAIL_DOMAIN.toLowerCase())
+}
+
+function loadSession() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
+
+function saveSession(user) {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(user))
+  } catch {
+    /* ignore */
+  }
+}
 
 export default function Complaints() {
   const { url, description } = COMPLAINTS
   const [user, setUser] = useState(null)
   const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const existing = loadSession()
+    if (existing && isAllowed(existing.email)) {
+      setUser(existing)
+    }
+  }, [])
+
+  const logout = () => {
+    try {
+      sessionStorage.removeItem(SESSION_KEY)
+    } catch {
+      /* ignore */
+    }
+    setUser(null)
+    setError(null)
+  }
 
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => {
@@ -14,17 +54,75 @@ export default function Complaints() {
         headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
       })
         .then((res) => (res.ok ? res.json() : Promise.reject(new Error('Failed to load profile'))))
-        .then((profile) => setUser({ name: profile.name, email: profile.email, picture: profile.picture }))
+        .then((profile) => {
+          if (!isAllowed(profile.email)) {
+            setError(
+              `This Google account (${profile.email}) is not an IIT Bhilai account. Please sign in with an @${ALLOWED_EMAIL_DOMAIN} email.`
+            )
+            return
+          }
+          const authed = { name: profile.name, email: profile.email, picture: profile.picture }
+          saveSession(authed)
+          setUser(authed)
+          setError(null)
+        })
         .catch((err) => setError(err.message))
     },
     onError: () => setError('Google sign-in was cancelled or failed. Please try again.'),
   })
 
-  const logout = () => {
-    setUser(null)
-    setError(null)
+  // Already signed in -> straight to the QR page (no login card)
+  if (user) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <h2 className="font-display text-3xl font-extrabold">🙋 Complaints &amp; Suggestions</h2>
+          <p className="polaris-muted mx-auto mt-1 max-w-xl text-sm">{description}</p>
+        </div>
+
+        <div className="mx-auto max-w-3xl">
+          <div className="polaris-card p-8 text-center">
+            <div className="mb-6 flex flex-wrap items-center justify-center gap-3">
+              {user.picture && (
+                <img
+                  src={user.picture}
+                  alt={user.name}
+                  referrerPolicy="no-referrer"
+                  className="h-12 w-12 object-cover"
+                  style={{ borderRadius: '9999px' }}
+                />
+              )}
+              <div className="text-left">
+                <p className="font-display text-lg font-bold">{user.name}</p>
+                <p className="polaris-muted text-xs">{user.email}</p>
+              </div>
+              <button
+                onClick={logout}
+                className="ml-4 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200"
+                style={{ background: 'var(--secondary)', color: 'var(--secondary-foreground)' }}
+              >
+                Log out
+              </button>
+            </div>
+
+            <h3 className="font-display text-xl font-bold">Scan to file a complaint</h3>
+            <p className="polaris-muted mt-1 text-sm">
+              Point your phone camera at the QR code at the mess entrance — or scan the one below — to open the
+              complaint form. You are verified with your @{ALLOWED_EMAIL_DOMAIN} account.
+            </p>
+            <div className="mt-6 inline-block rounded-2xl bg-white p-5 shadow-[0_10px_28px_-10px_rgba(69,52,125,.45)]">
+              <QRCodeSVG value={url} size={200} level="M" bgColor="#ffffff" fgColor="#45347d" />
+            </div>
+            <p className="polaris-muted mt-4 text-xs">
+              Every complaint goes directly to the mess committee for review.
+            </p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
+  // Not signed in -> login card
   return (
     <div className="space-y-6">
       <div className="text-center">
@@ -40,69 +138,29 @@ export default function Complaints() {
         </div>
       )}
 
-      {!user ? (
-        <div className="polaris-card mx-auto max-w-md p-8 text-center">
-          <div
-            className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full text-3xl"
-            style={{ background: 'rgba(69,52,125,.12)' }}
+      <div className="polaris-card mx-auto max-w-md p-8 text-center">
+        <div
+          className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full text-3xl"
+          style={{ background: 'rgba(69,52,125,.12)' }}
+        >
+          🔒
+        </div>
+        <h3 className="font-display text-xl font-bold">Sign in with your IIT Bhilai Google account</h3>
+        <p className="polaris-muted mt-2 text-sm leading-relaxed">
+          The complaint desk is only for students and staff with an <b>@iitbhilai.ac.in</b> email. On successful
+          sign-in you will be taken straight to the complaint QR.
+        </p>
+        <div className="mt-6 flex justify-center">
+          <button
+            onClick={() => login()}
+            className="inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#0f1115] shadow-[0_8px_24px_-8px_rgba(69,52,125,.45)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_-6px_rgba(69,52,125,.55)] active:opacity-70"
+            style={{ border: '1px solid var(--border)' }}
           >
-            🔒
-          </div>
-          <h3 className="font-display text-xl font-bold">Sign in with Google to continue</h3>
-          <p className="polaris-muted mt-2 text-sm leading-relaxed">
-            The complaint desk is restricted to Institute Google accounts so the mess committee can follow up on every
-            submission. Only your name and email are used.
-          </p>
-          <div className="mt-6 flex justify-center">
-            <button
-              onClick={() => login()}
-              className="inline-flex -translate-y-0 items-center gap-3 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#0f1115] shadow-[0_8px_24px_-8px_rgba(69,52,125,.45)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_-6px_rgba(69,52,125,.55)] active:opacity-70"
-              style={{ border: '1px solid var(--border)' }}
-            >
-              <GoogleIcon />
-              Sign in with Google
-            </button>
-          </div>
+            <GoogleIcon />
+            Sign in with Google
+          </button>
         </div>
-      ) : (
-        <div className="mx-auto max-w-3xl">
-          <div className="polaris-card p-8 text-center">
-            <div className="mb-4 flex items-center justify-center gap-3">
-              {user.picture && (
-                <img
-                  src={user.picture}
-                  alt={user.name}
-                  referrerPolicy="no-referrer"
-                  className="h-12 w-12 rounded-full border-2 object-cover"
-                  style={{ borderColor: 'var(--primary)' }}
-                />
-              )}
-              <div className="text-left">
-                <p className="font-display text-lg font-bold">{user.name}</p>
-                <p className="polaris-muted text-xs">{user.email}</p>
-              </div>
-              <button
-                onClick={logout}
-                className="ml-4 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200"
-                style={{ background: 'var(--secondary)', color: 'var(--secondary-foreground)' }}
-              >
-                Log out
-              </button>
-            </div>
-            <h3 className="font-display text-xl font-bold">Scan to file a complaint</h3>
-            <p className="polaris-muted mt-1 text-sm">
-              Point your phone camera at the QR code at the mess entrance — or scan the one below — to open the
-              complaint form. Your Institute account is already verified.
-            </p>
-            <div className="mt-6 inline-block rounded-2xl bg-white p-5 shadow-[0_10px_28px_-10px_rgba(69,52,125,.45)]">
-              <QRCodeSVG value={url} size={200} level="M" bgColor="#ffffff" fgColor="#45347d" />
-            </div>
-            <p className="polaris-muted mt-4 text-xs">
-              Every complaint goes directly to the mess committee for review.
-            </p>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   )
 }
