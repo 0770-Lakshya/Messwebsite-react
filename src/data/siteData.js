@@ -73,7 +73,7 @@ export const COMMITTEE = [
   {
     name: 'Arpit Panday',
     role: 'Member',
-    photo: "",
+    photo: "images/arpit.jpg",
   },
   {
     name: 'Pushkar Surendra Chaudhari',
