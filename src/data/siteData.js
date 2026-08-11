@@ -58,7 +58,7 @@ export const COMMITTEE = [
   {
     name: 'Krish Shiyani',
     role: 'Website Manager',
-    photo: null,
+    photo: "images/krish.png",
   },
   {
     name: 'Dheeraj Preetham Reddy',
@@ -83,7 +83,7 @@ export const COMMITTEE = [
   {
     name: 'Venna Yaswanth',
     role: 'Member',
-    photo: null,
+    photo: "images/yaswanth.png",
   },
   {
     name: 'Kavita Negi',
@@ -116,6 +116,13 @@ export const COMMITTEE = [
     photo: null,
   },
 ]
+
+export const MESS_INCHARGE = {
+  name: 'Dr Yagnesh Shadangi',
+  role: 'Faculty In-Charge (FIC), Mess',
+  email: 'ficmess@iitbhilai.ac.in',
+  photo: 'images/fic.jpg',
+}
 
 export const NOTICES = [
   {

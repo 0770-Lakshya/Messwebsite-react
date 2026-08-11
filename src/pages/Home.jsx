@@ -16,43 +16,35 @@ export default function Home() {
 
   return (
     <div>
-      {/* Hero */}
-      <section className="mb-14 text-center">
-        <div className="mx-auto max-w-3xl space-y-5">
-          <h1 className="hero-font text-5xl leading-none md:text-7xl">
-            PAKADAR<span className="gradient-text">PANALAYA</span>
-          </h1>
-          <p className="polaris-muted mx-auto max-w-xl text-lg">
-            The official dining portal of IIT Bhilai — live menu, weekly schedule, leadership messages and your student
-            mess committee, all in one place.
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link to="/menu" className="btn-primary">
-              Today&apos;s Menu
-            </Link>
-            <Link to="/menu/weekly" className="btn-ghost">
-              Weekly Menu .XLS
-            </Link>
-          </div>
-        </div>
-        <div className="polaris-card polaris-card-hover mx-auto mt-10 aspect-[16/9] max-w-4xl overflow-hidden">
-          <img
-            src="/images/pakadarpanalaya.jpg"
-            alt="Pakadarpanalaya Mess, IIT Bhilai"
-            className="hero-image h-full w-full"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none'
-              e.currentTarget.nextElementSibling.style.display = 'flex'
-            }}
-          />
-          <div
-            className="hidden h-full w-full items-center justify-center text-6xl"
-            style={{ display: 'none', background: 'linear-gradient(135deg, rgba(69,52,125,.9), rgba(142,125,180,.7))' }}
-          >
-            🍽️
-          </div>
-        </div>
-      </section>
+      <section className="relative mb-14 overflow-hidden rounded-b-[2rem] text-center">
+  {/* 50% opacity background image */}
+  <img
+    // src="/images/notice_bg.png"
+    alt=""
+    aria-hidden="true"
+    className="absolute inset-0 h-full w-full object-cover opacity-50"
+    onError={(e) => (e.currentTarget.style.display = 'none')}
+  />
+
+  {/* Content on top */}
+  <div className="relative z-10 mx-auto max-w-4xl space-y-5 px-4 py-16 md:py-24">
+    <h1 className="hero-font text-5xl leading-none md:text-7xl">
+      PAKADAR<span className="gradient-text">PANALAYA</span>
+    </h1>
+    <p className="polaris-muted mx-auto max-w-xl text-lg">
+      The official dining portal of IIT Bhilai — live menu, weekly schedule, leadership messages and your student
+      mess committee, all in one place.
+    </p>
+    <div className="flex flex-wrap justify-center gap-3">
+      <Link to="/menu" className="btn-primary">
+        Today&apos;s Menu
+      </Link>
+      <Link to="/menu/weekly" className="btn-ghost">
+        Weekly Menu .XLS
+      </Link>
+    </div>
+  </div>
+</section>
 
       {/* Appetite strip */}
       <div className="appetite-strip mx-auto mb-14 flex max-w-4xl flex-wrap items-center justify-center gap-x-8 gap-y-2 rounded-xl px-6 py-4">

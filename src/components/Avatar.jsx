@@ -25,10 +25,7 @@ export default function Avatar({ photo, name, size = 'w-24 h-24', textSize = 'te
 
   if (src) {
     return (
-      <div
-        className={`relative ${size} shrink-0 overflow-hidden rounded-full border-4 object-cover`}
-        style={{ borderColor: 'var(--primary)' }}
-      >
+      <div className={`relative ${size} shrink-0 overflow-hidden rounded-full object-cover shadow-[0_8px_20px_-6px_rgba(69,52,125,.35)]`}>
         <img
           src={src}
           alt={name}
@@ -50,8 +47,8 @@ export default function Avatar({ photo, name, size = 'w-24 h-24', textSize = 'te
 
   return (
     <div
-      className={`${size} flex shrink-0 items-center justify-center rounded-full border-4 font-bold text-white ${textSize}`}
-      style={{ borderColor: 'var(--primary)', background: GRADIENTS[index % GRADIENTS.length] }}
+      className={`${size} flex shrink-0 items-center justify-center rounded-full font-bold text-white shadow-[0_8px_20px_-6px_rgba(69,52,125,.35)] ${textSize}`}
+      style={{ background: GRADIENTS[index % GRADIENTS.length] }}
     >
       {initials}
     </div>

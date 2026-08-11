@@ -1,7 +1,7 @@
-import { COMMITTEE } from '../data/siteData'
+import { COMMITTEE, MESS_INCHARGE } from '../data/siteData'
 import Avatar from '../components/Avatar'
 
-function MemberCard({ member, index, size = 'w-24 h-24', textSize = 'text-2xl' }) {
+function MemberCard({ member, index, size = 'w-28 h-28', textSize = 'text-3xl' }) {
   return (
     <div className="polaris-card polaris-card-hover p-6 text-center">
       <div className="flex justify-center">
@@ -18,6 +18,19 @@ function MemberCard({ member, index, size = 'w-24 h-24', textSize = 'text-2xl' }
   )
 }
 
+function TierLabel({ emoji, label }) {
+  return (
+    <div className="flex flex-col items-center gap-1 text-sm font-bold text-[#45347D]">
+      <span>
+        {emoji} {label}
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 9l6 6 6-6" />
+      </svg>
+    </div>
+  )
+}
+
 export default function Committee() {
   const [coordinator, ...members] = COMMITTEE
 
@@ -30,24 +43,24 @@ export default function Committee() {
         </p>
       </div>
 
-      {/* Hierarchy line */}
-      {/* <div className="flex flex-col items-center gap-1 text-sm font-bold text-[#45347D]">
-        <span>👑 Mess Coordinator</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M6 9l6 6 6-6" />
-        </svg>
-        <span className="text-xs font-semibold text-[#6b6e76]">Members</span>
-      </div> */}
-
-      {/* Coordinator — on top */}
+      {/* Coordinator — on top, biggest */}
       <div className="mx-auto max-w-sm">
-        <MemberCard member={coordinator} index={0} size="w-32 h-32" textSize="text-3xl" />
+        <MemberCard member={coordinator} index={0} size="w-40 h-40" textSize="text-4xl" />
       </div>
+
+      <TierLabel emoji="🎓" label="Mess In-Charge (FIC)" />
+
+      {/* Mess In-Charge — below coordinator, bigger than members */}
+      <div className="mx-auto max-w-sm">
+        <MemberCard member={MESS_INCHARGE} index={1} size="w-32 h-32" textSize="text-3xl" />
+      </div>
+
+      <TierLabel emoji="👥" label="Members" />
 
       {/* Members — below */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {members.map((member, i) => (
-          <MemberCard key={member.name} member={member} index={i + 1} />
+          <MemberCard key={member.name} member={member} index={i + 2} />
         ))}
       </div>
     </div>
