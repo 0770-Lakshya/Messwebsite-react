@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ANNOUNCEMENTS, LEADERSHIP, MEAL_TIMINGS, NOTICES } from '../data/siteData'
-import { dayView, todayIndex, todayName } from '../lib/menu'
+import { currentMealSection, dayView, effectiveMenuDayIndex, effectiveMenuDayName, getMealStatus, todayName } from '../lib/menu'
 import useMenu from '../lib/useMenu'
 import Avatar from '../components/Avatar'
 import { LoadingSkeleton, MenuError, SectionCard, SectionRows, WeeklyTable } from '../components/MenuBits'
@@ -10,8 +10,12 @@ const ANN_EMOJI = { special: '🎉', timing: '🕒', meal: '🍛', general: '�
 export default function Home() {
   const { weeks, error, loading } = useMenu()
   const today = todayName()
-  const dayIndex = todayIndex()
-  const todaySections = weeks && weeks[0] ? dayView(weeks[0], dayIndex) : []
+  const menuDayIndex = effectiveMenuDayIndex()
+  const mealStatus = getMealStatus()
+  const todaySections = weeks && weeks[0] ? dayView(weeks[0], menuDayIndex) : []
+  const filteredSections = todaySections.filter((section) => section.name === mealStatus.section)
+  const todaySectionsToShow = filteredSections.length ? filteredSections : todaySections
+  const menuDayName = effectiveMenuDayName()
   const week = weeks && weeks[0]
 
   return (
@@ -126,8 +130,10 @@ export default function Home() {
       <section className="mb-14 text-center">
         <div className="mb-6">
           <span className="pill-yellow mb-3 inline-block">🍽️ Fresh &amp; Served</span>
-          <h2 className="font-display text-3xl font-extrabold">Today&apos;s Live Menu — {today}</h2>
-          <p className="polaris-muted mt-1 text-sm">Fresh from the official mess sheet</p>
+          <h2 className="font-display text-3xl font-extrabold">Live Menu — {menuDayName}</h2>
+          <p className="polaris-muted mt-2 text-sm">
+            {mealStatus.type === 'current' ? 'Current' : 'Upcoming'} {mealStatus.label} — {mealStatus.display}
+          </p>
         </div>
 
         {loading ? (
@@ -135,12 +141,12 @@ export default function Home() {
         ) : (
           <>
             <MenuError error={error} />
-            {todaySections.map((section, i) => (
+            {todaySectionsToShow.map((section, i) => (
               <SectionCard key={section.name} name={section.name} index={i}>
                 <SectionRows rows={section.rows} />
               </SectionCard>
             ))}
-            {!loading && !error && todaySections.length === 0 && (
+            {!loading && !error && todaySectionsToShow.length === 0 && (
               <p className="polaris-muted text-sm">The menu for today has not been published yet.</p>
             )}
           </>

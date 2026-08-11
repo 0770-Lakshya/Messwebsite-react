@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { DAYS } from '../data/siteData'
-import { dayView, todayIndex } from '../lib/menu'
+import { dayView, effectiveMenuDayIndex } from '../lib/menu'
 import useMenu from '../lib/useMenu'
 import { LoadingSkeleton, MenuError, SectionCard, SectionRows } from '../components/MenuBits'
 
 export default function Menu() {
   const { weeks, error, loading } = useMenu()
-  const [active, setActive] = useState(todayIndex())
+  const [active, setActive] = useState(effectiveMenuDayIndex())
 
   return (
     <div className="space-y-6">
