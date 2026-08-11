@@ -162,9 +162,7 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {LEADERSHIP.map((person, i) => (
             <div key={person.name} className="polaris-card polaris-card-hover flex flex-col items-center p-6 text-center">
-              <div className="mb-4">
-                <Avatar photo={person.photo} name={person.name} size="w-28 h-28 sm:w-32 sm:h-32" textSize="text-4xl" index={i} />
-              </div>
+              <div className="mb-4 flex justify-center"><Avatar photo={person.photo} name={person.name} size="w-28 h-28 sm:w-32 sm:h-32" textSize="text-4xl" index={i} /></div>
               <h3 className="font-display font-bold">{person.name}</h3>
               <p className="polaris-muted mb-3 text-xs">{person.role}</p>
               {person.quote && <p className="serif polaris-muted text-sm italic leading-relaxed">{person.quote}</p>}

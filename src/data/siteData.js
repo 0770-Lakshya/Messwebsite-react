@@ -3,49 +3,116 @@ export const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sa
 export const SECTIONS = ['BREAKFAST', 'LUNCH', 'Tea Time', 'DINNER']
 
 export const LEADERSHIP = [
+  
+  
   {
     name: 'Director, IIT Bhilai',
     role: 'Dr Rajiv Prakash',
-    quote: '',
+    // quote: 'A well-nourished campus is a thriving campus.',
     photo: 'images/director.jpg',
   },
   {
     name: 'Dean of Student Affairs, IIT Bhilai',
     role: 'Dr Shudhanwa Patra',
-    quote: '',
+    // quote: 'Your well-being at the mess is my priority.',
     photo: 'images/dosa.jpg',
   },
   {
     name: 'Faculty In-Charge (FIC), Mess',
     role: 'Dr Yagnesh Shadangi',
-    quote: '',
+    // quote: 'Good food, great conversations, better days.',
     photo: 'images/fic.jpg',
   },
   {
     name: 'Mess Coordinator, IIT Bhilai',
     role: 'Manish Kumar',
-    quote: '',
-    photo: null,
+    // quote: 'We listen, we improve, we serve.',
+    photo: "images/coordinator.png",
   },
 ]
 
 export const COMMITTEE = [
   {
-    name: 'Mess Coordinator',
-    role: 'Manish Kumar Yadav',
+    name: 'Manish Kumar Yadav',
+    role: 'Mess Coordinator',
     email: 'messcoordinator@iitbhilai.ac.in',
-    photo: null,
+    photo: "images/coordinator.png",
   },
   {
-    name: 'Member',
-    role: 'Abhishek Kumar',
+    name: 'Sudhanshu Mishra',
+    role: 'Member',
+    email: "",
+    photo: "images/sudhanshu.png",
+  },
+  {
+    name: 'Abhishek Kumar',
+    role: 'Member',
     email: 'abhishekkumar@iitbhilai.ac.in',
+    photo: "images/abhishekkumar.png",
+  },
+  {
+    name: 'Lakshya Soni',
+    role: 'Website Incharge',
+    photo: "images/Lakshya.png",
+  },
+  {
+    name: 'Krish Shiyani',
+    role: 'Website Manager',
     photo: null,
   },
   {
-    name: 'Lakshya soni',
-    role: 'Website Incharge',
-    // email: 'ficmess@iitbhilai.ac.in',
+    name: 'Dheeraj Preetham Reddy',
+    role: 'Member',
+    photo: "images/dheeraj.png",
+  },
+  {
+    name: 'Abhishek Singh',
+    role: 'Member',
+    photo: "images/abhishekk.png",
+  },
+  {
+    name: 'Arpit Panday',
+    role: 'Member',
+    photo: "",
+  },
+  {
+    name: 'Pushkar Surendra Chaudhari',
+    role: 'Member',
+    photo: null,
+  },
+  {
+    name: 'Venna Yaswanth',
+    role: 'Member',
+    photo: null,
+  },
+  {
+    name: 'Kavita Negi',
+    role: 'Member',
+    photo: "images/kavita.png",
+  },
+  {
+    name: 'Bikka Akshara Venus',
+    role: 'Member',
+    photo: "images/akshara.png",
+  },
+  {
+    name: 'Shubham Kumar',
+    role: 'Member',
+    photo: "images/shubham.png",
+  },
+  {
+    name: 'Sadhana Gupta',
+    role: 'Member',
+    photo: null,
+  },
+  {
+    name: 'Sanjay Kumar Verma',
+    role: 'Member',
+    photo: null,
+  },
+  {
+    name: 'Akash Netam',
+    role: 'Member',
     photo: null,
   },
 ]
@@ -82,8 +149,8 @@ export const NOTICES = [
 ]
 
 export const ANNOUNCEMENTS = [{
-    title: 'Special Independence Day Dinner — 15 Aug',
-    message: 'Join us for a festive dinner with special dishes across all counters. Timings: 8:00–10:00 PM.',
+    title: 'Special Independence Day Lunch — 15 Aug',
+    message: 'Join us for a festive Lunch with special dishes across all counters. Timings: 12:30–2:30 PM.',
     kind: 'special', // 🎉 special | 🕒 timing | 🍛 meal | 📢 general
     color: '#d97706', // matches your CSS palette
   },
@@ -116,5 +183,5 @@ export const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.co
 export const COMPLAINTS = {
   description:
     'Spot a problem at the mess? Sign in with your Institute Google account, then scan the QR code at the mess entrance to file a complaint. The mess committee reviews every submission.',
-   // TODO: replace with your real Google Form link
+  url: 'https://forms.gle/YOUR_FEEDBACK_FORM', // TODO: replace with your real Google Form link
 }
