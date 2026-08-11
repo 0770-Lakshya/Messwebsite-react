@@ -11,7 +11,11 @@ function MemberCard({ member, index, size = 'w-28 h-28', textSize = 'text-3xl' }
       <p className="polaris-muted mt-1 text-xs">{member.role}</p>
       {member.email && (
         <p className="mt-2 text-xs" style={{ color: 'var(--primary)' }}>
-          <a href={`mailto:${member.email}`}>{member.email}</a>
+          <b>
+            <a href={`mailto:${member.email}`} style={{ fontSize: '1.7rem' }}>
+              ✉
+            </a>
+          </b>
         </p>
       )}
     </div>
@@ -58,7 +62,7 @@ export default function Committee() {
       <TierLabel emoji="👥" label="Members" />
 
       {/* Members — below */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {members.map((member, i) => (
           <MemberCard key={member.name} member={member} index={i + 2} />
         ))}
