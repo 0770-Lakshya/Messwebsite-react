@@ -38,19 +38,19 @@ export default function Navbar() {
               'linear-gradient(135deg, rgba(69, 52, 125, 0.35) 0%, rgba(255, 255, 255, 0.6) 40%, rgba(142, 125, 180, 0.35) 100%)',
           }}
         >
-          <div className="flex items-center justify-between gap-8 rounded-full bg-white/80 px-7 py-3.5 shadow-[inset_0_1px_1.5px_rgba(255,255,255,0.9),0_6px_22px_-8px_rgba(69,52,125,0.20),0_16px_44px_-10px_rgba(69,52,125,0.25)] backdrop-blur-2xl transition-all duration-300">
+          <div className="relative flex flex-wrap items-center justify-between gap-2 rounded-full bg-white/80 px-3 py-2 shadow-[inset_0_1px_1.5px_rgba(255,255,255,0.9),0_6px_22px_-8px_rgba(69,52,125,0.20),0_16px_44px_-10px_rgba(69,52,125,0.25)] backdrop-blur-2xl transition-all duration-300 sm:px-4 sm:py-3">
             {/* Brand */}
-            <Link to="/" className="group flex items-center gap-4 pl-1 pr-2">
+            <Link to="/" className="group flex-1 min-w-0 items-center gap-2 pl-1 pr-1 sm:gap-3">
               <span className="flex items-center gap-3">
-                <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#45347d] to-[#8e7db4] text-[11px] font-bold text-white">
+                <div className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#45347d] to-[#8e7db4] text-[10px] font-bold text-white sm:h-11 sm:w-11">
                   IITBH
                 </div>
                 <span className="h-6 border-l border-black/[0.15]" />
-                <span className="flex flex-col justify-center">
-                  <span className="text-[20px] leading-none font-bold tracking-tight text-[#0f1115] sm:text-[22px]" style={{ fontFamily: 'var(--font-display)', fontWeight: 800 }}>
+                <span className="flex min-w-0 flex-1 flex-col justify-center">
+                    <span className="truncate text-[16px] leading-none font-bold tracking-tight text-[#0f1115] sm:text-[20px]" style={{ fontFamily: 'var(--font-display)', fontWeight: 800 }}>
                     Pakadarpanalaya
                   </span>
-                  <span className="mt-1 text-[10.5px] font-bold uppercase leading-none tracking-[0.06em] text-[#6b6e76]">
+                  <span className="mt-1 hidden text-[10.5px] font-bold uppercase leading-none tracking-[0.06em] text-[#6b6e76] md:block">
                     IIT Bhilai • Campus Dining
                   </span>
                 </span>
@@ -93,7 +93,7 @@ export default function Navbar() {
               <button
                 aria-label="Toggle menu"
                 onClick={() => setMobileOpen((o) => !o)}
-                className="grid h-11 w-11 place-items-center rounded-full border border-[#45347D]/15 bg-gradient-to-br from-white to-[#f5f2fa] text-[#45347D] shadow-[0_2px_8px_-2px_rgba(69,52,125,0.20)] transition-all duration-200 md:hidden"
+                className="grid h-10 w-10 place-items-center rounded-full border border-[#45347D]/15 bg-gradient-to-br from-white to-[#f5f2fa] text-[#45347D] shadow-[0_2px_8px_-2px_rgba(69,52,125,0.20)] transition-all duration-200 md:hidden"
               >
                 {mobileOpen ? (
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">

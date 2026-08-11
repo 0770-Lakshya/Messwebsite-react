@@ -132,6 +132,62 @@ export async function fetchMenu() {
   }
 }
 
+const MEAL_SCHEDULE = [
+  { section: 'BREAKFAST', label: 'Breakfast', start: 8 * 60, end: 10 * 60, display: '8:00 AM - 10:00 AM' },
+  { section: 'LUNCH', label: 'Lunch', start: 12 * 60 + 30, end: 14 * 60 + 30, display: '12:30 PM - 2:30 PM' },
+  { section: 'DINNER', label: 'Dinner', start: 20 * 60, end: 22 * 60, display: '8:00 PM - 10:00 PM' },
+]
+
+function toMinutes(date) {
+  return date.getHours() * 60 + date.getMinutes()
+}
+
+function nameFromDate(date) {
+  const names = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ]
+  return names[date.getDay()]
+}
+
+export function getMealStatus(date = new Date()) {
+  const minutes = toMinutes(date)
+  const current = MEAL_SCHEDULE.find((meal) => minutes >= meal.start && minutes < meal.end)
+  if (current) {
+    return { type: 'current', ...current }
+  }
+
+  const next = MEAL_SCHEDULE.find((meal) => minutes < meal.start)
+  if (next) {
+    return { type: 'upcoming', ...next, nextDay: false }
+  }
+
+  return { type: 'upcoming', ...MEAL_SCHEDULE[0], nextDay: true }
+}
+
+export function currentMealSection(date = new Date()) {
+  return getMealStatus(date).section
+}
+
+export function effectiveMenuDayIndex(date = new Date()) {
+  const name = nameFromDate(date)
+  const dayIndex = DAYS.indexOf(name) >= 0 ? DAYS.indexOf(name) : 0
+  const minutes = toMinutes(date)
+  if (minutes >= 22 * 60) {
+    return (dayIndex + 1) % DAYS.length
+  }
+  return dayIndex
+}
+
+export function effectiveMenuDayName(date = new Date()) {
+  return DAYS[effectiveMenuDayIndex(date)]
+}
+
 export function dayView(week, dayIndex) {
   return week.sections.map((section) => ({
     name: section.name,
