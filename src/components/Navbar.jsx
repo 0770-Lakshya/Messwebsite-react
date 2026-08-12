@@ -55,8 +55,12 @@ export default function Navbar() {
             {/* Brand */}
             <Link to="/" className="group flex-1 min-w-0 items-center gap-2 pl-1 pr-1 sm:gap-3">
               <span className="flex items-center gap-3">
-                <div className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#45347d] to-[#8e7db4] text-[10px] font-bold text-white sm:h-11 sm:w-11">
-                  IITBH
+                <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-[#45347d]/10 bg-white shadow-sm sm:h-14 sm:w-14">
+                  <img
+                    src="images/logo_IITBhilai.png"
+                    alt="IIT Bhilai Logo"
+                    className="h-full w-full object-cover"
+                  />
                 </div>
                 <span className="h-6 border-l border-black/[0.15]" />
                 <span className="flex min-w-0 flex-1 flex-col justify-center">

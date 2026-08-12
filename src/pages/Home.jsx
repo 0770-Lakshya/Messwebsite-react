@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { LEADERSHIP, MEAL_TIMINGS } from '../data/siteData'
 import { currentMealSection, dayView, effectiveMenuDayIndex, effectiveMenuDayName, getMealStatus } from '../lib/menu'
@@ -9,6 +10,12 @@ import VegToggle from '../components/VegToggle'
 import { LoadingSkeleton, MenuError, SectionCard, SectionRows, WeeklyTable } from '../components/MenuBits'
 
 const ANN_EMOJI = { special: '🎉', timing: '🕒', meal: '🍛', general: '📢' }
+{/*image container for home page images*/}
+const GALLERY_IMAGES = [
+  'images/ShreeSai.jpg',
+  'images/ShreeSai.jpg',
+  'images/ShreeSai.jpg',
+]
 
 export default function Home() {
   const { weeks, error, loading } = useMenu()
@@ -25,10 +32,31 @@ export default function Home() {
   const todaySectionsToShow = filteredSections.length ? filteredSections : todaySections
   const menuDayName = effectiveMenuDayName()
   const week = activeWeeks && activeWeeks[0]
+  const [activeSlide, setActiveSlide] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % GALLERY_IMAGES.length)
+    }, 3200)
+
+    return () => clearInterval(timer)
+  }, [])
+
+  const nextSlide = () => setActiveSlide((prev) => (prev + 1) % GALLERY_IMAGES.length)
+  const prevSlide = () => setActiveSlide((prev) => (prev - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length)
 
   const shownAnnouncements = announcements
   const shownNotices = notices
+  const [announcementIndex, setAnnouncementIndex] = useState(0)
 
+  useEffect(() => {
+    if (!shownAnnouncements.length) return
+    const timer = setInterval(() => {
+      setAnnouncementIndex((prev) => (prev + 1) % shownAnnouncements.length)
+    }, 4200)
+
+    return () => clearInterval(timer)
+  }, [shownAnnouncements.length])
 
   return (
     <div>
@@ -51,92 +79,162 @@ export default function Home() {
       The official dining portal of IIT Bhilai — live menu, weekly schedule, leadership messages and your student
       mess committee, all in one place.
     </p>
-    <div className="flex flex-wrap justify-center gap-3">
-      <Link to="/menu" className="btn-primary">
-        Today&apos;s Menu
-      </Link>
-      <Link to="/menu/weekly" className="btn-ghost">
-        Weekly Menu .XLS
-      </Link>
+
+    <div className="mt-6 flex w-full justify-start pl-0 md:pl-2">
+      <span
+        className="pill inline-flex items-center bg-white/10 px-5 py-2 text-lg font-bold tracking-[0.12em] text-[#f5f1ff] shadow-md backdrop-blur-sm"
+        style={{ fontSize: '1.5rem' }}
+      >
+        📸 Gallery
+      </span>
+    </div>
+
+    {/*image section */}
+    <div className="relative mx-auto mt-4 w-full max-w-6xl overflow-hidden rounded-[2rem] py-4">
+      <div className="hidden overflow-hidden md:block">
+        <div
+          className="flex transition-transform duration-700 ease-out"
+          style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+        >
+          {GALLERY_IMAGES.map((src, index) => {
+            const prevIndex = (index - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length
+            const nextIndex = (index + 1) % GALLERY_IMAGES.length
+
+            return (
+              <div key={`${src}-${index}`} className="min-w-full flex-shrink-0 px-2">
+                <div className="flex items-center justify-center gap-4">
+                  <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] shadow-2xl opacity-80">
+                    <img
+                      src={GALLERY_IMAGES[prevIndex]}
+                      alt={`Mess gallery ${prevIndex + 1}`}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+
+                  <div className="h-[340px] w-[52%] overflow-hidden rounded-[1.5rem] shadow-2xl">
+                    <img
+                      src={src}
+                      alt={`Mess gallery ${index + 1}`}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+
+                  <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] shadow-2xl opacity-80">
+                    <img
+                      src={GALLERY_IMAGES[nextIndex]}
+                      alt={`Mess gallery ${nextIndex + 1}`}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="md:hidden">
+        <div className="overflow-hidden rounded-[1.5rem] shadow-2xl px-2">
+          <img
+            src={GALLERY_IMAGES[activeSlide]}
+            alt={`Mess gallery ${activeSlide + 1}`}
+            className="h-[280px] w-full rounded-[1.5rem] object-cover sm:h-[360px] lg:h-[440px]"
+          />
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={prevSlide}
+        className="absolute left-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
+        aria-label="Previous image"
+      >
+        ←
+      </button>
+      <button
+        type="button"
+        onClick={nextSlide}
+        className="absolute right-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
+        aria-label="Next image"
+      >
+        →
+      </button>
+
+      <div className="mt-5 flex justify-center gap-2">
+        {GALLERY_IMAGES.map((_, index) => (
+          <button
+            key={index}
+            type="button"
+            onClick={() => setActiveSlide(index)}
+            aria-label={`Show image ${index + 1}`}
+            className={`h-2.5 rounded-full transition-all duration-300 ${
+              activeSlide === index ? 'w-8 bg-primary' : 'w-2.5 bg-white/70'
+            }`}
+          />
+        ))}
+      </div>
     </div>
   </div>
 </section>
 
-      {/* Appetite strip */}
-      <div className="appetite-strip mx-auto mb-14 flex max-w-4xl flex-wrap items-center justify-center gap-x-8 gap-y-2 rounded-xl px-6 py-4">
-        {MEAL_TIMINGS.map((t) => (
-          <span key={t.label} className={`text-sm font-semibold ${t.color}`}>
-            {t.emoji} {t.label} {t.time}
-          </span>
-        ))}
-      </div>
-
       {/* Announcements */}
       {shownAnnouncements.length > 0 && (
-        <section className="mb-10">
-          <div className="mb-6 text-center">
-            <span className="pill">📣 Announcements</span>
+        <section className="mb-8 text-center sm:mb-10">
+          <div className="mb-4 flex justify-center px-4 sm:mb-6">
+            <span className="pill" style={{fontSize:'1.15rem'}}>📣 Announcements</span>
           </div>
-          <div className="mx-auto max-w-4xl space-y-4 text-left">
-            {shownAnnouncements.map((ann, i) => (
-              <div key={i} className="polaris-card polaris-card-hover flex items-start gap-4 p-5">
-                <div className="font-display text-2xl font-bold leading-none md:text-[2.5rem]">
-                  {ANN_EMOJI[ann.kind] || '📢'}
-                </div>
-                <div>
-                  <div className="mb-1 flex flex-wrap items-center gap-2">
-                    <h3 className="font-display text-2xl font-bold leading-none md:text-[2.5rem]">{ann.title}</h3>
-                    <span
-                      className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[.15em]"
-                      style={{ background: ann.color + '22', color: ann.color }}
+
+          <div className="mx-auto max-w-5xl px-2 sm:px-4">
+            <div className="relative overflow-hidden rounded-[1.2rem] sm:rounded-[1.5rem]">
+              <div
+                className="flex transition-transform duration-700 ease-out"
+                style={{ transform: `translateX(-${announcementIndex * 100}%)` }}
+              >
+                {shownAnnouncements.map((ann, i) => (
+                  <div key={i} className="min-w-full flex-shrink-0 px-1 sm:px-1.5">
+                    <div
+                      className="polaris-card polaris-card-hover mx-auto flex min-h-[150px] w-full max-w-[760px] items-center justify-center gap-2 p-3 text-center sm:min-h-[180px] sm:gap-4 sm:p-5 md:min-h-[220px] md:gap-5 md:p-7"
+                      style={{ background: 'linear-gradient(135deg, #f5f1ff 0%, #ede7ff 38%, #faf7ff 100%)' }}
                     >
-                      {ann.kind}
-                    </span>
+                      <div className="shrink-0 font-display text-xl font-bold leading-none sm:text-2xl md:text-[2.5rem]">
+                        {ANN_EMOJI[ann.kind] || '📢'}
+                      </div>
+
+                      <div className="min-w-0 flex-1 text-center">
+                        <div className="mb-2 flex flex-wrap items-center justify-center gap-2">
+                          <h3 className="max-w-full break-words font-display text-base font-bold leading-tight sm:text-lg md:text-[2rem]">{ann.title}</h3>
+                          <span
+                            className="rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-[.15em] sm:text-[10px]"
+                            style={{ background: ann.color + '22', color: ann.color }}
+                          >
+                            {ann.kind}
+                          </span>
+                        </div>
+                        <p className="polaris-muted text-sm leading-relaxed sm:text-base md:text-base">{ann.message}</p>
+                      </div>
+                    </div>
                   </div>
-                  <p className="polaris-muted text-sm leading-relaxed">{ann.message}</p>
-                </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            <div className="mt-4 flex justify-center gap-2 sm:mt-5">
+              {shownAnnouncements.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setAnnouncementIndex(index)}
+                  aria-label={`Show announcement ${index + 1}`}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                    announcementIndex === index ? 'w-8 bg-primary' : 'w-2.5 bg-[#d9d2f4]'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </section>
       )}
 
-      {/* Notice Board */}
-      <section
-        className="mb-14"
-        style={{
-          backgroundImage: "url('/images/notice_bg.png')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          opacity: 0.8,
-        }}
-      >
-        <div className="mb-8 text-center">
-          <h2 className="font-display text-3xl font-extrabold">📢 Notice Board</h2>
-          <p className="polaris-muted mt-1 text-sm">Important instructions and updates for all students</p>
-        </div>
-        <div className="grid grid-cols-1 gap-4 text-left md:grid-cols-2 xl:grid-cols-3">
-          {shownNotices.map((notice, i) => (
-            <div key={i} className="polaris-card polaris-card-hover p-5">
-              <div className="mb-2 flex items-center gap-2">
-                <span className="nav-icon" style={{ background: notice.color + '22' }}>
-                  📌
-                </span>
-                <span
-                  className="text-[10px] font-bold uppercase tracking-[.15em]"
-                  style={{ color: notice.color }}
-                >
-                  {notice.category}
-                </span>
-              </div>
-              <h3 className="font-display mb-1 font-bold" style={{ fontSize: '1.5rem', lineHeight: '1.5rem' }}>
-                {notice.title}
-              </h3>
-              <p className="polaris-muted text-sm leading-relaxed">{notice.text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Today's Menu */}
       <section className="mb-14 text-center">
@@ -209,17 +307,6 @@ export default function Home() {
           )}
         </div>
       </section>
-
-      {/* Weekly at a glance */}
-      {week && (
-        <section className="text-center">
-          <h2 className="font-display mb-2 text-3xl font-extrabold">{week.label} at a Glance</h2>
-          <p className="polaris-muted mb-8 text-sm">The complete weekly schedule across all four meal blocks</p>
-          {week.sections.map((section, i) => (
-            <WeeklyTable key={section.name} section={section} index={i} />
-          ))}
-        </section>
-      )}
     </div>
   )
 }

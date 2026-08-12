@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { DAYS } from '../data/siteData'
+import { DAYS, MEAL_TIMINGS } from '../data/siteData'
 import { dayView, effectiveMenuDayIndex } from '../lib/menu'
 import useMenu, { useVegMenu } from '../lib/useMenu'
 import { useVegMode } from '../lib/vegModeContext'
@@ -21,6 +21,14 @@ export default function Menu() {
       <div className="text-center">
         <h2 className="font-display text-3xl font-extrabold">Today&apos;s Menu</h2>
         <p className="polaris-muted mt-1 text-sm">Full day schedule from the official IIT Bhilai mess sheet.</p>
+      </div>
+
+      <div className="appetite-strip mx-auto mb-6 flex max-w-4xl flex-wrap items-center justify-center gap-x-8 gap-y-2 rounded-xl px-6 py-4">
+        {MEAL_TIMINGS.map((t) => (
+          <span key={t.label} className={`text-sm font-semibold ${t.color}`}>
+            {t.emoji} {t.label} {t.time}
+          </span>
+        ))}
       </div>
 
       <VegToggle />
