@@ -52,12 +52,12 @@ export const COMMITTEE = [
   },
   {
     name: 'Lakshya Soni',
-    role: 'Website Incharge',
+    role: 'Technical Member',
     photo: "images/Lakshya.png",
   },
   {
     name: 'Krish Shiyani',
-    role: 'Website Manager',
+    role: 'Technical Member',
     photo: "images/krish.png",
   },
   {
