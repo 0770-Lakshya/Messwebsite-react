@@ -3,8 +3,6 @@ export const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sa
 export const SECTIONS = ['BREAKFAST', 'LUNCH', 'Tea Time', 'DINNER']
 
 export const LEADERSHIP = [
-  
-  
   {
     name: 'Director, IIT Bhilai',
     role: 'Dr Rajiv Prakash',
@@ -22,6 +20,18 @@ export const LEADERSHIP = [
     role: 'Dr Yagnesh Shadangi',
     // quote: 'Good food, great conversations, better days.',
     photo: 'images/fic.jpg',
+  },
+  
+  //   name: 'Associate Faculty, IIT Bhilai',
+  //   role: 'Dr Yaswanth sir',
+  //   // quote: 'We listen, we improve, we serve.',
+  //   photo: "images/yaswanthsir.png",
+  // },
+  {
+    name: 'Associate FIC Mess, IIT Bhilai',
+    role: 'Dr Milan Kumar Jena',
+    // quote: 'We listen, we improve, we serve.',
+    photo: null,
   },
   {
     name: 'Mess Coordinator, IIT Bhilai',
@@ -123,45 +133,6 @@ export const MESS_INCHARGE = {
   email: null,
   photo: 'images/incharge.jpg',
 }
-
-export const NOTICES = [
-  {
-    title: 'ID card is Mandatory at Every Meal',
-    date: 'Important',
-    category: 'Rules',
-    text: 'All students must carry their mess card while entering the dining hall. Entry without a mess card will be denied.',
-    color: '#d4183d',
-  },
-  {
-    title: 'Meal Timings — Strictly Enforced',
-    date: 'Important',
-    category: 'Timings',
-    text: 'Breakfast 8:00–10:00 AM • Lunch 12:30–2:30 PM • Snacks 5:00–6:00 PM • Dinner 8:00–10:00 PM. No service outside these hours.',
-    color: '#2541b2',
-  },
-  {
-    title: 'Hygiene Rules — Wash Hands Before Serving',
-    date: 'Reminder',
-    category: 'Hygiene',
-    text: 'Hand sanitizer and wash basins are available at both entrances. Do not touch food directly while serving yourself.',
-    color: '#10b981',
-  },
-  {
-    title: 'No Food or Utensils to Be Taken Out',
-    date: 'Reminder',
-    category: 'Rules',
-    text: 'Food, plates and cutlery must not be removed from the mess hall. Violators will be reported to the mess committee.',
-    color: '#45347d',
-  },
-]
-
-export const ANNOUNCEMENTS = [{
-    title: 'Special Independence Day Lunch — 15 Aug',
-    message: 'Join us for a festive Lunch with special dishes across all counters. Timings: 12:30–2:30 PM.',
-    kind: 'special', // 🎉 special | 🕒 timing | 🍛 meal | 📢 general
-    color: '#d97706', // matches your CSS palette
-  },
-]
 
 export const MEAL_TIMINGS = [
   { label: 'Breakfast', time: '8:00 – 10:00 AM', emoji: '🍌', color: 'text-hunger-yellow' },

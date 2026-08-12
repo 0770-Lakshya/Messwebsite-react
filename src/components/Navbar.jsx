@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
-import LockIcon from './LockIcon'
+import LockIcon, { preloadLottie } from './LockIcon'
 
 const NAV_ITEMS = [
   { to: '/', label: 'Home', image: '/home.svg', icon: '/homeicon.json' },
@@ -27,6 +27,12 @@ function ActivePill({ isActive }) {
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [hoveredItem, setHoveredItem] = useState(null)
+
+  useEffect(() => {
+    NAV_ITEMS.forEach((item) => {
+      if (item.icon) preloadLottie(item.icon)
+    })
+  }, [])
 
   const navItemProps = (item) => ({
     onMouseEnter: () => setHoveredItem(item.to),
@@ -79,10 +85,23 @@ export default function Navbar() {
                     {({ isActive }) => (
                       <>
                         <ActivePill isActive={isActive} />
-                        {item.icon && hovering ? (
-                          <LockIcon src={item.icon} size={30} loop className="mr-1.5 -my-1" />
-                        ) : item.image ? (
-                          <img src={item.image} alt="" className="mr-1.5 -my-1 inline-block h-[30px] w-[30px]" />
+                        {item.icon ? (
+                          <span className="relative -my-1 mr-1.5 inline-block h-[30px] w-[30px] overflow-hidden align-middle">
+                            {item.image && (
+                              <img
+                                src={item.image}
+                                alt=""
+                                className="absolute inset-0 h-full w-full object-contain transition-opacity duration-150"
+                                style={{ opacity: hovering ? 0 : 1 }}
+                              />
+                            )}
+                            <LockIcon
+                              src={item.icon}
+                              size={30}
+                              playing={hovering}
+                              className="absolute inset-0"
+                            />
+                          </span>
                         ) : (
                           <span className="mr-1.5 inline-block opacity-90">{item.emoji}</span>
                         )}
