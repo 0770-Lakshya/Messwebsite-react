@@ -35,6 +35,8 @@ export default function Home() {
   const [activeSlide, setActiveSlide] = useState(0)
 
   useEffect(() => {
+    if (GALLERY_IMAGES.length <= 1) return
+
     const timer = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % GALLERY_IMAGES.length)
     }, 3200)
@@ -50,7 +52,8 @@ export default function Home() {
   const [announcementIndex, setAnnouncementIndex] = useState(0)
 
   useEffect(() => {
-    if (!shownAnnouncements.length) return
+    if (!shownAnnouncements.length || shownAnnouncements.length <= 1) return
+
     const timer = setInterval(() => {
       setAnnouncementIndex((prev) => (prev + 1) % shownAnnouncements.length)
     }, 4200)
