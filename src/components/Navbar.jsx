@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { NavLink, Link } from 'react-router-dom'
+import LockIcon from './LockIcon'
 
 const NAV_ITEMS = [
   { to: '/', label: 'Home', emoji: '🏠' },
   { to: '/menu', label: 'Menu', emoji: '🍽️' },
   { to: '/menu/weekly', label: 'Weekly Menu', emoji: '📊' },
-  { to: '/committee', label: 'Council Members', emoji: '👥' },
+  { to: '/committee', label: 'Council Members', emoji: '👥', icon: '/councilicon.json' },
   { to: '/contact', label: 'Contact Us', emoji: '📞' },
 ]
 
@@ -25,6 +26,12 @@ function ActivePill({ isActive }) {
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [hoveredItem, setHoveredItem] = useState(null)
+
+  const navItemProps = (item) => ({
+    onMouseEnter: () => setHoveredItem(item.to),
+    onMouseLeave: () => setHoveredItem(null),
+  })
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-6 pt-5">
@@ -59,17 +66,30 @@ export default function Navbar() {
 
             {/* Desktop nav */}
             <nav className="relative hidden items-center gap-1 md:flex">
-              {NAV_ITEMS.map((item) => (
-                <NavLink key={item.to} to={item.to} end={item.to === '/'} className={activeClasses}>
-                  {({ isActive }) => (
-                    <>
-                      <ActivePill isActive={isActive} />
-                      <span className="mr-1.5 inline-block opacity-90">{item.emoji}</span>
-                      {item.label}
-                    </>
-                  )}
-                </NavLink>
-              ))}
+              {NAV_ITEMS.map((item) => {
+                const hovering = hoveredItem === item.to
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end
+                    className={activeClasses}
+                    {...navItemProps(item)}
+                  >
+                    {({ isActive }) => (
+                      <>
+                        <ActivePill isActive={isActive} />
+                        {item.icon && hovering ? (
+                          <LockIcon src={item.icon} size={30} loop className="mr-1.5 -my-1" />
+                        ) : (
+                          <span className="mr-1.5 inline-block opacity-90">{item.emoji}</span>
+                        )}
+                        {item.label}
+                      </>
+                    )}
+                  </NavLink>
+                )
+              })}
             </nav>
 
             <div className="flex items-center gap-2">
@@ -120,7 +140,7 @@ export default function Navbar() {
                 <NavLink
                   key={item.to}
                   to={item.to}
-                  end={item.to === '/'}
+                  end
                   onClick={() => setMobileOpen(false)}
                   className={({ isActive }) =>
                     `rounded-xl px-4 py-3 text-sm font-bold transition-all duration-200 ${

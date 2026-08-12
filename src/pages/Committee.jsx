@@ -52,7 +52,7 @@ export default function Committee() {
         <MemberCard member={coordinator} index={0} size="w-40 h-40" textSize="text-4xl" />
       </div>
 
-      <TierLabel emoji="🎓" label="Mess In-Charge (FIC)" />
+      <TierLabel emoji="🎓" label="Mess In-Charge" />
 
       {/* Mess In-Charge — below coordinator, bigger than members */}
       <div className="mx-auto max-w-sm">
