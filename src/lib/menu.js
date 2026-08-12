@@ -14,14 +14,14 @@ const SHEETS = [
 // Same caching strategy as the Django version:
 // - re-render from cache between probes (20 min), no network at all
 // - at each probe, refetch the file and hash it; re-parse only if changed
-const MENU_CACHE_KEY = 'mess_menu_weeks_v2'
-const MENU_HASH_KEY = 'mess_menu_file_hash_v2'
-const MENU_CHECK_KEY = 'mess_menu_last_check_v2'
-const VEG_MENU_CACHE_KEY = 'mess_menu_veg_weeks_v2'
-const VEG_MENU_HASH_KEY = 'mess_menu_veg_file_hash_v2'
-const VEG_MENU_CHECK_KEY = 'mess_menu_veg_last_check_v2'
-const MENU_CHECK_INTERVAL = 20 * 60 * 1000
-const MENU_CACHE_TTL = 24 * 60 * 60 * 1000
+const MENU_CACHE_KEY='mess_menu_weeks_v2'
+const MENU_HASH_KEY='mess_menu_file_hash_v2'
+const MENU_CHECK_KEY='mess_menu_last_check_v2'
+const VEG_MENU_CACHE_KEY='mess_menu_veg_weeks_v2'
+const VEG_MENU_HASH_KEY='mess_menu_veg_file_hash_v2'
+const VEG_MENU_CHECK_KEY='mess_menu_veg_last_check_v2'
+const MENU_CHECK_INTERVAL=20*60*1000
+const MENU_CACHE_TTL=24*60*60*1000
 
 function now() {
   return Date.now()

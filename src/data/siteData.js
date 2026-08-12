@@ -118,7 +118,7 @@ export const COMMITTEE = [
 ]
 
 export const MESS_INCHARGE = {
-  name: 'Mahesh Koli',
+  name: 'Mr Mahesh Koli',
   role: 'Mess Incharge',
   email: null,
   photo: 'images/incharge.jpg',
