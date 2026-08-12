@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import lottie from 'lottie-web'
 
-export default function LockIcon({ src = '/lockicon.json', size = 96, loop = false, className = '' }) {
+export default function LockIcon({ src = '/lockicon.json', size = 96, loop = false, speed = 1, className = '' }) {
   const containerRef = useRef(null)
 
   useEffect(() => {
@@ -19,6 +19,7 @@ export default function LockIcon({ src = '/lockicon.json', size = 96, loop = fal
           animationData: data,
           rendererSettings: { preserveAspectRatio: 'xMidYMid meet' },
         })
+        instance.setSpeed(speed)
         // Ensure the rendered SVG always fills the box after layout settles.
         raf = requestAnimationFrame(() => {
           const svg = containerRef.current && containerRef.current.querySelector('svg')
@@ -34,7 +35,7 @@ export default function LockIcon({ src = '/lockicon.json', size = 96, loop = fal
       if (raf) cancelAnimationFrame(raf)
       if (instance) instance.destroy()
     }
-  }, [src, loop])
+  }, [src, loop, speed])
 
   return (
     <div

@@ -184,7 +184,7 @@ export default function Complaints() {
           className="mx-auto mb-4 grid h-28 w-28 place-items-center overflow-hidden rounded-full"
           style={{ background: 'rgba(69,52,125,.12)' }}
         >
-          <LockIcon size={70} loop />
+          <LockIcon size={70} loop speed={0.70} />
         </div>
         <h3 className="font-display text-xl font-bold">Sign in with your IIT Bhilai Google account</h3>
         <p className="polaris-muted mt-2 text-sm leading-relaxed">

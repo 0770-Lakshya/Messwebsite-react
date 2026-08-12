@@ -3,11 +3,11 @@ import { NavLink, Link } from 'react-router-dom'
 import LockIcon from './LockIcon'
 
 const NAV_ITEMS = [
-  { to: '/', label: 'Home', emoji: '🏠' },
-  { to: '/menu', label: 'Menu', emoji: '🍽️' },
+  { to: '/', label: 'Home', image: '/home.svg', icon: '/homeicon.json' },
+  { to: '/menu', label: 'Menu', image: '/foodmenuicon.svg', icon: '/menuicon.json' },
   { to: '/menu/weekly', label: 'Weekly Menu', emoji: '📊' },
-  { to: '/committee', label: 'Council Members', emoji: '👥', icon: '/councilicon.json' },
-  { to: '/contact', label: 'Contact Us', emoji: '📞' },
+  { to: '/committee', label: 'Council Members', image: '/council.svg', icon: '/councilicon.json' },
+  { to: '/contact', label: 'Contact Us', image: '/contact.svg', icon: '/contacticon.json' },
 ]
 
 function activeClasses({ isActive }) {
@@ -81,6 +81,8 @@ export default function Navbar() {
                         <ActivePill isActive={isActive} />
                         {item.icon && hovering ? (
                           <LockIcon src={item.icon} size={30} loop className="mr-1.5 -my-1" />
+                        ) : item.image ? (
+                          <img src={item.image} alt="" className="mr-1.5 -my-1 inline-block h-[30px] w-[30px]" />
                         ) : (
                           <span className="mr-1.5 inline-block opacity-90">{item.emoji}</span>
                         )}
