@@ -1,23 +1,29 @@
 import { useEffect, useState } from 'react'
-import { fetchMenu } from '../lib/menu'
+import { fetchMenu, fetchVegMenu } from './menu'
 
-export default function useMenu() {
-  const [weeks, setWeeks] = useState(null)
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(true)
+function useMenuState(fetcher) {
+  const [state, setState] = useState({ weeks: null, error: null, loading: true })
 
   useEffect(() => {
     let cancelled = false
-    fetchMenu().then(({ weeks: w, error: e }) => {
+    fetcher().then(({ weeks, error }) => {
       if (cancelled) return
-      setWeeks(w)
-      setError(e)
-      setLoading(false)
+      setState({ weeks, error, loading: false })
     })
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [fetcher])
 
-  return { weeks, error, loading }
+  return state
 }
+
+export function useMenu() {
+  return useMenuState(fetchMenu)
+}
+
+export function useVegMenu() {
+  return useMenuState(fetchVegMenu)
+}
+
+export default useMenu

@@ -1,12 +1,20 @@
 import { useState } from 'react'
 import { DAYS } from '../data/siteData'
 import { dayView, effectiveMenuDayIndex } from '../lib/menu'
-import useMenu from '../lib/useMenu'
+import useMenu, { useVegMenu } from '../lib/useMenu'
+import { useVegMode } from '../lib/vegModeContext'
+import VegToggle from '../components/VegToggle'
 import { LoadingSkeleton, MenuError, SectionCard, SectionRows } from '../components/MenuBits'
 
 export default function Menu() {
   const { weeks, error, loading } = useMenu()
+  const { weeks: vegWeeks, error: vegError, loading: vegLoading } = useVegMenu()
+  const { vegMode } = useVegMode()
   const [active, setActive] = useState(effectiveMenuDayIndex())
+
+  const activeWeeks = vegMode ? vegWeeks : weeks
+  const activeError = vegMode ? vegError : error
+  const activeLoading = vegMode ? vegLoading : loading
 
   return (
     <div className="space-y-6">
@@ -15,11 +23,13 @@ export default function Menu() {
         <p className="polaris-muted mt-1 text-sm">Full day schedule from the official IIT Bhilai mess sheet.</p>
       </div>
 
-      <MenuError error={error} />
+      <VegToggle />
 
-      {loading ? (
+      <MenuError error={activeError} />
+
+      {activeLoading ? (
         <LoadingSkeleton />
-      ) : weeks && weeks[0] ? (
+      ) : activeWeeks && activeWeeks[0] ? (
         <>
           <div className="flex flex-wrap justify-center gap-2">
             {DAYS.map((name, i) => {
@@ -44,7 +54,7 @@ export default function Menu() {
           </div>
 
           <div>
-            {dayView(weeks[0], active).map((section, i) => (
+            {dayView(activeWeeks[0], active).map((section, i) => (
               <SectionCard key={section.name} name={section.name} index={i}>
                 <SectionRows rows={section.rows} />
               </SectionCard>
@@ -52,7 +62,7 @@ export default function Menu() {
           </div>
         </>
       ) : (
-        !error && <p className="polaris-muted text-sm">No menu published yet.</p>
+        !activeError && <p className="polaris-muted text-sm">No menu published yet.</p>
       )}
     </div>
   )

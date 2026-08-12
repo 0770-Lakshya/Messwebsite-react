@@ -33,7 +33,7 @@ export const LEADERSHIP = [
 
 export const COMMITTEE = [
   {
-    name: 'Manish Kumar Yadav',
+    name: 'Manish Kumar ',
     role: 'Mess Coordinator',
     email: 'messcoordinator@iitbhilai.ac.in',
     photo: "images/coordinator.png",
@@ -78,7 +78,7 @@ export const COMMITTEE = [
   {
     name: 'Pushkar Surendra Chaudhari',
     role: 'Member',
-    photo: null,
+    photo: "images/pushkar.png",
   },
   {
     name: 'Venna Yaswanth',
@@ -103,7 +103,7 @@ export const COMMITTEE = [
   {
     name: 'Sadhana Gupta',
     role: 'Member',
-    photo: null,
+    photo: "images/sadhana.png",
   },
   {
     name: 'Sanjay Kumar Verma',
@@ -113,7 +113,7 @@ export const COMMITTEE = [
   {
     name: 'Akash Netam',
     role: 'Member',
-    photo: null,
+    photo: "images/akash.png",
   },
 ]
 
@@ -178,8 +178,8 @@ export const CONTACT = {
   ],
   email: 'messcoordinator@iitbhilai.ac.in',
   caterers: [
-    { name: 'Galav Caterers', email: 'galav@iitbhilai.ac.in' },
-    { name: 'Shreesai Caterers', email: 'shreesai@iitbhilai.ac.in' },
+    { name: 'Galav Mess', email: null },
+    { name: 'Shreesai Mess', email: null },
   ],
 }
 
@@ -192,6 +192,6 @@ export const ALLOWED_EMAIL_DOMAIN = 'iitbhilai.ac.in'
 
 export const COMPLAINTS = {
   description:
-    'Spot a problem or complain at the mess? Sign in with your Institute Google account, then scan the QR code  to file a complaint. We ensures that every submission must be reveiwed .',
-  url: 'https://forms.gle/YOUR_FEEDBACK_FORM', // TODO: replace with your real Google Form link
+    'Spot a problem or complain at the mess? Sign in with your Institute Google account and you will be redirected to the official feedback form. Every submission goes directly to the mess committee for review.',
+  url: 'https://forms.gle/F9sVJp31PGQrodE48',
 }

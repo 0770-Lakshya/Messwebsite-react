@@ -1,22 +1,29 @@
 import { Link } from 'react-router-dom'
 import { ANNOUNCEMENTS, LEADERSHIP, MEAL_TIMINGS, NOTICES } from '../data/siteData'
-import { currentMealSection, dayView, effectiveMenuDayIndex, effectiveMenuDayName, getMealStatus, todayName } from '../lib/menu'
-import useMenu from '../lib/useMenu'
+import { currentMealSection, dayView, effectiveMenuDayIndex, effectiveMenuDayName, getMealStatus } from '../lib/menu'
+import useMenu, { useVegMenu } from '../lib/useMenu'
+import { useVegMode } from '../lib/vegModeContext'
 import Avatar from '../components/Avatar'
+import VegToggle from '../components/VegToggle'
 import { LoadingSkeleton, MenuError, SectionCard, SectionRows, WeeklyTable } from '../components/MenuBits'
 
 const ANN_EMOJI = { special: '🎉', timing: '🕒', meal: '🍛', general: '📢' }
 
 export default function Home() {
   const { weeks, error, loading } = useMenu()
-  const today = todayName()
+  const { weeks: vegWeeks, error: vegError, loading: vegLoading } = useVegMenu()
+  const { vegMode } = useVegMode()
   const menuDayIndex = effectiveMenuDayIndex()
   const mealStatus = getMealStatus()
-  const todaySections = weeks && weeks[0] ? dayView(weeks[0], menuDayIndex) : []
+  const activeWeeks = vegMode ? vegWeeks : weeks
+  const activeError = vegMode ? vegError : error
+  const activeLoading = vegMode ? vegLoading : loading
+  const todaySections = activeWeeks && activeWeeks[0] ? dayView(activeWeeks[0], menuDayIndex) : []
   const filteredSections = todaySections.filter((section) => section.name === mealStatus.section)
   const todaySectionsToShow = filteredSections.length ? filteredSections : todaySections
   const menuDayName = effectiveMenuDayName()
-  const week = weeks && weeks[0]
+  const week = activeWeeks && activeWeeks[0]
+
 
   return (
     <div>
@@ -129,24 +136,26 @@ export default function Home() {
       {/* Today's Menu */}
       <section className="mb-14 text-center">
         <div className="mb-6">
-          <span className="pill-yellow mb-3 inline-block">🍽️ Fresh &amp; Served</span>
+          <span className="pill-yellow mb-3 inline-block">{vegMode ? '🥗 Pure Veg' : '🍽️ Fresh & Served'}</span>
           <h2 className="font-display text-3xl font-extrabold">Live Menu — {menuDayName}</h2>
           <p className="polaris-muted mt-2 text-sm">
             {mealStatus.type === 'current' ? 'Current' : 'Upcoming'} {mealStatus.label} — {mealStatus.display}
           </p>
         </div>
 
-        {loading ? (
+        <VegToggle className="mb-6" />
+
+        {activeLoading ? (
           <LoadingSkeleton />
         ) : (
           <>
-            <MenuError error={error} />
+            <MenuError error={activeError} />
             {todaySectionsToShow.map((section, i) => (
               <SectionCard key={section.name} name={section.name} index={i}>
                 <SectionRows rows={section.rows} />
               </SectionCard>
             ))}
-            {!loading && !error && todaySectionsToShow.length === 0 && (
+            {!activeLoading && !activeError && todaySectionsToShow.length === 0 && (
               <p className="polaris-muted text-sm">The menu for today has not been published yet.</p>
             )}
           </>

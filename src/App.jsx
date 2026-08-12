@@ -8,6 +8,7 @@ import WeeklyMenu from './pages/WeeklyMenu'
 import Committee from './pages/Committee'
 import Contact from './pages/Contact'
 import Complaints from './pages/Complaints'
+import VegModeProvider from './lib/VegMode'
 import { GOOGLE_CLIENT_ID } from './data/siteData'
 
 function ScrollToTop() {
@@ -21,20 +22,22 @@ function ScrollToTop() {
 export default function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="/menu" element={<Menu />} />
-            <Route path="/menu/weekly" element={<WeeklyMenu />} />
-            <Route path="/committee" element={<Committee />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/complaints" element={<Complaints />} />
-            <Route path="*" element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <VegModeProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            <Route element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="/menu" element={<Menu />} />
+              <Route path="/menu/weekly" element={<WeeklyMenu />} />
+              <Route path="/committee" element={<Committee />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/complaints" element={<Complaints />} />
+              <Route path="*" element={<Home />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </VegModeProvider>
     </GoogleOAuthProvider>
   )
 }

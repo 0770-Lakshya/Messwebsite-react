@@ -3,6 +3,9 @@ import { DAYS, SECTIONS } from '../data/siteData'
 const GOOGLE_SHEET_URL =
   'https://docs.google.com/spreadsheets/d/19orUPC3WDjW31AUQeZbcB6n-6g8f02HtL7MhMF0Qpq8/export?format=xlsx'
 
+const VEG_GOOGLE_SHEET_URL =
+  'https://docs.google.com/spreadsheets/d/1TGfLxe9dPgsOY8idcMwjIx_FPUFc9PDiNyJ3vZ1XKwA/export?format=xlsx'
+
 const SHEETS = [
   ['1&3 Week', 'Week 1 & 3'],
   ['2&4', 'Week 2 & 4'],
@@ -14,6 +17,9 @@ const SHEETS = [
 const MENU_CACHE_KEY = 'mess_menu_weeks_v2'
 const MENU_HASH_KEY = 'mess_menu_file_hash_v2'
 const MENU_CHECK_KEY = 'mess_menu_last_check_v2'
+const VEG_MENU_CACHE_KEY = 'mess_menu_veg_weeks_v2'
+const VEG_MENU_HASH_KEY = 'mess_menu_veg_file_hash_v2'
+const VEG_MENU_CHECK_KEY = 'mess_menu_veg_last_check_v2'
 const MENU_CHECK_INTERVAL = 20 * 60 * 1000
 const MENU_CACHE_TTL = 24 * 60 * 60 * 1000
 
@@ -21,20 +27,23 @@ function now() {
   return Date.now()
 }
 
-function cached(...keys) {
+function cached(weekCacheKey, hashKey, checkKey) {
   try {
-    const values = keys.map((k) => localStorage.getItem(k))
-    return values.every((v) => v !== null) ? values.map((v, i) => (keys[i] === MENU_CACHE_KEY ? JSON.parse(v) : v)) : null
+    const weekData = localStorage.getItem(weekCacheKey)
+    const hash = localStorage.getItem(hashKey)
+    const check = localStorage.getItem(checkKey)
+    if (weekData === null || hash === null || check === null) return null
+    return [JSON.parse(weekData), hash, check]
   } catch {
     return null
   }
 }
 
-function setCache(data, hash) {
+function setCache(weekCacheKey, hashKey, checkKey, data, hash) {
   try {
-    localStorage.setItem(MENU_CACHE_KEY, JSON.stringify(data))
-    localStorage.setItem(MENU_HASH_KEY, hash)
-    localStorage.setItem(MENU_CHECK_KEY, String(now()))
+    localStorage.setItem(weekCacheKey, JSON.stringify(data))
+    localStorage.setItem(hashKey, hash)
+    localStorage.setItem(checkKey, String(now()))
   } catch {
     // storage full or unavailable — degrade gracefully
   }
@@ -51,8 +60,8 @@ async function sha256(buffer) {
   }
 }
 
-async function downloadSheet() {
-  const res = await fetch(GOOGLE_SHEET_URL, { cache: 'no-store' })
+async function downloadSheet(url) {
+  const res = await fetch(url, { cache: 'no-store' })
   if (!res.ok) throw new Error('Could not download the menu sheet (HTTP ' + res.status + ')')
   return res.arrayBuffer()
 }
@@ -93,8 +102,15 @@ export async function parseMenuWorkbook(buffer) {
   return weeks
 }
 
-export async function fetchMenu() {
-  const cache = cached(MENU_CACHE_KEY, MENU_HASH_KEY, MENU_CHECK_KEY)
+async function fetchMenuFrom({
+  url,
+  weekCacheKey,
+  hashKey,
+  checkKey,
+  fallbackError,
+  notFoundError,
+}) {
+  const cache = cached(weekCacheKey, hashKey, checkKey)
   const lastCheck = cache ? Number(cache[2]) : 0
 
   if (cache && now() - lastCheck < MENU_CHECK_INTERVAL) {
@@ -102,34 +118,56 @@ export async function fetchMenu() {
   }
 
   try {
-    const buffer = await downloadSheet()
+    const buffer = await downloadSheet(url)
     const hash = await sha256(buffer)
 
     if (cache && hash && hash === cache[1]) {
-      localStorage.setItem(MENU_CHECK_KEY, String(now()))
+      localStorage.setItem(checkKey, String(now()))
       return { weeks: cache[0], error: null }
     }
 
     const weeks = await parseMenuWorkbook(buffer)
     let error = null
     if (!weeks.length || weeks.every((w) => !w.sections.length)) {
-      error = 'Could not read the menu sheet. Make sure it matches the expected format and is public.'
+      error = notFoundError
       weeks.splice(0, weeks.length)
       if (!weeks.length) return { weeks: null, error }
     }
-    if (hash) setCache(weeks, hash)
-    else localStorage.setItem(MENU_CHECK_KEY, String(now()))
+    if (hash) setCache(weekCacheKey, hashKey, checkKey, weeks, hash)
+    else localStorage.setItem(checkKey, String(now()))
     return { weeks, error }
   } catch {
     if (cache) {
-      localStorage.setItem(MENU_CHECK_KEY, String(now()))
-      return { weeks: cache[0], error: 'Could not refresh the menu — showing the last saved copy.' }
+      localStorage.setItem(checkKey, String(now()))
+      return { weeks: cache[0], error: fallbackError }
     }
     return {
       weeks: null,
       error: 'Could not download the menu. Check your internet connection and that the Google Sheet link is public.',
     }
   }
+}
+
+export function fetchMenu() {
+  return fetchMenuFrom({
+    url: GOOGLE_SHEET_URL,
+    weekCacheKey: MENU_CACHE_KEY,
+    hashKey: MENU_HASH_KEY,
+    checkKey: MENU_CHECK_KEY,
+    fallbackError: 'Could not refresh the menu — showing the last saved copy.',
+    notFoundError: 'Could not read the menu sheet. Make sure it matches the expected format and is public.',
+  })
+}
+
+export function fetchVegMenu() {
+  return fetchMenuFrom({
+    url: VEG_GOOGLE_SHEET_URL,
+    weekCacheKey: VEG_MENU_CACHE_KEY,
+    hashKey: VEG_MENU_HASH_KEY,
+    checkKey: VEG_MENU_CHECK_KEY,
+    fallbackError: 'Could not refresh the veg menu — showing the last saved copy.',
+    notFoundError: 'Could not read the veg menu sheet. Make sure it matches the expected format and is public.',
+  })
 }
 
 const MEAL_SCHEDULE = [

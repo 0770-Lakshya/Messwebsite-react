@@ -36,7 +36,7 @@ export default function Contact() {
               <div key={c.name}>
                 <p className="font-semibold">{c.name}</p>
                 <p className="polaris-muted text-xs">
-                  📧{' '}
+                  {' '}
                   <a href={`mailto:${c.email}`} style={{ color: 'var(--primary)' }}>
                     {c.email}
                   </a>

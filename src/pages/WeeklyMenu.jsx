@@ -1,10 +1,18 @@
 import { useState } from 'react'
-import useMenu from '../lib/useMenu'
+import useMenu, { useVegMenu } from '../lib/useMenu'
+import { useVegMode } from '../lib/vegModeContext'
+import VegToggle from '../components/VegToggle'
 import { LoadingSkeleton, MenuError, WeeklyTable } from '../components/MenuBits'
 
 export default function WeeklyMenu() {
   const { weeks, error, loading } = useMenu()
+  const { weeks: vegWeeks, error: vegError, loading: vegLoading } = useVegMenu()
+  const { vegMode } = useVegMode()
   const [active, setActive] = useState(0)
+
+  const activeWeeks = vegMode ? vegWeeks : weeks
+  const activeError = vegMode ? vegError : error
+  const activeLoading = vegMode ? vegLoading : loading
 
   return (
     <div className="space-y-6">
@@ -13,14 +21,16 @@ export default function WeeklyMenu() {
         <p className="polaris-muted mt-1 text-sm">Official grid from the IIT Bhilai mess Google Sheet.</p>
       </div>
 
-      <MenuError error={error} />
+      <VegToggle />
 
-      {loading ? (
+      <MenuError error={activeError} />
+
+      {activeLoading ? (
         <LoadingSkeleton />
-      ) : weeks && weeks.length ? (
+      ) : activeWeeks && activeWeeks.length ? (
         <>
           <div className="flex justify-center gap-2">
-            {weeks.map((week, i) => {
+            {activeWeeks.map((week, i) => {
               const isActive = active === i
               return (
                 <button
@@ -42,14 +52,14 @@ export default function WeeklyMenu() {
           </div>
 
           <div>
-            <h3 className="font-display mb-4 text-lg font-bold">{weeks[active].label}</h3>
-            {weeks[active].sections.map((section, i) => (
+            <h3 className="font-display mb-4 text-lg font-bold">{activeWeeks[active].label}</h3>
+            {activeWeeks[active].sections.map((section, i) => (
               <WeeklyTable key={section.name} section={section} index={i} />
             ))}
           </div>
         </>
       ) : (
-        !error && <p className="polaris-muted text-sm">No menu published yet.</p>
+        !activeError && <p className="polaris-muted text-sm">No menu published yet.</p>
       )}
     </div>
   )

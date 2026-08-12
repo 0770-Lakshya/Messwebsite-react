@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
 import { QRCodeSVG } from 'qrcode.react'
 import { ALLOWED_EMAIL_DOMAIN, COMPLAINTS } from '../data/siteData'
+import LockIcon from '../components/LockIcon'
 
 const SESSION_KEY = 'mess_complaints_user'
 
@@ -36,6 +37,18 @@ export default function Complaints() {
     if (existing && isAllowed(existing.email)) {
       setUser(existing)
     }
+
+    // Force a logout when the tab/window is closed so a restored browser
+    // session ("continue where you left off") cannot come back signed in.
+    const clearOnClose = () => {
+      try {
+        sessionStorage.removeItem(SESSION_KEY)
+      } catch {
+        /* ignore */
+      }
+    }
+    window.addEventListener('beforeunload', clearOnClose)
+    return () => window.removeEventListener('beforeunload', clearOnClose)
   }, [])
 
   const logout = () => {
@@ -65,6 +78,11 @@ export default function Complaints() {
           saveSession(authed)
           setUser(authed)
           setError(null)
+          try {
+            window.open(url, '_blank', 'noopener,noreferrer')
+          } catch {
+            /* ignore popup blockers */
+          }
         })
         .catch((err) => setError(err.message))
     },
@@ -76,7 +94,10 @@ export default function Complaints() {
     return (
       <div className="space-y-6">
         <div className="text-center">
-          <h2 className="font-display text-3xl font-extrabold">🙋 Complaints &amp; Suggestions</h2>
+          <h2 className="font-display text-3xl font-extrabold">
+            <LockIcon src="/complaints.json" size={40} loop />
+            <span className="ml-2">Complaints &; Suggestions</span>
+          </h2>
           <p className="polaris-muted mx-auto mt-1 max-w-xl text-sm">{description}</p>
         </div>
 
@@ -105,17 +126,34 @@ export default function Complaints() {
               </button>
             </div>
 
-            <h3 className="font-display text-xl font-bold">Scan to file a complaint</h3>
+            {/* <h3 className="font-display text-xl font-bold">Scan to file a complaint</h3>
             <p className="polaris-muted mt-1 text-sm">
               Point your phone camera at the QR code at the mess entrance — or scan the one below — to open the
               complaint form. You are verified with your @{ALLOWED_EMAIL_DOMAIN} account.
             </p>
             <div className="mt-6 inline-block rounded-2xl bg-white p-5 shadow-[0_10px_28px_-10px_rgba(69,52,125,.45)]">
               <QRCodeSVG value={url} size={200} level="M" bgColor="#ffffff" fgColor="#45347d" />
-            </div>
+            </div> */}
             <p className="polaris-muted mt-4 text-xs">
               Every complaint goes directly to the mess committee for review.
             </p>
+
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white shadow-[0_8px_24px_-8px_rgba(69,52,125,.55)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_-6px_rgba(69,52,125,.7)] active:opacity-70"
+                style={{ background: 'var(--primary)' }}
+              >
+                <span>📝</span>
+                Open Feedback Form
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -126,7 +164,10 @@ export default function Complaints() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="font-display text-3xl font-extrabold">🙋 Complaints &amp; Suggestions</h2>
+        <h2 className="font-display text-3xl font-extrabold">
+          <LockIcon src="/complaints.json" size={40} loop />
+          <span className="ml-2">Complaints</span>
+        </h2>
         <p className="polaris-muted mx-auto mt-1 max-w-xl text-sm">{description}</p>
       </div>
 
@@ -140,15 +181,15 @@ export default function Complaints() {
 
       <div className="polaris-card mx-auto max-w-md p-8 text-center">
         <div
-          className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-full text-3xl"
+          className="mx-auto mb-4 grid h-28 w-28 place-items-center overflow-hidden rounded-full"
           style={{ background: 'rgba(69,52,125,.12)' }}
         >
-          🔒
+          <LockIcon size={70} loop />
         </div>
         <h3 className="font-display text-xl font-bold">Sign in with your IIT Bhilai Google account</h3>
         <p className="polaris-muted mt-2 text-sm leading-relaxed">
-          The complaint desk is only for students and staff with an <b>@iitbhilai.ac.in</b> email. On successful
-          sign-in you will be taken straight to the complaint QR.
+          The complaint section is only for students and staff with an <b>@iitbhilai.ac.in</b> email. On successful
+          sign-in you will be taken straight to the Google form link .
         </p>
         <div className="mt-6 flex justify-center">
           <button
