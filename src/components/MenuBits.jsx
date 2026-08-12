@@ -43,9 +43,9 @@ export function SectionRows({ rows }) {
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-2 text-sm sm:grid-cols-2">
       {rows.map((row, i) => (
-        <div key={i} className="flex gap-2 border-b py-1" style={{ borderColor: 'var(--border)' }}>
+        <div key={i} className="flex flex-col items-start gap-2">
           <span className="polaris-muted min-w-[5.5rem] flex-none pt-0.5 text-xs font-semibold">{row.category}</span>
-          <span>{row.item || '—'}</span>
+          <span className="font-bold text-lg font-display tracking-[0.05em]">{row.item || '—'}</span>
         </div>
       ))}
     </div>
@@ -84,7 +84,7 @@ export function WeeklyTable({ section, index = 0 }) {
                 {row.category}
               </td>
               {row.items.map((item, j) => (
-                <td key={j} className="px-4 py-2">
+                <td key={j} className="px-4 py-2 font-bold font-display max-w-[200px] overflow-hidden text-truncate">
                   {item || '—'}
                 </td>
               ))}

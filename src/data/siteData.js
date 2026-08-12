@@ -3,12 +3,7 @@ export const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sa
 export const SECTIONS = ['BREAKFAST', 'LUNCH', 'Tea Time', 'DINNER']
 
 export const LEADERSHIP = [
-  {
-    name: 'Director, IIT Bhilai',
-    role: 'Dr Rajiv Prakash',
-    // quote: 'A well-nourished campus is a thriving campus.',
-    photo: 'images/director.jpg',
-  },
+  
   {
     name: 'Dean of Student Affairs, IIT Bhilai',
     role: 'Dr Shudhanwa Patra',
@@ -57,7 +52,7 @@ export const COMMITTEE = [
   {
     name: 'Abhishek Kumar',
     role: 'Member',
-    email: 'abhishekkumar@iitbhilai.ac.in',
+    email: null,
     photo: "images/abhishekkumar.png",
   },
   {

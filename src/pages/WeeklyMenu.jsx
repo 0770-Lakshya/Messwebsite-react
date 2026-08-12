@@ -17,7 +17,7 @@ export default function WeeklyMenu() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="font-display text-3xl font-extrabold">Weekly Menu</h2>
+        <h2 className="font-display text-5xl font-extrabold tracking-[0.1em]">Weekly Menu</h2>
         <p className="polaris-muted mt-1 text-sm">Official grid from the IIT Bhilai mess Google Sheet.</p>
       </div>
 
@@ -52,7 +52,7 @@ export default function WeeklyMenu() {
           </div>
 
           <div>
-            <h3 className="font-display mb-4 text-lg font-bold">{activeWeeks[active].label}</h3>
+            <h3 className="font-display mb-4 text-xl font-extrabold">{activeWeeks[active].label}</h3>
             {activeWeeks[active].sections.map((section, i) => (
               <WeeklyTable key={section.name} section={section} index={i} />
             ))}

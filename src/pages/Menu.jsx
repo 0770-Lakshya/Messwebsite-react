@@ -19,7 +19,7 @@ export default function Menu() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="font-display text-3xl font-extrabold">Today&apos;s Menu</h2>
+        <h2 className="font-display text-5xl font-extrabold tracking-[0.1em]">Today&apos;s Menu</h2>
         <p className="polaris-muted mt-1 text-sm">Full day schedule from the official IIT Bhilai mess sheet.</p>
       </div>
 

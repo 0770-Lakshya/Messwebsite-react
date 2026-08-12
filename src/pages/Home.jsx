@@ -10,11 +10,11 @@ import VegToggle from '../components/VegToggle'
 import { LoadingSkeleton, MenuError, SectionCard, SectionRows, WeeklyTable } from '../components/MenuBits'
 
 const ANN_EMOJI = { special: '🎉', timing: '🕒', meal: '🍛', general: '📢' }
-{/*image container for home page images*/}
+{/image container for home page images/}
 const GALLERY_IMAGES = [
   'images/ShreeSai.jpg',
-  'images/ShreeSai.jpg',
-  'images/ShreeSai.jpg',
+  'images/entrance.jpg',
+  'images/art.jpg',
 ]
 
 export default function Home() {
@@ -59,9 +59,9 @@ export default function Home() {
   }, [shownAnnouncements.length])
 
   return (
-    <div>
+    <div className="relative">
       <section className="relative mb-14 overflow-hidden rounded-b-[2rem] text-center">
-  {/* 50% opacity background image */}
+  {/* Background image */}
   <img
     // src="/images/notice_bg.png"
     alt=""
@@ -71,111 +71,117 @@ export default function Home() {
   />
 
   {/* Content on top */}
-  <div className="relative z-10 mx-auto max-w-4xl space-y-5 px-4 py-16 md:py-24">
+  <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 md:py-24 bg-[url('/images/bg.jpg')] bg-cover bg-no-repeat bg-fixed min-h-screen">
     <h1 className="hero-font text-5xl leading-none md:text-7xl">
       PAKADAR<span className="gradient-text">PANALAYA</span>
+
     </h1>
-    <p className="polaris-muted mx-auto max-w-xl text-lg">
-      The official dining portal of IIT Bhilai — live menu, weekly schedule, leadership messages and your student
-      mess committee, all in one place.
-    </p>
+    <p class="polaris-muted mx-auto max-w-xl text-lg">The official dining portal of IIT Bhilai — live menu, weekly schedule, leadership messages and your student mess committee, all in one place.</p>
 
-    <div className="mt-6 flex w-full justify-start pl-0 md:pl-2">
-      <span
-        className="pill inline-flex items-center bg-white/10 px-5 py-2 text-lg font-bold tracking-[0.12em] text-[#f5f1ff] shadow-md backdrop-blur-sm"
-        style={{ fontSize: '1.5rem' }}
-      >
-        📸 Gallery
-      </span>
-    </div>
-
-    {/*image section */}
-    <div className="relative mx-auto mt-4 w-full max-w-6xl overflow-hidden rounded-[2rem] py-4">
-      <div className="hidden overflow-hidden md:block">
-        <div
-          className="flex transition-transform duration-700 ease-out"
-          style={{ transform: `translateX(-${activeSlide * 100}%)` }}
-        >
-          {GALLERY_IMAGES.map((src, index) => {
-            const prevIndex = (index - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length
-            const nextIndex = (index + 1) % GALLERY_IMAGES.length
-
-            return (
-              <div key={`${src}-${index}`} className="min-w-full flex-shrink-0 px-2">
-                <div className="flex items-center justify-center gap-4">
-                  <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] shadow-2xl opacity-80">
-                    <img
-                      src={GALLERY_IMAGES[prevIndex]}
-                      alt={`Mess gallery ${prevIndex + 1}`}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-
-                  <div className="h-[340px] w-[52%] overflow-hidden rounded-[1.5rem] shadow-2xl">
-                    <img
-                      src={src}
-                      alt={`Mess gallery ${index + 1}`}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-
-                  <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] shadow-2xl opacity-80">
-                    <img
-                      src={GALLERY_IMAGES[nextIndex]}
-                      alt={`Mess gallery ${nextIndex + 1}`}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
-      <div className="md:hidden">
-        <div className="overflow-hidden rounded-[1.5rem] shadow-2xl px-2">
-          <img
-            src={GALLERY_IMAGES[activeSlide]}
-            alt={`Mess gallery ${activeSlide + 1}`}
-            className="h-[280px] w-full rounded-[1.5rem] object-cover sm:h-[360px] lg:h-[440px]"
-          />
-        </div>
-      </div>
-
-      <button
-        type="button"
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
-        aria-label="Previous image"
-      >
-        ←
-      </button>
-      <button
-        type="button"
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
-        aria-label="Next image"
-      >
-        →
-      </button>
-
-      <div className="mt-5 flex justify-center gap-2">
-        {GALLERY_IMAGES.map((_, index) => (
-          <button
-            key={index}
-            type="button"
-            onClick={() => setActiveSlide(index)}
-            aria-label={`Show image ${index + 1}`}
-            className={`h-2.5 rounded-full transition-all duration-300 ${
-              activeSlide === index ? 'w-8 bg-primary' : 'w-2.5 bg-white/70'
-            }`}
-          />
-        ))}
-      </div>
-    </div>
+    {/* Gallery pill - below background image */}
+    
   </div>
 </section>
+
+      {/* Gallery pill navigation */}
+      <div className="mt-6 flex w-full justify-start pl-0 md:pl-2">
+        <span
+          className="pill inline-flex items-center bg-white/10 px-5 py-2 text-lg font-bold tracking-[0.12em] text-[#f5f1ff] shadow-md backdrop-blur-sm"
+          style={{ fontSize: '1.5rem' }}
+        >
+          📸 Gallery
+        </span>
+      </div>
+
+      {/* Gallery section - below the main content */}
+      <section className="mb-14 md:mb-20 text-center">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="relative overflow-hidden rounded-[2rem] py-4">
+            <div className="hidden overflow-hidden md:block">
+              <div
+                className="flex transition-transform duration-700 ease-out"
+                style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+              >
+                {GALLERY_IMAGES.map((src, index) => {
+                  const prevIndex = (index - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length
+                  const nextIndex = (index + 1) % GALLERY_IMAGES.length
+
+                  return (
+                    <div key={`${src}-${index}`} className="min-w-full flex-shrink-0 px-2">
+                      <div className="flex items-center justify-center gap-4">
+                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] shadow-2xl opacity-80">
+                          <img
+                            src={GALLERY_IMAGES[prevIndex]}
+                            alt={`Mess gallery ${prevIndex + 1}`}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+
+                        <div className="h-[340px] w-[52%] overflow-hidden rounded-[1.5rem] shadow-2xl">
+                          <img
+                            src={src}
+                            alt={`Mess gallery ${index + 1}`}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+
+                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] shadow-2xl opacity-80">
+                          <img
+                            src={GALLERY_IMAGES[nextIndex]}
+                            alt={`Mess gallery ${nextIndex + 1}`}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            <div className="md:hidden">
+              <div className="overflow-hidden rounded-[1.5rem] shadow-2xl px-2">
+                <img
+                  src={GALLERY_IMAGES[activeSlide]}
+                  alt={`Mess gallery ${activeSlide + 1}`}
+                  className="h-[360px] w-full rounded-[1.5rem] object-cover sm:h-[400px] lg:h-[480px]"
+                />
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={prevSlide}
+              className="absolute left-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
+              aria-label="Previous image"
+            >
+              ←
+            </button>
+            <button
+              type="button"
+              onClick={nextSlide}
+              className="absolute right-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
+              aria-label="Next image"
+            >
+              →
+            </button>
+
+            <div className="mt-5 flex justify-center gap-2">
+              {GALLERY_IMAGES.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setActiveSlide(index)}
+                  aria-label={`Show image ${index + 1}`}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                    activeSlide === index ? 'w-8 bg-primary' : 'w-2.5 bg-white/70'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Announcements */}
       {shownAnnouncements.length > 0 && (
@@ -193,7 +199,7 @@ export default function Home() {
                 {shownAnnouncements.map((ann, i) => (
                   <div key={i} className="min-w-full flex-shrink-0 px-1 sm:px-1.5">
                     <div
-                      className="polaris-card polaris-card-hover mx-auto flex min-h-[150px] w-full max-w-[760px] items-center justify-center gap-2 p-3 text-center sm:min-h-[180px] sm:gap-4 sm:p-5 md:min-h-[220px] md:gap-5 md:p-7"
+                      className="polaris-card polaris-card-hover mx-auto w-full items-center justify-center gap-2 p-3 text-center sm:min-h-[180px] sm:gap-4 sm:p-5 md:min-h-[220px] md:gap-5 md:p-7"
                       style={{ background: 'linear-gradient(135deg, #f5f1ff 0%, #ede7ff 38%, #faf7ff 100%)' }}
                     >
                       <div className="shrink-0 font-display text-xl font-bold leading-none sm:text-2xl md:text-[2.5rem]">
@@ -210,7 +216,7 @@ export default function Home() {
                             {ann.kind}
                           </span>
                         </div>
-                        <p className="polaris-muted text-sm leading-relaxed sm:text-base md:text-base">{ann.message}</p>
+                        <p className="polaris-muted text-sm leading-relaxed sm:text-base md:text-base overflow-hidden">{ann.message}</p>
                       </div>
                     </div>
                   </div>
@@ -225,16 +231,13 @@ export default function Home() {
                   type="button"
                   onClick={() => setAnnouncementIndex(index)}
                   aria-label={`Show announcement ${index + 1}`}
-                  className={`h-2.5 rounded-full transition-all duration-300 ${
-                    announcementIndex === index ? 'w-8 bg-primary' : 'w-2.5 bg-[#d9d2f4]'
-                  }`}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${announcementIndex === index ? 'w-8 bg-primary' : 'w-2.5 bg-[#d9d2f4]'}`}
                 />
               ))}
             </div>
           </div>
         </section>
       )}
-
 
       {/* Today's Menu */}
       <section className="mb-14 text-center">
@@ -289,7 +292,7 @@ export default function Home() {
                   </div>
                 )}
                 {tier.people.length > 0 && (
-                  <div className={`mx-auto grid max-w-4xl grid-cols-1 items-start justify-items-center gap-5 ${tier.cols}`}>
+                  <div className="mx-auto grid max-w-4xl grid-cols-1 items-start justify-items-center gap-5 sm:grid-cols-2 xl:grid-cols-2">
                     {tier.people.map((person, i) => (
                       <div key={person.name} className="polaris-card polaris-card-hover flex w-full max-w-xs flex-col items-center p-6 text-center">
                         <div className="mb-4 flex justify-center">
