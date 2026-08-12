@@ -27,7 +27,7 @@ export default function Layout() {
               </div>
 
               <p className="max-w-md text-sm leading-6 text-gray-300">
-                Your official dining companion for live mess updates, weekly menus, complaint assistance, and the campus food experience at IIT Bhilai.
+                The official student portal for mess updates, weekly menu schedules, complaint assistance, and everyday dining information at IIT Bhilai.
               </p>
             </div>
 
