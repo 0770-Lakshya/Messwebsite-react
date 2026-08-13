@@ -35,6 +35,7 @@ export default function Layout() {
               <h3 className="mb-4 text-sm font-black uppercase tracking-[0.16em] text-white">Quick Links</h3>
               <ul className="space-y-3 text-sm text-gray-300">
                 <li><Link to="https://www.iitbhilai.ac.in/" className="transition hover:text-white">IIT BHILAI</Link></li>
+                <li><Link to="https://polaris.iitbhilai.ac.in/" className="transition hover:text-white">Polaris - IIT Bhilai</Link></li>
                 <li><Link to="/" className="transition hover:text-white">Home</Link></li>
                 <li><Link to="/menu" className="transition hover:text-white">Today's Menu</Link></li>
                 <li><Link to="/menu/weekly" className="transition hover:text-white">Weekly Menu</Link></li>
