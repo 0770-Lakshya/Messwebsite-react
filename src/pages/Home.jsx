@@ -10,11 +10,15 @@ import VegToggle from '../components/VegToggle'
 import { LoadingSkeleton, MenuError, SectionCard, SectionRows, WeeklyTable } from '../components/MenuBits'
 
 const ANN_EMOJI = { special: '🎉', timing: '🕒', meal: '🍛', general: '📢' }
-{/image container for home page images/}
+{/*image container for home page images*/}
 const GALLERY_IMAGES = [
-  'images/ShreeSai.jpg',
-  'images/entrance.jpg',
   'images/art.jpg',
+  'images/entrance.jpg',
+  'images/messphoto/Galav1.png',
+  'images/ShreeSai.jpg',
+  'images/messphoto/shree_sai.png',
+  'images/messphoto/helth.png',
+  
 ]
 
 export default function Home() {
@@ -33,6 +37,7 @@ export default function Home() {
   const menuDayName = effectiveMenuDayName()
   const week = activeWeeks && activeWeeks[0]
   const [activeSlide, setActiveSlide] = useState(0)
+  const [noticeIndex, setNoticeIndex] = useState(0)
 
   useEffect(() => {
     if (GALLERY_IMAGES.length <= 1) return
@@ -60,6 +65,16 @@ export default function Home() {
 
     return () => clearInterval(timer)
   }, [shownAnnouncements.length])
+
+  useEffect(() => {
+    if (!shownNotices.length || shownNotices.length <= 1) return
+
+    const timer = setInterval(() => {
+      setNoticeIndex((prev) => (prev + 1) % shownNotices.length)
+    }, 4200)
+
+    return () => clearInterval(timer)
+  }, [shownNotices.length])
 
   return (
     <div className="relative">
@@ -112,27 +127,27 @@ export default function Home() {
                   return (
                     <div key={`${src}-${index}`} className="min-w-full flex-shrink-0 px-2">
                       <div className="flex items-center justify-center gap-4">
-                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] shadow-2xl opacity-80">
+                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl opacity-80">
                           <img
                             src={GALLERY_IMAGES[prevIndex]}
                             alt={`Mess gallery ${prevIndex + 1}`}
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-contain p-1 object-center"
                           />
                         </div>
 
-                        <div className="h-[340px] w-[52%] overflow-hidden rounded-[1.5rem] shadow-2xl">
+                        <div className="h-[340px] w-[52%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl">
                           <img
                             src={src}
                             alt={`Mess gallery ${index + 1}`}
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-contain p-1 object-center"
                           />
                         </div>
 
-                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] shadow-2xl opacity-80">
+                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl opacity-80">
                           <img
                             src={GALLERY_IMAGES[nextIndex]}
                             alt={`Mess gallery ${nextIndex + 1}`}
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-contain p-1 object-center"
                           />
                         </div>
                       </div>
@@ -143,11 +158,11 @@ export default function Home() {
             </div>
 
             <div className="md:hidden">
-              <div className="overflow-hidden rounded-[1.5rem] shadow-2xl px-2">
+              <div className="overflow-hidden rounded-[1.5rem] bg-white px-2 shadow-2xl">
                 <img
                   src={GALLERY_IMAGES[activeSlide]}
                   alt={`Mess gallery ${activeSlide + 1}`}
-                  className="h-[400px] w-full rounded-[1.5rem] object-cover sm:h-[400px] lg:h-[480px]"
+                  className="h-[400px] w-full rounded-[1.5rem] object-contain p-1 sm:h-[400px] lg:h-[480px]"
                 />
               </div>
             </div>
@@ -271,16 +286,85 @@ export default function Home() {
         )}
       </section>
 
+      {shownNotices.length > 0 && (
+        <section className="mb-12 text-center">
+          <div className="mx-auto max-w-5xl px-4">
+            <div className="mb-4 flex justify-center">
+              <span className="pill" style={{ fontSize: '1.15rem' }}>📌 Notices</span>
+            </div>
+
+            <div
+              className="rounded-[2rem] border border-[#d7c7ab] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_8px_22px_-14px_rgba(81,63,35,0.2)] sm:p-6"
+              style={{
+                background:
+                  'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.32), transparent 24%), radial-gradient(circle at 70% 35%, rgba(110,88,54,0.08), transparent 26%), linear-gradient(135deg, rgba(239,228,205,0.96) 0%, rgba(225,212,186,0.94) 100%)',
+              }}
+            >
+              <div className="relative overflow-hidden rounded-[1.5rem]">
+                <div
+                  className="flex transition-transform duration-700 ease-out"
+                  style={{ transform: `translateX(-${noticeIndex * 100}%)` }}
+                >
+                  {shownNotices.map((notice, index) => (
+                    <div key={`${notice.title}-${index}`} className="min-w-full flex-shrink-0 px-1">
+                      <div
+                        className="polaris-card polaris-card-hover p-5 text-left sm:p-6"
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(255,252,246,0.88) 0%, rgba(239,229,208,0.9) 100%)',
+                          borderColor: 'rgba(130, 99, 52, 0.18)',
+                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.45), 0 10px 25px -18px rgba(91,70,38,0.28)',
+                        }}
+                      >
+                        <div className="mb-3 flex items-center justify-between gap-3">
+                          <span
+                            className="rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em]"
+                            style={{ background: notice.color ? `${notice.color}22` : 'rgba(69,52,125,0.10)', color: notice.color || '#45347D' }}
+                          >
+                            {notice.category || 'Notice'}
+                          </span>
+                          {notice.date && (
+                            <span className="polaris-muted text-[10px] uppercase tracking-[0.14em]">{notice.date}</span>
+                          )}
+                        </div>
+
+                        <h3 className="font-display text-xl font-extrabold leading-tight text-[#0f1115] sm:text-2xl">
+                          {notice.title}
+                        </h3>
+                        {notice.text && <p className="polaris-muted mt-2 text-sm leading-relaxed text-[#2b2a2a]">{notice.text}</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {shownNotices.length > 1 && (
+                <div className="mt-4 flex justify-center gap-2">
+                  {shownNotices.map((_, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => setNoticeIndex(index)}
+                      aria-label={`Show notice ${index + 1}`}
+                      className={`h-2.5 rounded-full transition-all duration-300 ${noticeIndex === index ? 'w-8 bg-[#45347D]' : 'w-2.5 bg-white/70'}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Leadership */}
       <section className="mb-14 text-center">
         <h2 className="font-display mb-2 text-3xl font-extrabold">Meet the Team Behind Mess</h2>
         <p className="polaris-muted mb-8 text-sm">Official dignities who run the mess</p>
         <div className="space-y-6">
           {[
-            { people: LEADERSHIP.slice(0, 1), size: 'w-36 h-36 sm:w-40 sm:h-40', textSize: 'text-5xl', cols: 'xl:grid-cols-1', label: null },
+            { people: LEADERSHIP.slice(0, 1), size: 'w-36 h-36 sm:w-40 sm:h-40', textSize: 'text-5xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: null },
             { people: LEADERSHIP.slice(1, 3), size: 'w-28 h-28 sm:w-32 sm:h-32', textSize: 'text-4xl', cols: 'sm:grid-cols-2 xl:grid-cols-2', label: 'Dean & Faculty In-Charge' },
-            { people: LEADERSHIP.slice(3, 4), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'xl:grid-cols-1', label: 'Associate Faculty' },
-            { people: LEADERSHIP.slice(4, 5), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'xl:grid-cols-1', label: 'Mess Coordinator' },
+            { people: LEADERSHIP.slice(3, 4), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: 'Associate Faculty' },
+            { people: LEADERSHIP.slice(4, 5), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: 'Mess Coordinator' },
           ].map(
             (tier, ti) => (
               <div key={ti} className="space-y-3">
@@ -295,17 +379,19 @@ export default function Home() {
                   </div>
                 )}
                 {tier.people.length > 0 && (
-                  <div className="mx-auto grid max-w-4xl grid-cols-1 items-start justify-items-center gap-5 sm:grid-cols-2 xl:grid-cols-2">
-                    {tier.people.map((person, i) => (
-                      <div key={person.name} className="polaris-card polaris-card-hover flex w-full max-w-xs flex-col items-center p-6 text-center">
-                        <div className="mb-4 flex justify-center">
-                          <Avatar photo={person.photo} name={person.name} size={tier.size} textSize={tier.textSize} index={ti * 2 + i} />
+                  <div className="flex justify-center">
+                    <div className={`grid max-w-4xl gap-5 justify-items-center ${tier.people.length === 1 ? 'w-full max-w-xs grid-cols-1' : `w-full grid-cols-1 ${tier.cols}`}`}>
+                      {tier.people.map((person, i) => (
+                        <div key={person.name} className="polaris-card polaris-card-hover flex w-full max-w-xs flex-col items-center p-6 text-center">
+                          <div className="mb-4 flex justify-center">
+                            <Avatar photo={person.photo} name={person.name} size={tier.size} textSize={tier.textSize} index={ti * 2 + i} />
+                          </div>
+                          <h3 className="font-display font-bold">{person.name}</h3>
+                          <p className="polaris-muted mb-3 text-xs">{person.role}</p>
+                          {person.quote && <p className="serif polaris-muted text-sm italic leading-relaxed">{person.quote}</p>}
                         </div>
-                        <h3 className="font-display font-bold">{person.name}</h3>
-                        <p className="polaris-muted mb-3 text-xs">{person.role}</p>
-                        {person.quote && <p className="serif polaris-muted text-sm italic leading-relaxed">{person.quote}</p>}
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

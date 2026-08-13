@@ -5,7 +5,7 @@ import LockIcon, { preloadLottie } from './LockIcon'
 const NAV_ITEMS = [
   { to: '/', label: 'Home', image: '/home.svg', icon: '/homeicon.json' },
   { to: '/menu', label: 'Menu', image: '/foodmenuicon.svg', icon: '/menuicon.json' },
-  { to: '/menu/weekly', label: 'Weekly Menu', emoji: '📊' },
+  { to: '/menu/weekly', label: 'Weekly Menu', emoji: '𝄜' },
   { to: '/committee', label: 'Council Members', image: '/council.svg', icon: '/councilicon.json' },
   { to: '/contact', label: 'Contact Us', image: '/contact.svg', icon: '/contacticon.json' },
 ]
@@ -107,7 +107,7 @@ export default function Navbar() {
                             />
                           </span>
                         ) : (
-                          <span className="mr-1.5 inline-block opacity-90">{item.emoji}</span>
+                          <span className="relative mr-1.5 inline-flex translate-y-[5px] items-center justify-center text-xl leading-none opacity-90 sm:text-2xl">{item.emoji}</span>
                         )}
                         {item.label}
                       </>

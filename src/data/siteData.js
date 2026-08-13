@@ -17,16 +17,11 @@ export const LEADERSHIP = [
     photo: 'images/fic.jpg',
   },
   
-  //   name: 'Associate Faculty, IIT Bhilai',
-  //   role: 'Dr Yaswanth sir',
-  //   // quote: 'We listen, we improve, we serve.',
-  //   photo: "images/yaswanthsir.png",
-  // },
   {
     name: 'Dr Milan Kumar Jena ',
     role: 'Associate FIC Mess, IIT Bhilai',
     // quote: 'We listen, we improve, we serve.',
-    photo: null,
+    photo: 'images/milansir.png',
   },
   {
     name: 'Manish Kumar' ,
@@ -122,12 +117,41 @@ export const COMMITTEE = [
   },
 ]
 
-export const MESS_INCHARGE = {
-  name: 'Mr Mahesh Koli',
-  role: 'Mess Incharge',
-  email: null,
-  photo: 'images/incharge.jpg',
-}
+export const LEADERSHIP_IN_CHARGE = [
+  {
+    role: 'Dean of Student Affairs, IIT Bhilai',
+    email: null,
+    photo: 'images/dosa.jpg',
+    name: 'Dr Shudhanwa Patra',
+  },
+  {
+    role: 'Faculty In-Charge (FIC), Mess',
+    email: null,
+    photo: 'images/fic.jpg',
+    name: 'Dr Yagnesh Shadangi',
+  },
+  {
+    role: 'Associate FIC Mess, IIT Bhilai',
+    email: null,
+    photo: 'images/milansir.png',
+    name: 'Dr Milan Kumar Jena',
+  },
+]
+
+export const MESS_INCHARGE = [
+  {
+    role: 'Mess Incharge',
+    email: null,
+    photo: 'images/incharge.jpg',
+    name: 'Mr Mahesh Koli',
+  },
+  {
+    role: 'Asscociate FIC, Mess',
+    email: null,
+    photo: 'images/yaswanthsir.png',
+    name: 'Dr Yashavant Kumar',
+  },
+]
 
 export const MEAL_TIMINGS = [
   { label: 'Breakfast', time: '8:00 – 10:00 AM', emoji: '🍌', color: 'text-hunger-yellow' },
