@@ -64,22 +64,12 @@ export default function Home() {
   return (
     <div className="relative">
       <section className="relative mb-14 overflow-hidden rounded-b-[2rem] text-center">
-  {/* Background image */}
-  <img
-    // src="/images/notice_bg.png"
-    alt=""
-    aria-hidden="true"
-    className="absolute inset-0 h-full w-full object-cover opacity-50"
-    onError={(e) => (e.currentTarget.style.display = 'none')}
-  />
-
   {/* Content on top */}
-  <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 md:py-24 bg-[url('/images/bg.jpg')] bg-cover bg-no-repeat bg-fixed min-h-screen">
-    <h1 className="hero-font text-5xl leading-none md:text-7xl">
+  <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 md:py-28">
+    <h1 className="hero-font text-5xl leading-none tracking-wide md:text-7xl">
       PAKADAR<span className="gradient-text">PANALAYA</span>
-
     </h1>
-    <p class="polaris-muted mx-auto max-w-xl text-lg">The official dining portal of IIT Bhilai — live menu, weekly schedule, leadership messages and your student mess committee, all in one place.</p>
+    <p className="polaris-muted mx-auto max-w-xl text-lg">The official dining portal of IIT Bhilai — live menu, weekly schedule, leadership messages and your student mess committee, all in one place.</p>
 
     {/* Gallery pill - below background image */}
     
@@ -190,40 +180,44 @@ export default function Home() {
       {shownAnnouncements.length > 0 && (
         <section className="mb-8 text-center sm:mb-10">
           <div className="mb-4 flex justify-center px-4 sm:mb-6">
-            <span className="pill" style={{fontSize:'1.15rem'}}>📣 Announcements</span>
+            <span className="pill inline-flex items-center gap-2 text-lg font-bold" style={{ fontSize: '1.15rem', background: 'linear-gradient(90deg, #7c3aed, #a855f7)' , color: '#fff', boxShadow: '0 0 24px rgba(168, 85, 247, .6)' }}>
+              📣 Announcements
+            </span>
           </div>
 
           <div className="mx-auto max-w-5xl px-2 sm:px-4">
-            <div className="relative overflow-hidden rounded-[2rem] py-4">
+            <div
+              className="relative overflow-hidden rounded-[2rem] p-[3px]"
+              style={{ background: 'linear-gradient(135deg, #7c3aed, #ec4899, #f59e0b, #7c3aed)', backgroundSize: '300% 300%', animation: 'gradientShift 6s ease infinite' }}
+            >
+              <div className="relative overflow-hidden rounded-[2rem] py-2" style={{ background: '#150f2e' }}>
               <div
-                className="flex transition-transform duration-700 ease-out"
+                className="flex w-full transition-transform duration-700 ease-out"
                 style={{ transform: `translateX(-${announcementIndex * 100}%)` }}
               >
                 {shownAnnouncements.map((ann, i) => (
-                  <div key={i} className="min-w-full flex-shrink-0 px-2">
+                  <div key={i} className="w-full shrink-0 px-1 sm:px-2">
                     <div
-                      className="polaris-card polaris-card-hover mx-auto w-full items-center justify-center gap-2 p-3 text-center sm:min-h-[180px] sm:gap-4 sm:p-5 md:min-h-[220px] md:gap-5 md:p-7"
-                      style={{ background: 'linear-gradient(135deg, #f5f1ff 0%, #ede7ff 38%, #faf7ff 100%)' }}
+                      className="mx-auto flex h-full flex-col items-center justify-center p-5 text-center sm:p-6 md:p-7"
+                      style={{ background: 'linear-gradient(135deg, #241743 0%, #150f2e 100%)' }}
                     >
-                      <div className="shrink-0 font-display text-xl font-bold leading-none sm:text-2xl md:text-[2.5rem]">
-                        {ANN_EMOJI[ann.kind] || '📢'}
+                      <div className="mb-3 flex w-full flex-wrap items-center justify-center gap-2">
+                        <span className="shrink-0 font-display text-3xl font-bold leading-none sm:text-4xl">
+                          {ANN_EMOJI[ann.kind] || '📢'}
+                        </span>
+                        <span
+                          className="rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[.15em] sm:text-[10px]"
+                          style={{ background: ann.color + '33', color: ann.color }}
+                        >
+                          {ann.kind}
+                        </span>
                       </div>
-
-                      <div className="min-w-0 flex-1 text-center">
-                        <div className="mb-2 flex flex-wrap items-center justify-center gap-2">
-                          <h3 className="max-w-full break-words font-display text-base font-bold leading-tight sm:text-lg md:text-[2rem]">{ann.title}</h3>
-                          <span
-                            className="rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-[.15em] sm:text-[10px]"
-                            style={{ background: ann.color + '22', color: ann.color }}
-                          >
-                            {ann.kind}
-                          </span>
-                        </div>
-                        <p className="polaris-muted text-sm leading-relaxed sm:text-base md:text-base overflow-hidden">{ann.message}</p>
-                      </div>
+                      <h3 className="w-full min-w-0 break-words font-display text-base font-bold leading-tight text-[#f5f1ff] sm:text-lg md:text-2xl">{ann.title}</h3>
+                      <p className="mt-2 w-full min-w-0 break-words polaris-muted text-sm leading-relaxed sm:text-base md:text-base">{ann.message}</p>
                     </div>
                   </div>
                 ))}
+              </div>
               </div>
             </div>
 
