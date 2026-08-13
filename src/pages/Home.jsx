@@ -161,10 +161,10 @@ export default function Home() {
 
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
-                to="/menu"
+                to="/#live-menu"
                 className="hero-button-3d rounded-full bg-[#f2c78d] px-5 py-3 text-sm font-bold text-[#201a2b] shadow-[0_10px_24px_-14px_rgba(242,199,141,0.9)] sm:px-6"
               >
-                Explore Menu
+                Live Menu
               </Link>
               <Link
                 to="/committee"
@@ -338,7 +338,7 @@ export default function Home() {
       )}
 
       {/* Today's Menu */}
-      <section className="mb-14 text-center">
+      <section id="live-menu" className="mb-14 scroll-mt-24 text-center">
         <div className="mb-6">
           <span className="pill-yellow mb-3 inline-block">{vegMode ? '🥗 Pure Veg' : '🍽️ Fresh & Served'}</span>
           <h2 className="font-display text-3xl font-extrabold">Live Menu — {menuDayName}</h2>
