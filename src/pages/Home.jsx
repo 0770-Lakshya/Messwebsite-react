@@ -22,8 +22,9 @@ const GALLERY_IMAGES = [
   'images/messphoto/krishna_kripa.png',
   'images/messphoto/helth.png',
   'images/messphoto/amul.png',
-  
 ]
+
+const HERO_IMAGE = 'images/messphoto/mess_enterance.png'
 
 export default function Home() {
   const { weeks, error, loading } = useMenu()
@@ -82,18 +83,99 @@ export default function Home() {
 
   return (
     <div className="relative">
-      <section className="relative mb-14 overflow-hidden rounded-b-[2rem] text-center">
-  {/* Content on top */}
-  <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 md:py-28">
-    <h1 className="hero-font text-5xl leading-none tracking-wide md:text-7xl">
-      PAKADAR<span className="gradient-text">PANALAYA</span>
-    </h1>
-    <p className="polaris-muted mx-auto max-w-xl text-lg">The official dining portal of IIT Bhilai — live menu, weekly schedule, leadership messages and your student mess committee, all in one place.</p>
+      <style>{`
+        @keyframes heroTitleIn {
+          0% {
+            opacity: 0;
+            transform: translate3d(0, 22px, -30px) rotateX(18deg) rotateY(-16deg);
+            filter: blur(6px);
+          }
+          100% {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg);
+            filter: blur(0);
+          }
+        }
 
-    {/* Gallery pill - below background image */}
-    
-  </div>
-</section>
+        @keyframes heroFloatIn {
+          0% {
+            opacity: 0;
+            transform: perspective(1200px) rotateX(18deg) rotateY(-14deg) translateY(24px);
+          }
+          100% {
+            opacity: 1;
+            transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0);
+          }
+        }
+
+        .hero-title-animate {
+          animation: heroTitleIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+          transform-style: preserve-3d;
+          text-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+        }
+
+        .hero-copy-3d {
+          animation: heroFloatIn 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+          transform-style: preserve-3d;
+          perspective: 1200px;
+        }
+
+        .hero-button-3d {
+          transform: translateZ(0);
+          transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease;
+          transform-style: preserve-3d;
+        }
+
+        .hero-button-3d:hover {
+          transform: translateY(-4px) rotateX(10deg) rotateY(-8deg);
+          box-shadow: 0 18px 30px -18px rgba(242, 199, 141, 0.85);
+          filter: brightness(1.04);
+        }
+      `}</style>
+
+      <section className="relative mb-14 overflow-hidden rounded-b-[2rem] border border-[#d8c7a9]/30 shadow-[0_24px_80px_-32px_rgba(11,13,18,0.8)]">
+        <div
+          className="absolute inset-0 bg-no-repeat bg-cover"
+          style={{
+            backgroundImage: `url('${HERO_IMAGE}')`,
+            backgroundPosition: 'center center',
+            backgroundSize: 'cover',
+          }}
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(16,14,18,0.84),rgba(16,14,18,0.58),rgba(16,14,18,0.22))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.20),_transparent_18%),radial-gradient(circle_at_bottom_right,_rgba(239,193,113,0.18),_transparent_25%)]" />
+
+        <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:py-20 md:py-28">
+          <div className="hero-copy-3d max-w-xl text-left text-white">
+            <div className="mb-5 inline-flex items-center rounded-full border border-[#f0d6a5]/40 bg-[#1a1c22]/40 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[#f9efe0] backdrop-blur-sm">
+              IIT Bhilai Dining Portal
+            </div>
+
+            <h1 className="hero-title-animate hero-font text-[2.2rem] leading-[0.95] tracking-wide sm:text-5xl md:text-7xl">
+              PAKADAR<span className="gradient-text">PANALAYA</span>
+            </h1>
+
+            <p className="mt-5 max-w-lg text-base text-white/90 sm:text-lg md:text-xl">
+              The official dining portal of IIT Bhilai — live menu, weekly schedule, leadership messages and your student mess committee, all in one place.
+            </p>
+
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link
+                to="/menu"
+                className="hero-button-3d rounded-full bg-[#f2c78d] px-5 py-3 text-sm font-bold text-[#201a2b] shadow-[0_10px_24px_-14px_rgba(242,199,141,0.9)] sm:px-6"
+              >
+                Explore Menu
+              </Link>
+              <Link
+                to="/committee"
+                className="hero-button-3d rounded-full border border-white/35 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur-sm sm:px-6"
+              >
+                Meet the Team
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Gallery pill navigation */}
       <div className="mt-6 flex w-full justify-start pl-0 md:pl-2">
