@@ -5,14 +5,14 @@ export const SECTIONS = ['BREAKFAST', 'LUNCH', 'Tea Time', 'DINNER']
 export const LEADERSHIP = [
   
   {
-    name: 'Dean of Student Affairs, IIT Bhilai',
-    role: 'Dr Shudhanwa Patra',
+    name: 'Dr Shudhanwa Patra ',
+    role: 'Dean of Student Affairs, IIT Bhilai',
     // quote: 'Your well-being at the mess is my priority.',
     photo: 'images/dosa.jpg',
   },
   {
-    name: 'Faculty In-Charge (FIC), Mess',
-    role: 'Dr Yagnesh Shadangi',
+    name: 'Dr Yagnesh Shadangi',
+    role: 'Faculty In-Charge (FIC), Mess',
     // quote: 'Good food, great conversations, better days.',
     photo: 'images/fic.jpg',
   },
@@ -23,14 +23,14 @@ export const LEADERSHIP = [
   //   photo: "images/yaswanthsir.png",
   // },
   {
-    name: 'Associate FIC Mess, IIT Bhilai',
-    role: 'Dr Milan Kumar Jena',
+    name: 'Dr Milan Kumar Jena ',
+    role: 'Associate FIC Mess, IIT Bhilai',
     // quote: 'We listen, we improve, we serve.',
     photo: null,
   },
   {
-    name: 'Mess Coordinator, IIT Bhilai',
-    role: 'Manish Kumar',
+    name: 'Manish Kumar' ,
+    role: 'Mess Coordinator, IIT Bhilai',
     // quote: 'We listen, we improve, we serve.',
     photo: "images/coordinator.png",
   },

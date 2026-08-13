@@ -147,7 +147,7 @@ export default function Home() {
                 <img
                   src={GALLERY_IMAGES[activeSlide]}
                   alt={`Mess gallery ${activeSlide + 1}`}
-                  className="h-[360px] w-full rounded-[1.5rem] object-cover sm:h-[400px] lg:h-[480px]"
+                  className="h-[400px] w-full rounded-[1.5rem] object-cover sm:h-[400px] lg:h-[480px]"
                 />
               </div>
             </div>
@@ -194,13 +194,13 @@ export default function Home() {
           </div>
 
           <div className="mx-auto max-w-5xl px-2 sm:px-4">
-            <div className="relative overflow-hidden rounded-[1.2rem] sm:rounded-[1.5rem]">
+            <div className="relative overflow-hidden rounded-[2rem] py-4">
               <div
                 className="flex transition-transform duration-700 ease-out"
                 style={{ transform: `translateX(-${announcementIndex * 100}%)` }}
               >
                 {shownAnnouncements.map((ann, i) => (
-                  <div key={i} className="min-w-full flex-shrink-0 px-1 sm:px-1.5">
+                  <div key={i} className="min-w-full flex-shrink-0 px-2">
                     <div
                       className="polaris-card polaris-card-hover mx-auto w-full items-center justify-center gap-2 p-3 text-center sm:min-h-[180px] sm:gap-4 sm:p-5 md:min-h-[220px] md:gap-5 md:p-7"
                       style={{ background: 'linear-gradient(135deg, #f5f1ff 0%, #ede7ff 38%, #faf7ff 100%)' }}
