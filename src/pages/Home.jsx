@@ -14,10 +14,14 @@ const ANN_EMOJI = { special: '🎉', timing: '🕒', meal: '🍛', general: '�
 const GALLERY_IMAGES = [
   'images/art.jpg',
   'images/entrance.jpg',
+  'images/messphoto/galav.png',
   'images/messphoto/Galav1.png',
   'images/ShreeSai.jpg',
   'images/messphoto/shree_sai.png',
+  'images/messphoto/notice.jpg',
+  'images/messphoto/krishna_kripa.png',
   'images/messphoto/helth.png',
+  'images/messphoto/amul.png',
   
 ]
 
@@ -300,31 +304,32 @@ export default function Home() {
                   style={{ transform: `translateX(-${noticeIndex * 100}%)` }}
                 >
                   {shownNotices.map((notice, index) => (
-                    <div key={`${notice.title}-${index}`} className="min-w-full flex-shrink-0 px-1">
+                    <div key={`${notice.title}-${index}`} className="w-full shrink-0 px-1 sm:px-2">
                       <div
-                        className="polaris-card polaris-card-hover p-5 text-left sm:p-6"
+                        className="mx-auto flex h-full flex-col items-center justify-center p-5 text-center sm:p-6 md:p-7"
                         style={{
                           background: 'linear-gradient(135deg, rgba(255,252,246,0.88) 0%, rgba(239,229,208,0.9) 100%)',
-                          borderColor: 'rgba(130, 99, 52, 0.18)',
+                          border: '1px solid rgba(130, 99, 52, 0.18)',
                           boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.45), 0 10px 25px -18px rgba(91,70,38,0.28)',
                         }}
                       >
-                        <div className="mb-3 flex items-center justify-between gap-3">
+                        <div className="mb-3 flex w-full flex-wrap items-center justify-center gap-2">
                           <span
-                            className="rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em]"
-                            style={{ background: notice.color ? `${notice.color}22` : 'rgba(69,52,125,0.10)', color: notice.color || '#45347D' }}
+                            className="rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-[.15em] sm:text-[10px]"
+                            style={{ background: notice.color ? `${notice.color}22` : 'rgba(81,63,35,0.12)', color: notice.color || '#514023' }}
                           >
                             {notice.category || 'Notice'}
                           </span>
                           {notice.date && (
-                            <span className="polaris-muted text-[10px] uppercase tracking-[0.14em]">{notice.date}</span>
+                            <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#514023]/70">{notice.date}</span>
                           )}
                         </div>
-
-                        <h3 className="font-display text-xl font-extrabold leading-tight text-[#0f1115] sm:text-2xl">
+                        <h3 className="w-full min-w-0 break-words font-display text-base font-bold leading-tight text-[#3a2f1e] sm:text-lg md:text-2xl">
                           {notice.title}
                         </h3>
-                        {notice.text && <p className="polaris-muted mt-2 text-sm leading-relaxed text-[#2b2a2a]">{notice.text}</p>}
+                        {notice.text && (
+                          <p className="mt-2 w-full min-w-0 break-words text-sm leading-relaxed text-[#5a4a30] sm:text-base md:text-base">{notice.text}</p>
+                        )}
                       </div>
                     </div>
                   ))}
