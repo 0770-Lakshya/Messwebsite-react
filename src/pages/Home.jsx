@@ -232,7 +232,7 @@ export default function Home() {
                         </span>
                       </div>
                       <h3 className="w-full min-w-0 break-words font-display text-base font-bold leading-tight text-[#f5f1ff] sm:text-lg md:text-2xl">{ann.title}</h3>
-                      <p className="mt-2 w-full min-w-0 break-words polaris-muted text-sm leading-relaxed sm:text-base md:text-base">{ann.message}</p>
+                      <p className="mt-2 w-full min-w-0 break-words text-sm font-medium leading-relaxed text-[#ff7b7b] sm:text-base md:text-base">{ann.message}</p>
                     </div>
                   </div>
                 ))}
