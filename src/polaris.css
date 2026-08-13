@@ -106,7 +106,7 @@ h3 { font-weight: 600; }
 
 /* ---------- brand text gradient ---------- */
 .gradient-text {
-  background-image: linear-gradient(to right, #45347D, #8E7DB4);
+  background-image: linear-gradient(to right, #6541da, #8E7DB4);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
