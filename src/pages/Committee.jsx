@@ -1,4 +1,4 @@
-import { COMMITTEE, MESS_INCHARGE } from '../data/siteData'
+import { COMMITTEE, LEADERSHIP_IN_CHARGE, MESS_INCHARGE } from '../data/siteData'
 import Avatar from '../components/Avatar'
 
 function MemberCard({ member, index, size = 'w-28 h-28', textSize = 'text-3xl' }) {
@@ -49,10 +49,17 @@ export default function Committee() {
 
       
 
-      <TierLabel emoji="🎓" label="Coordinator" />
-      {/* Coordinator — on top, biggest */}
-      <div className="mx-auto max-w-sm">
-        <MemberCard member={coordinator} index={0} size="w-40 h-40" textSize="text-4xl" />
+      <TierLabel emoji="🎓" label="Faculty In-Charge (FIC)" />
+
+      <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-4">
+        <div className="w-full max-w-xs">
+          <MemberCard member={LEADERSHIP_IN_CHARGE[0]} index={1} size="w-32 h-32" textSize="text-3xl" />
+        </div>
+        <div className="mx-auto grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
+          {LEADERSHIP_IN_CHARGE.slice(1).map((member, i) => (
+            <MemberCard key={member.name || member.role} member={member} index={i + 2} size="w-32 h-32" textSize="text-3xl" />
+          ))}
+        </div>
       </div>
 
       <TierLabel emoji="🎓" label="Mess In-Charge" />
@@ -63,6 +70,13 @@ export default function Committee() {
           <MemberCard key={member.name || member.role} member={member} index={i + 1} size="w-32 h-32" textSize="text-3xl" />
         ))}
       </div>
+
+      <TierLabel emoji="🎓" label="Coordinator" />
+      {/* Coordinator — on top, biggest */}
+      <div className="mx-auto max-w-sm">
+        <MemberCard member={coordinator} index={0} size="w-40 h-40" textSize="text-4xl" />
+      </div>
+
 
       <TierLabel emoji="👥" label="Members" />
 

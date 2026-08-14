@@ -144,13 +144,12 @@ export const MESS_INCHARGE = [
     email: null,
     photo: 'images/incharge.jpg',
     name: 'Mr Mahesh Koli',
-        name: 'Mr Mahesh Koli',
   },
   {
-    role: 'Mess Incharge',
+    role: 'Asscociate FIC, Mess',
     email: null,
     photo: 'images/yaswanthsir.png',
-    name: 'Mr Yashavant Kumar',
+    name: 'Dr Yashavant Kumar',
   },
 ]
 

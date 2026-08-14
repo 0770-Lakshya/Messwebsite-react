@@ -39,7 +39,7 @@ export default function Layout() {
                 <li><Link to="/" className="transition hover:text-white">Home</Link></li>
                 <li><Link to="/menu" className="transition hover:text-white">Today's Menu</Link></li>
                 <li><Link to="/menu/weekly" className="transition hover:text-white">Weekly Menu</Link></li>
-                <li><Link to="/committee" className="transition hover:text-white">Committee Members</Link></li>
+                <li><Link to="/committee" className="transition hover:text-white">Council Members</Link></li>
                 <li><Link to="/contact" className="transition hover:text-white">Contact</Link></li>
               </ul>
             </div>
