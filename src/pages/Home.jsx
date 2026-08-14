@@ -15,9 +15,12 @@ const GALLERY_IMAGES = [
   'images/art.jpg',
   'images/entrance.jpg',
   'images/messphoto/night.jpg',
+  'images/messphoto/ballon.jpg',
+  'images/messphoto/millettrain.jpg',
   'images/messphoto/galav.png',
   'images/messphoto/Galav1.png',
   'images/ShreeSai.jpg',
+  
   'images/messphoto/shree_sai.png',
   'images/messphoto/notice.jpg',
   'images/messphoto/krishna_kripa.png',
