@@ -14,6 +14,10 @@ export default function WeeklyMenu() {
   const activeError = vegMode ? vegError : error
   const activeLoading = vegMode ? vegLoading : loading
 
+  if (typeof window !== 'undefined') {
+    console.log('WeeklyMenu: vegMode', vegMode, 'weeks', activeWeeks)
+  }
+
   return (
     <div className="space-y-6">
       <div className="text-center">

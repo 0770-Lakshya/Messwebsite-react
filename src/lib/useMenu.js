@@ -19,7 +19,12 @@ function useMenuState(fetcher) {
 }
 
 export function useMenu() {
-  return useMenuState(fetchMenu)
+  const state = useMenuState(fetchMenu)
+  // debug: log menu weeks for non-veg
+  if (typeof window !== 'undefined') {
+    console.log('useMenu: weeks', state.weeks)
+  }
+  return state
 }
 
 export function useVegMenu() {

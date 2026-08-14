@@ -8,7 +8,7 @@ const VEG_GOOGLE_SHEET_URL =
 
 const SHEETS = [
   ['1&3 Week', 'Week 1 & 3'],
-  ['2&4', 'Week 2 & 4'],
+  ['2&4 Week', 'Week 2 & 4'],
 ]
 
 // Same caching strategy as the Django version:
@@ -71,9 +71,34 @@ export async function parseMenuWorkbook(buffer) {
   const wb = XLSX.read(buffer, { type: 'array' })
   const weeks = []
 
+  // Provide tolerant lookup for sheet names: accept small variations in spacing,
+  // ampersand usage, punctuation and case. This helps when sheet tab names differ
+  // slightly between the veg and non-veg spreadsheets.
+  const actualSheetNames = wb.SheetNames || []
+  function norm(name) {
+    return String(name || '')
+      .toLowerCase()
+      .replace(/&/g, 'and')
+      .replace(/[^a-z0-9]/g, '')
+  }
+
   for (const [sheetName, label] of SHEETS) {
-    const ws = wb.Sheets[sheetName]
-    if (!ws) continue
+    const nameList = Array.isArray(sheetName) ? sheetName : [sheetName]
+    let ws = null
+    let matchedName = null
+    for (const candidate of nameList) {
+      const nc = norm(candidate)
+      matchedName = actualSheetNames.find((n) => norm(n) === nc)
+      if (matchedName) {
+        ws = wb.Sheets[matchedName]
+        break
+      }
+    }
+    // If worksheet not found, still push an empty week so the UI shows the tab label
+    if (!ws) {
+      weeks.push({ label, sections: [] })
+      continue
+    }
     const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: null })
     const sections = []
     let current = null
@@ -128,10 +153,11 @@ async function fetchMenuFrom({
 
     const weeks = await parseMenuWorkbook(buffer)
     let error = null
-    if (!weeks.length || weeks.every((w) => !w.sections.length)) {
+    // If no sheets were found at all, report notFoundError.
+    // But if sheets exist and are empty, still return them so the UI can show week tabs.
+    if (!weeks.length) {
       error = notFoundError
-      weeks.splice(0, weeks.length)
-      if (!weeks.length) return { weeks: null, error }
+      return { weeks: null, error }
     }
     if (hash) setCache(weekCacheKey, hashKey, checkKey, weeks, hash)
     else localStorage.setItem(checkKey, String(now()))
