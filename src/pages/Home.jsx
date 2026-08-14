@@ -14,6 +14,7 @@ const ANN_EMOJI = { special: '🎉', timing: '🕒', meal: '🍛', general: '�
 const GALLERY_IMAGES = [
   'images/art.jpg',
   'images/entrance.jpg',
+  'images/messphoto/night.jpg',
   'images/messphoto/galav.png',
   'images/messphoto/Galav1.png',
   'images/ShreeSai.jpg',
