@@ -156,7 +156,7 @@ export default function Home() {
             </h1>
 
             <p className="mt-5 max-w-lg text-base text-white/90 sm:text-lg md:text-xl">
-              The official dining portal of IIT Bhilai — live menu, weekly schedule, leadership messages and your student mess committee, all in one place.
+              The official dining portal of IIT Bhilai — live menu, weekly schedule and your student mess committee, all in one place.
             </p>
 
             <div className="mt-7 flex flex-wrap gap-3">
