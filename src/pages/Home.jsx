@@ -178,7 +178,7 @@ export default function Home() {
       </section>
 
       {/* Gallery pill navigation */}
-      <div className="mt-6 flex w-full justify-start pl-0 md:pl-2">
+      <div className="mt-6 flex w-full flex-wrap items-center justify-between gap-3 pl-0 md:pl-2">
         <span
           className="pill inline-flex items-center bg-white/10 px-5 py-2 text-lg font-bold tracking-[0.12em] text-[#f5f1ff] shadow-md backdrop-blur-sm"
           style={{ fontSize: '1.5rem' }}
@@ -191,62 +191,100 @@ export default function Home() {
       <section className="mb-14 md:mb-20 text-center">
         <div className="mx-auto max-w-6xl px-4">
           <div className="relative overflow-hidden rounded-[2rem] py-4">
+            {/* Desktop: coverflow carousel */}
             <div className="hidden overflow-hidden md:block">
               <div
-                className="flex transition-transform duration-700 ease-out"
-                style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+                className="flex items-center transition-transform duration-700 ease-out"
+                style={{
+                  transform: `translateX(calc(25% - ${activeSlide * 50}%))`,
+                }}
               >
                 {GALLERY_IMAGES.map((src, index) => {
-                  const prevIndex = (index - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length
-                  const nextIndex = (index + 1) % GALLERY_IMAGES.length
+                  const distance = Math.min(
+                    Math.abs(index - activeSlide),
+                    GALLERY_IMAGES.length - Math.abs(index - activeSlide),
+                  )
+
+                  const isActive = distance === 0
 
                   return (
-                    <div key={`${src}-${index}`} className="min-w-full flex-shrink-0 px-2">
-                      <div className="flex items-center justify-center gap-4">
-                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl opacity-80">
-                          <img
-                            src={GALLERY_IMAGES[prevIndex]}
-                            alt={`Mess gallery ${prevIndex + 1}`}
-                            className="h-full w-full object-contain p-1 object-center"
-                          />
-                        </div>
-
-                        <div className="h-[340px] w-[52%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl">
-                          <img
-                            src={src}
-                            alt={`Mess gallery ${index + 1}`}
-                            className="h-full w-full object-contain p-1 object-center"
-                          />
-                        </div>
-
-                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl opacity-80">
-                          <img
-                            src={GALLERY_IMAGES[nextIndex]}
-                            alt={`Mess gallery ${nextIndex + 1}`}
-                            className="h-full w-full object-contain p-1 object-center"
-                          />
-                        </div>
-                      </div>
+                    <div
+                      key={`${src}-${index}`}
+                      className="flex-shrink-0 overflow-hidden rounded-[1.5rem] bg-white shadow-2xl transition-all duration-700 ease-out"
+                      style={{
+                        width: '44%',
+                        margin: '0 3%',
+                        transform: isActive ? 'scale(1)' : 'scale(0.78)',
+                        opacity: isActive ? 1 : 0.6,
+                        zIndex: isActive ? 2 : 1,
+                        height: isActive ? 'clamp(280px, 34vw, 440px)' : 'clamp(200px, 24vw, 300px)',
+                      }}
+                    >
+                      <img
+                        src={src}
+                        alt={`Mess gallery ${index + 1}`}
+                        className="h-full w-full object-cover p-1 object-center"
+                      />
                     </div>
                   )
                 })}
               </div>
-            </div>
 
-            <div className="md:hidden">
-              <div className="overflow-hidden rounded-[1.5rem] bg-white px-2 shadow-2xl">
-                <img
-                  src={GALLERY_IMAGES[activeSlide]}
-                  alt={`Mess gallery ${activeSlide + 1}`}
-                  className="h-[400px] w-full rounded-[1.5rem] object-contain p-1 sm:h-[400px] lg:h-[480px]"
-                />
+              <button
+                type="button"
+                onClick={prevSlide}
+                className="absolute left-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
+                aria-label="Previous image"
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                onClick={nextSlide}
+                className="absolute right-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
+                aria-label="Next image"
+              >
+                →
+              </button>
+
+              <div className="mt-5 flex justify-center gap-2">
+                {GALLERY_IMAGES.map((_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => setActiveSlide(index)}
+                    aria-label={`Show image ${index + 1}`}
+                    className={`h-2.5 rounded-full transition-all duration-300 ${
+                      activeSlide === index ? 'w-8 bg-primary' : 'w-2.5 bg-white/70'
+                    }`}
+                  />
+                ))}
               </div>
             </div>
 
+            {/* Mobile: auto-sliding single image, no swipe gestures */}
+            <div className="overflow-hidden rounded-[1.5rem] bg-white shadow-2xl md:hidden">
+              <div
+                className="flex transition-transform duration-700 ease-out"
+                style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+              >
+                {GALLERY_IMAGES.map((src, index) => (
+                  <div key={`${src}-${index}`} className="flex w-full flex-shrink-0 items-center justify-center">
+                    <img
+                      src={src}
+                      alt={`Mess gallery ${index + 1}`}
+                      className="w-full max-h-[70vh] object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile arrows + dots */}
             <button
               type="button"
               onClick={prevSlide}
-              className="absolute left-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
+              className="absolute left-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80 md:hidden"
               aria-label="Previous image"
             >
               ←
@@ -254,13 +292,13 @@ export default function Home() {
             <button
               type="button"
               onClick={nextSlide}
-              className="absolute right-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
+              className="absolute right-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80 md:hidden"
               aria-label="Next image"
             >
               →
             </button>
 
-            <div className="mt-5 flex justify-center gap-2">
+            <div className="mt-5 flex justify-center gap-2 md:hidden">
               {GALLERY_IMAGES.map((_, index) => (
                 <button
                   key={index}
