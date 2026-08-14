@@ -6,7 +6,7 @@ const NAV_ITEMS = [
   { to: '/', label: 'Home', image: '/home.svg', icon: '/homeicon.json' },
   { to: '/menu', label: 'Menu', image: '/foodmenuicon.svg', icon: '/menuicon.json' },
   { to: '/menu/weekly', label: 'Weekly Menu', emoji: '𝄜' },
-  { to: '/committee', label: 'Council Members', image: '/council.svg', icon: '/councilicon.json' },
+  { to: '/committee', label: 'Committee Members', image: '/council.svg', icon: '/councilicon.json' },
   { to: '/contact', label: 'Contact Us', image: '/contact.svg', icon: '/contacticon.json' },
 ]
 
