@@ -145,7 +145,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(16,14,18,0.84),rgba(16,14,18,0.58),rgba(16,14,18,0.22))]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.20),_transparent_18%),radial-gradient(circle_at_bottom_right,_rgba(239,193,113,0.18),_transparent_25%)]" />
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:py-20 md:py-28">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 py-24 sm:py-20 md:py-28">
           <div className="hero-copy-3d max-w-xl text-left text-white">
             <div className="mb-5 inline-flex items-center rounded-full border border-[#f0d6a5]/40 bg-[#1a1c22]/40 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-[#f9efe0] backdrop-blur-sm">
               IIT Bhilai Dining Portal

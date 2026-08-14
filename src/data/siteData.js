@@ -170,7 +170,17 @@ export const CONTACT = {
   caterers: [
     { name: 'Galav Mess', email: null },
     { name: 'Shreesai Mess', email: null },
+    { name: 'Krishna Kripa ', email: null },
+    { name: 'Amul Parlour', email: null },
+
   ],
+  // Canteens: [
+  //   { name: 'NJC(Not Just Coffee)', email: null },
+  //   { name: 'Tech Cafe', email: null },
+
+
+  // ]
+
 }
 
 // Google OAuth — create credentials at https://console.cloud.google.com/apis/credentials
