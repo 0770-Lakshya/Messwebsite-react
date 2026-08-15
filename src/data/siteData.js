@@ -8,26 +8,26 @@ export const LEADERSHIP = [
     name: 'Dr Shudhanwa Patra ',
     role: 'Dean of Student Affairs, IIT Bhilai',
     // quote: 'Your well-being at the mess is my priority.',
-    photo: 'images/dosa.jpg',
+    photo: 'images/dosa.webp',
   },
   {
     name: 'Dr Yagnesh Shadangi',
     role: 'Faculty In-Charge (FIC), Mess',
     // quote: 'Good food, great conversations, better days.',
-    photo: 'images/fic.jpg',
+    photo: 'images/fic.webp',
   },
   
   {
     name: 'Dr Milan Kumar Jena ',
     role: 'Associate FIC Mess, IIT Bhilai',
     // quote: 'We listen, we improve, we serve.',
-    photo: 'images/milansir.png',
+    photo: 'images/milansir.webp',
   },
   {
     name: 'Manish Kumar' ,
     role: 'Mess Coordinator, IIT Bhilai',
     // quote: 'We listen, we improve, we serve.',
-    photo: "images/coordinator.png",
+    photo: "images/coordinator.webp",
   },
 ]
 
@@ -36,84 +36,84 @@ export const COMMITTEE = [
     name: 'Manish Kumar ',
     role: 'Mess Coordinator',
     email: 'messcoordinator@iitbhilai.ac.in',
-    photo: "images/coordinator.png",
+    photo: "images/coordinator.webp",
   },
   {
     name: 'Sudhanshu Mishra',
     role: 'Member',
     email: "",
-    photo: "images/sudhanshu.png",
+    photo: "images/sudhanshu.webp",
   },
   {
     name: 'Abhishek Kumar',
     role: 'Member',
     email: null,
-    photo: "images/abhishekkumar.png",
+    photo: "images/abhishekkumar.webp",
   },
   {
     name: 'Lakshya Soni',
     role: 'Technical Member',
-    photo: "images/Lakshya.png",
+    photo: "images/Lakshya.webp",
   },
   {
     name: 'Krish Shiyani',
     role: 'Technical Member',
-    photo: "images/krish.png",
+    photo: "images/krish.webp",
   },
   {
     name: 'Dheeraj Preetham Reddy',
     role: 'Member',
-    photo: "images/dheeraj.png",
+    photo: "images/dheeraj.webp",
   },
   {
     name: 'Abhishek Singh',
     role: 'Member',
-    photo: "images/abhishekk.png",
+    photo: "images/abhishekk.webp",
   },
   {
-    name: 'Arpit Panday',
+    name: 'Arpit Pandey',
     role: 'Member',
-    photo: "images/arpit.jpg",
+    photo: "images/arpit.webp",
   },
   {
     name: 'Pushkar Surendra Chaudhari',
     role: 'Member',
-    photo: "images/pushkar.png",
+    photo: "images/pushkar.webp",
   },
   {
     name: 'Venna Yaswanth',
     role: 'Member',
-    photo: "images/yaswanth.png",
+    photo: "images/yaswanth.webp",
   },
   {
     name: 'Kavita Negi',
     role: 'Member',
-    photo: "images/kavita.png",
+    photo: "images/kavita.webp",
   },
   {
     name: 'Bikka Akshara Venus',
     role: 'Member',
-    photo: "images/akshara.png",
+    photo: "images/akshara.webp",
   },
   {
     name: 'Shubham Kumar',
     role: 'Member',
-    photo: "images/shubham.png",
+    photo: "images/shubham.webp",
   },
   {
     name: 'Sadhana Gupta',
     role: 'Member',
-    photo: "images/sadhana.png",
+    photo: "images/sadhana.webp",
   },
   {
     name: 'Sanjay Kumar Verma',
     role: 'Member',
-    photo: "images/sanjay.png",
+    photo: "images/sanjay.webp",
   },
   {
     name: 'Akash Netam',
     role: 'Member',
-    photo: "images/akash.png",
+    photo: "images/akash.webp",
   },
 ]
 
@@ -121,19 +121,19 @@ export const LEADERSHIP_IN_CHARGE = [
   {
     role: 'Dean of Student Affairs, IIT Bhilai',
     email: null,
-    photo: 'images/dosa.jpg',
+    photo: 'images/dosa.webp',
     name: 'Dr Shudhanwa Patra',
   },
   {
     role: 'Faculty In-Charge (FIC), Mess',
     email: null,
-    photo: 'images/fic.jpg',
+    photo: 'images/fic.webp',
     name: 'Dr Yagnesh Shadangi',
   },
   {
     role: 'Associate FIC Mess, IIT Bhilai',
     email: null,
-    photo: 'images/milansir.png',
+    photo: 'images/milansir.webp',
     name: 'Dr Milan Kumar Jena',
   },
 ]
@@ -142,13 +142,13 @@ export const MESS_INCHARGE = [
   {
     role: 'Mess Incharge',
     email: null,
-    photo: 'images/incharge.jpg',
+    photo: 'images/incharge.webp',
     name: 'Mr Mahesh Koli',
   },
   {
     role: 'Mess Incharge',
     email: null,
-    photo: 'images/yaswanthsir.png',
+    photo: 'images/yaswanthsir.webp',
     name: 'Mr Yashavant Kumar',
   },
 ]

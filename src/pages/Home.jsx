@@ -12,23 +12,23 @@ import { LoadingSkeleton, MenuError, SectionCard, SectionRows, WeeklyTable } fro
 const ANN_EMOJI = { special: '🎉', timing: '🕒', meal: '🍛', general: '📢' }
 {/*image container for home page images*/}
 const GALLERY_IMAGES = [
-  'images/art.jpg',
-  'images/entrance.jpg',
-  'images/messphoto/night.jpg',
-  'images/messphoto/ballon.jpg',
-  'images/messphoto/millettrain.jpg',
-  'images/messphoto/galav.png',
-  'images/messphoto/Galav1.png',
-  'images/ShreeSai.jpg',
+  'images/art.webp',
+  'images/entrance.webp',
+  'images/messphoto/night.webp',
+  'images/messphoto/ballon.webp',
+  'images/messphoto/millettrain.webp',
+  'images/messphoto/galav.webp',
+  'images/messphoto/Galav1.webp',
+  'images/ShreeSai.webp',
   
-  'images/messphoto/shree_sai.png',
-  'images/messphoto/notice.jpg',
-  'images/messphoto/krishna_kripa.png',
-  'images/messphoto/helth.png',
-  'images/messphoto/amul.png',
+  'images/messphoto/shree_sai.webp',
+  'images/messphoto/notice.webp',
+  'images/messphoto/krishna_kripa.webp',
+  'images/messphoto/helth.webp',
+  'images/messphoto/amul.webp',
 ]
 
-const HERO_IMAGE = 'images/messphoto/mess_enterance.png'
+const HERO_IMAGE = 'images/messphoto/mess_enterance.webp'
 
 export default function Home() {
   const { weeks, error, loading } = useMenu()
@@ -446,17 +446,17 @@ export default function Home() {
         <p className="polaris-muted mb-8 text-sm">Official dignities who run the mess</p>
         <div className="space-y-6">
           {[
-            { people: LEADERSHIP.slice(0, 1), size: 'w-36 h-36 sm:w-40 sm:h-40', textSize: 'text-5xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: null },
-            { people: LEADERSHIP.slice(1, 3), size: 'w-28 h-28 sm:w-32 sm:h-32', textSize: 'text-4xl', cols: 'sm:grid-cols-2 xl:grid-cols-2', label: 'Dean & Faculty In-Charge' },
-            { people: LEADERSHIP.slice(3, 4), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: 'Associate Faculty' },
-            { people: LEADERSHIP.slice(4, 5), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: 'Mess Coordinator' },
+            { people: LEADERSHIP.slice(0, 1), size: 'w-36 h-36 sm:w-40 sm:h-40', textSize: 'text-5xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: 'Dean & Faculty In-Charge'},
+            { people: LEADERSHIP.slice(1, 3), size: 'w-28 h-28 sm:w-32 sm:h-32', textSize: 'text-4xl', cols: 'sm:grid-cols-2 xl:grid-cols-2', label: ' FIC and Associate Faculty' },
+            { people: LEADERSHIP.slice(3, 4), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: 'Mess Coordinator' },
+            { people: LEADERSHIP.slice(4, 5), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: null },
           ].map(
             (tier, ti) => (
               <div key={ti} className="space-y-3">
                 {ti > 0 && tier.label && (
                   <div className="flex flex-col items-center gap-1 text-sm font-bold text-[#45347D]">
                     <span>
-                      {ti === 1 ? '🎓' : ti === 2 ? '👥' : '🛠️'} {tier.label}
+                      {ti === 1 ? '🎓' : ti === 2 ? '👥' : ''} {tier.label}
                     </span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M6 9l6 6 6-6" />

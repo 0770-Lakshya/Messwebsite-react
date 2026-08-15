@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { HashRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import Layout from './components/Layout'
 import Home from './pages/Home'
@@ -30,7 +30,7 @@ export default function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <VegModeProvider>
-        <BrowserRouter>
+        <HashRouter>
           <ScrollToTop />
           <Routes>
             <Route element={<Layout />}>
@@ -43,7 +43,7 @@ export default function App() {
               <Route path="*" element={<Home />} />
             </Route>
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </VegModeProvider>
     </GoogleOAuthProvider>
   )

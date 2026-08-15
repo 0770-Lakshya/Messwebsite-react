@@ -57,7 +57,7 @@ export default function Navbar() {
               <span className="flex items-center gap-3">
                 <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-[#45347d]/10 bg-white shadow-sm sm:h-14 sm:w-14">
                   <img
-                    src="images/logo_IITBhilai.png"
+                    src="images/logo_IITBhilai.webp"
                     alt="IIT Bhilai Logo"
                     className="h-full w-full object-cover"
                   />
