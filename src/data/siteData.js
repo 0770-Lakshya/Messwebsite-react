@@ -22,6 +22,11 @@ export const LEADERSHIP = [
     role: 'Associate FIC Mess, IIT Bhilai',
     // quote: 'We listen, we improve, we serve.',
     photo: 'images/milansir.webp',
+  },{
+    name: 'Arush Ranjan' ,
+    role: 'President ,COSA IIT Bhilai',
+    // quote: 'We listen, we improve, we serve.',
+    photo: "images/arush.jpg",
   },
   {
     name: 'Manish Kumar' ,
@@ -29,6 +34,7 @@ export const LEADERSHIP = [
     // quote: 'We listen, we improve, we serve.',
     photo: "images/coordinator.webp",
   },
+  
 ]
 
 export const COMMITTEE = [
@@ -185,7 +191,7 @@ export const CONTACT = {
 
 // Google OAuth — create credentials at https://console.cloud.google.com/apis/credentials
 // (OAuth 2.0 Client ID, Web application) and paste the Client ID here.
-export const GOOGLE_CLIENT_ID = '233144735739-1or3fmoqnn6rkhf4t2s52k62m4evnc63.apps.googleusercontent.com'
+export const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
 // Only emails ending with this domain may use the complaints desk.
 export const ALLOWED_EMAIL_DOMAIN = 'iitbhilai.ac.in'

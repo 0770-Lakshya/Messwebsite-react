@@ -74,22 +74,22 @@ export default function Navbar() {
               </span>
             </Link>
 
-            {/* Desktop nav */}
-            <nav className="relative hidden items-center gap-1 md:flex">
-              {NAV_ITEMS.map((item) => {
-                const hovering = hoveredItem === item.to
-                return (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end
-                    className={activeClasses}
-                    {...navItemProps(item)}
-                  >
-                    {({ isActive }) => (
-                      <>
-                        <ActivePill isActive={isActive} />
-                        {item.icon ? (
+             {/* Desktop nav */}
+             <nav className="relative hidden items-center gap-1 xl:flex">
+               {NAV_ITEMS.map((item) => {
+                 const hovering = hoveredItem === item.to
+                 return (
+                   <NavLink
+                     key={item.to}
+                     to={item.to}
+                     end
+                     className={activeClasses}
+                     {...navItemProps(item)}
+                   >
+                     {({ isActive }) => (
+                       <>
+                         <ActivePill isActive={isActive} />
+{item.icon ? (
                           <span className="relative -my-1 mr-1.5 inline-block h-[30px] w-[30px] overflow-hidden align-middle">
                             {item.image && (
                               <img
@@ -103,63 +103,63 @@ export default function Navbar() {
                               src={item.icon}
                               size={30}
                               playing={hovering}
-                              className="absolute inset-0"
+                              className={`absolute inset-0 transition-opacity duration-150 ${hovering ? 'opacity-100' : 'opacity-0'}`}
                             />
                           </span>
                         ) : (
-                          <span className="relative mr-1.5 inline-flex translate-y-[5px] items-center justify-center text-xl leading-none opacity-90 sm:text-2xl">{item.emoji}</span>
-                        )}
-                        {item.label}
-                      </>
-                    )}
-                  </NavLink>
-                )
-              })}
-            </nav>
+                           <span className="relative mr-1.5 inline-flex translate-y-[5px] items-center justify-center text-xl leading-none opacity-90 sm:text-2xl">{item.emoji}</span>
+                         )}
+                         {item.label}
+                       </>
+                     )}
+                   </NavLink>
+                 )
+               })}
+             </nav>
 
-            <div className="flex items-center gap-2">
-              {/* Complain CTA */}
-              <div className="hidden lg:flex">
-                <Link
-                  to="/complaints"
-                  className="group relative inline-flex items-center gap-2 rounded-full border border-black/[0.15] bg-transparent px-6 py-3 text-[13.5px] font-bold text-[#0f1115] transition-all duration-300 ease-in-out hover:gap-4 hover:border-[#45347D] hover:text-[#45347D] active:opacity-70 focus:outline-none"
-                >
-                  <span className="relative z-10 inline-flex items-center gap-2 transition-all duration-300 ease-in-out group-hover:gap-3">
-                    <span>🙋</span> Complain
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                      <path d="M5 12h14" />
-                      <path d="m12 5 7 7-7 7" />
-                    </svg>
-                  </span>
-                </Link>
-              </div>
+             <div className="flex items-center gap-2">
+               {/* Complain CTA */}
+               <div className="hidden xl:flex">
+                 <Link
+                   to="/complaints"
+                   className="group relative inline-flex items-center gap-2 rounded-full border border-black/[0.15] bg-transparent px-6 py-3 text-[13.5px] font-bold text-[#0f1115] transition-all duration-300 ease-in-out hover:gap-4 hover:border-[#45347D] hover:text-[#45347D] active:opacity-70 focus:outline-none"
+                 >
+                   <span className="relative z-10 inline-flex items-center gap-2 transition-all duration-300 ease-in-out group-hover:gap-3">
+                     <span>🙋</span> Complain
+                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                       <path d="M5 12h14" />
+                       <path d="m12 5 7 7-7 7" />
+                     </svg>
+                   </span>
+                 </Link>
+               </div>
 
-              {/* Hamburger */}
-              <button
-                aria-label="Toggle menu"
-                onClick={() => setMobileOpen((o) => !o)}
-                className="grid h-10 w-10 place-items-center rounded-full border border-[#45347D]/15 bg-gradient-to-br from-white to-[#f5f2fa] text-[#45347D] shadow-[0_2px_8px_-2px_rgba(69,52,125,0.20)] transition-all duration-200 md:hidden"
-              >
-                {mobileOpen ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                    <path d="M18 6 6 18" />
-                    <path d="m6 6 12 12" />
-                  </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                    <line x1="4" x2="20" y1="12" y2="12" />
-                    <line x1="4" x2="20" y1="6" y2="6" />
-                    <line x1="4" x2="20" y1="18" y2="18" />
-                  </svg>
-                )}
-              </button>
-            </div>
+               {/* Hamburger */}
+               <button
+                 aria-label="Toggle menu"
+                 onClick={() => setMobileOpen((o) => !o)}
+                 className="grid h-10 w-10 place-items-center rounded-full border border-[#45347D]/15 bg-gradient-to-br from-white to-[#f5f2fa] text-[#45347D] shadow-[0_2px_8px_-2px_rgba(69,52,125,0.20)] transition-all duration-200 xl:hidden"
+               >
+                 {mobileOpen ? (
+                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                     <path d="M18 6 6 18" />
+                     <path d="m6 6 12 12" />
+                   </svg>
+                 ) : (
+                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                     <line x1="4" x2="20" y1="12" y2="12" />
+                     <line x1="4" x2="20" y1="6" y2="6" />
+                     <line x1="4" x2="20" y1="18" y2="18" />
+                   </svg>
+                 )}
+               </button>
+             </div>
           </div>
         </div>
 
         {/* Mobile drawer */}
         {mobileOpen && (
-          <div className="absolute left-0 right-0 top-full mt-3 rounded-2xl border border-black/[0.08] bg-white/95 p-4 shadow-xl backdrop-blur-xl md:hidden">
+          <div className="absolute left-0 right-0 top-full mt-3 rounded-2xl border border-black/[0.08] bg-white/95 p-4 shadow-xl backdrop-blur-xl xl:hidden">
             <div className="flex flex-col gap-2">
               {NAV_ITEMS.map((item) => (
                 <NavLink
@@ -175,7 +175,12 @@ export default function Navbar() {
                     }`
                   }
                 >
-                  {item.emoji} {item.label}
+                  {item.image ? (
+                    <img src={item.image} alt="" className="mr-1.5 inline-block h-6 w-6 object-contain" />
+                  ) : (
+                    <span className="mr-1.5 inline-block text-lg leading-none">{item.emoji}</span>
+                  )}
+                  {item.label}
                 </NavLink>
               ))}
               <NavLink

@@ -448,8 +448,7 @@ export default function Home() {
           {[
             { people: LEADERSHIP.slice(0, 1), size: 'w-36 h-36 sm:w-40 sm:h-40', textSize: 'text-5xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: 'Dean & Faculty In-Charge'},
             { people: LEADERSHIP.slice(1, 3), size: 'w-28 h-28 sm:w-32 sm:h-32', textSize: 'text-4xl', cols: 'sm:grid-cols-2 xl:grid-cols-2', label: ' FIC and Associate Faculty' },
-            { people: LEADERSHIP.slice(3, 4), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: 'Mess Coordinator' },
-            { people: LEADERSHIP.slice(4, 5), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: null },
+            { people: LEADERSHIP.slice(3, 5), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'sm:grid-cols-2 xl:grid-cols-2', label: 'Mess Coordinator & President' },
           ].map(
             (tier, ti) => (
               <div key={ti} className="space-y-3">
