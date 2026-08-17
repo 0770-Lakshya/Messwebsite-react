@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Player } from '@lordicon/react'
 
 const jsonCache = new Map()
@@ -45,7 +45,7 @@ export default function LockIcon({
     }
   }, [src])
 
-  useEffect(() => {
+  const applyState = useCallback(() => {
     const player = playerRef.current
     if (!player) return
     const lottie = player._lottie
@@ -53,11 +53,6 @@ export default function LockIcon({
       lottie.loop = loop
       lottie.setSpeed(speed)
     }
-  }, [loop, speed, data])
-
-  useEffect(() => {
-    const player = playerRef.current
-    if (!player) return
     if (playingRef.current) {
       if (loop) {
         player.play()
@@ -67,24 +62,71 @@ export default function LockIcon({
     } else {
       player.goToFirstFrame()
     }
-  }, [playing, loop, data])
+  }, [loop, speed])
+
+  // Apply immediately when props/data change.
+  useEffect(() => {
+    applyState()
+  }, [applyState, playing, data])
+
+  // Self-heal: the Player creates its animation with loop=false and
+  // autoplay=false, and React StrictMode remounts can leave a freshly
+  // re-created instance paused at frame 0 (applyState runs before the ref is
+  // valid). Keep loop and speed in sync until it is actually playing.
+  useEffect(() => {
+    if (!data) return
+    const id = setInterval(() => {
+      const player = playerRef.current
+      if (!player || !player._lottie) return
+      const lottie = player._lottie
+      if (lottie.loop !== loop) {
+        lottie.loop = loop
+      }
+      if (lottie.playSpeed !== speed) {
+        lottie.setSpeed(speed)
+      }
+      if (playingRef.current && lottie.isPaused) {
+        if (loop) {
+          player.play()
+        } else if (lottie.currentFrame === 0) {
+          player.playFromBeginning()
+        }
+      }
+    }, 250)
+    return () => clearInterval(id)
+  }, [data, loop, speed])
+
+  const containerStyle = {
+    width: size,
+    height: size,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    verticalAlign: 'middle',
+  }
 
   if (!data) {
-    return <span className={className} style={{ width: size, height: size }} aria-hidden="true" />
+    return <span className={className} style={containerStyle} aria-hidden="true" />
   }
 
   return (
     <span
       ref={containerRef}
       className={className}
-      style={{ width: size, height: size, overflow: 'hidden' }}
+      style={{ ...containerStyle, overflow: 'hidden' }}
       aria-hidden="true"
     >
-      <Player ref={playerRef} icon={data} size={size} onComplete={() => {
-        if (loop) {
-          playerRef.current?.playFromBeginning()
-        }
-      }} />
+      <Player
+        ref={playerRef}
+        icon={data}
+        size={size}
+        onReady={applyState}
+        onComplete={() => {
+          if (loop) {
+            playerRef.current?.playFromBeginning()
+          }
+        }}
+      />
     </span>
   )
 }
