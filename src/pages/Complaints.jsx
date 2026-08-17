@@ -95,7 +95,7 @@ export default function Complaints() {
       <div className="space-y-6">
         <div className="text-center">
           <h2 className="font-display text-3xl font-extrabold">
-            <LockIcon src="/complaints.json" size={40} loop speed={7} />
+            <LockIcon src="/complaints.json" size={40} loop speed={1} />
             <span className="ml-2">Complaints &; Suggestions</span>
           </h2>
           <p className="polaris-muted mx-auto mt-1 max-w-xl text-sm">{description}</p>
