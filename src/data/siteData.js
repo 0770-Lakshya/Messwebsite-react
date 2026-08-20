@@ -54,7 +54,7 @@ export const COMMITTEE = [
     name: 'Abhishek Kumar',
     role: 'Member',
     email: null,
-    photo: "images/abhishekkumar.webp",
+    photo: "images/abhishekkumar.png",
   },
   {
     name: 'Lakshya Soni',
@@ -94,7 +94,7 @@ export const COMMITTEE = [
   {
     name: 'Kavita Negi',
     role: 'Member',
-    photo: "images/kavita.webp",
+    photo: "images/kavita.jpg",
   },
   {
     name: 'Bikka Akshara Venus',
