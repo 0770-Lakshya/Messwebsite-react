@@ -49,36 +49,53 @@ export default function Home() {
   const [noticeIndex, setNoticeIndex] = useState(0)
   const [announcementTouch, setAnnouncementTouch] = useState(null)
   const [noticeTouch, setNoticeTouch] = useState(null)
+  const [announcementDrag, setAnnouncementDrag] = useState(0)
+  const [noticeDrag, setNoticeDrag] = useState(0)
+  const [announcementPausedUntil, setAnnouncementPausedUntil] = useState(0)
+  const [noticePausedUntil, setNoticePausedUntil] = useState(0)
 
-  const handleTouchStart = (setTouchData, event) => {
+  const handleTouchStart = (setTouchData, setDragOffset, event) => {
     const touch = event.touches[0]
-    setTouchData({ x: touch.clientX, y: touch.clientY })
+    setTouchData({ startX: touch.clientX, startY: touch.clientY })
+    setDragOffset(0)
   }
 
-  const handleTouchMove = (touchData, event) => {
+  const handleTouchMove = (touchData, setTouchData, setDragOffset, event) => {
     if (!touchData) return
 
     const touch = event.touches[0]
-    const deltaX = touch.clientX - touchData.x
-    const deltaY = touch.clientY - touchData.y
+    const deltaX = touch.clientX - touchData.startX
+    const deltaY = touch.clientY - touchData.startY
 
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
       event.preventDefault()
+      setTouchData({ ...touchData, currentX: touch.clientX, currentY: touch.clientY })
+      setDragOffset(deltaX)
     }
   }
 
-  const handleTouchEnd = (touchData, event, setIndex, length) => {
+  const handleTouchEnd = (touchData, event, setIndex, length, pauseSetter, setDragOffset) => {
     if (!touchData || !length) return
 
     const touch = event.changedTouches[0]
-    const deltaX = touch.clientX - touchData.x
-    const deltaY = touch.clientY - touchData.y
+    const deltaX = touch.clientX - touchData.startX
+    const deltaY = touch.clientY - touchData.startY
+
+    setDragOffset(0)
 
     if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
       if (deltaX < 0) {
-        setIndex((prev) => (prev + 1) % length)
+        setIndex((prev) => {
+          const next = (prev + 1) % length
+          pauseSetter(Date.now() + 3000)
+          return next
+        })
       } else {
-        setIndex((prev) => (prev - 1 + length) % length)
+        setIndex((prev) => {
+          const next = (prev - 1 + length) % length
+          pauseSetter(Date.now() + 3000)
+          return next
+        })
       }
     }
   }
@@ -103,22 +120,26 @@ export default function Home() {
   useEffect(() => {
     if (!shownAnnouncements.length || shownAnnouncements.length <= 1) return
 
-    const timer = setInterval(() => {
-      setAnnouncementIndex((prev) => (prev + 1) % shownAnnouncements.length)
-    }, 4200)
+    const timer = setTimeout(() => {
+      if (Date.now() >= announcementPausedUntil) {
+        setAnnouncementIndex((prev) => (prev + 1) % shownAnnouncements.length)
+      }
+    }, 3000)
 
-    return () => clearInterval(timer)
-  }, [shownAnnouncements.length])
+    return () => clearTimeout(timer)
+  }, [announcementIndex, announcementPausedUntil, shownAnnouncements.length])
 
   useEffect(() => {
     if (!shownNotices.length || shownNotices.length <= 1) return
 
-    const timer = setInterval(() => {
-      setNoticeIndex((prev) => (prev + 1) % shownNotices.length)
-    }, 4200)
+    const timer = setTimeout(() => {
+      if (Date.now() >= noticePausedUntil) {
+        setNoticeIndex((prev) => (prev + 1) % shownNotices.length)
+      }
+    }, 3000)
 
-    return () => clearInterval(timer)
-  }, [shownNotices.length])
+    return () => clearTimeout(timer)
+  }, [noticeIndex, noticePausedUntil, shownNotices.length])
 
   return (
     <div className="relative">
@@ -332,12 +353,15 @@ export default function Home() {
             >
               <div className="relative overflow-hidden rounded-[2rem] py-2" style={{ background: '#150f2e', touchAction: 'pan-y' }}>
               <div
-                className="flex w-full transition-transform duration-700 ease-out"
-                style={{ transform: `translateX(-${announcementIndex * 100}%)` }}
-                onTouchStart={(event) => handleTouchStart(setAnnouncementTouch, event)}
-                onTouchMove={(event) => handleTouchMove(announcementTouch, event)}
+                className="flex w-full"
+                style={{
+                  transform: `translate3d(calc(-${announcementIndex * 100}% + ${announcementDrag}px), 0, 0)`,
+                  transition: announcementDrag ? 'none' : 'transform 700ms ease-out',
+                }}
+                onTouchStart={(event) => handleTouchStart(setAnnouncementTouch, setAnnouncementDrag, event)}
+                onTouchMove={(event) => handleTouchMove(announcementTouch, setAnnouncementTouch, setAnnouncementDrag, event)}
                 onTouchEnd={(event) => {
-                  handleTouchEnd(announcementTouch, event, setAnnouncementIndex, shownAnnouncements.length)
+                  handleTouchEnd(announcementTouch, event, setAnnouncementIndex, shownAnnouncements.length, setAnnouncementPausedUntil, setAnnouncementDrag)
                   setAnnouncementTouch(null)
                 }}
               >
@@ -428,12 +452,15 @@ export default function Home() {
             >
               <div className="relative overflow-hidden rounded-[1.5rem]">
                 <div
-                  className="flex transition-transform duration-700 ease-out"
-                  style={{ transform: `translateX(-${noticeIndex * 100}%)` }}
-                  onTouchStart={(event) => handleTouchStart(setNoticeTouch, event)}
-                  onTouchMove={(event) => handleTouchMove(noticeTouch, event)}
+                  className="flex"
+                  style={{
+                    transform: `translate3d(calc(-${noticeIndex * 100}% + ${noticeDrag}px), 0, 0)`,
+                    transition: noticeDrag ? 'none' : 'transform 700ms ease-out',
+                  }}
+                  onTouchStart={(event) => handleTouchStart(setNoticeTouch, setNoticeDrag, event)}
+                  onTouchMove={(event) => handleTouchMove(noticeTouch, setNoticeTouch, setNoticeDrag, event)}
                   onTouchEnd={(event) => {
-                    handleTouchEnd(noticeTouch, event, setNoticeIndex, shownNotices.length)
+                    handleTouchEnd(noticeTouch, event, setNoticeIndex, shownNotices.length, setNoticePausedUntil, setNoticeDrag)
                     setNoticeTouch(null)
                   }}
                 >
