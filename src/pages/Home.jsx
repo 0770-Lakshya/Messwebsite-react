@@ -47,6 +47,41 @@ export default function Home() {
   const week = activeWeeks && activeWeeks[0]
   const [activeSlide, setActiveSlide] = useState(0)
   const [noticeIndex, setNoticeIndex] = useState(0)
+  const [announcementTouch, setAnnouncementTouch] = useState(null)
+  const [noticeTouch, setNoticeTouch] = useState(null)
+
+  const handleTouchStart = (setTouchData, event) => {
+    const touch = event.touches[0]
+    setTouchData({ x: touch.clientX, y: touch.clientY })
+  }
+
+  const handleTouchMove = (touchData, event) => {
+    if (!touchData) return
+
+    const touch = event.touches[0]
+    const deltaX = touch.clientX - touchData.x
+    const deltaY = touch.clientY - touchData.y
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      event.preventDefault()
+    }
+  }
+
+  const handleTouchEnd = (touchData, event, setIndex, length) => {
+    if (!touchData || !length) return
+
+    const touch = event.changedTouches[0]
+    const deltaX = touch.clientX - touchData.x
+    const deltaY = touch.clientY - touchData.y
+
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) {
+        setIndex((prev) => (prev + 1) % length)
+      } else {
+        setIndex((prev) => (prev - 1 + length) % length)
+      }
+    }
+  }
 
   useEffect(() => {
     if (GALLERY_IMAGES.length <= 1) return
@@ -295,10 +330,16 @@ export default function Home() {
               className="relative overflow-hidden rounded-[2rem] p-[3px]"
               style={{ background: 'linear-gradient(135deg, #7c3aed, #ec4899, #f59e0b, #7c3aed)', backgroundSize: '300% 300%', animation: 'gradientShift 6s ease infinite' }}
             >
-              <div className="relative overflow-hidden rounded-[2rem] py-2" style={{ background: '#150f2e' }}>
+              <div className="relative overflow-hidden rounded-[2rem] py-2" style={{ background: '#150f2e', touchAction: 'pan-y' }}>
               <div
                 className="flex w-full transition-transform duration-700 ease-out"
                 style={{ transform: `translateX(-${announcementIndex * 100}%)` }}
+                onTouchStart={(event) => handleTouchStart(setAnnouncementTouch, event)}
+                onTouchMove={(event) => handleTouchMove(announcementTouch, event)}
+                onTouchEnd={(event) => {
+                  handleTouchEnd(announcementTouch, event, setAnnouncementIndex, shownAnnouncements.length)
+                  setAnnouncementTouch(null)
+                }}
               >
                 {shownAnnouncements.map((ann, i) => (
                   <div key={i} className="w-full shrink-0 px-1 sm:px-2">
@@ -382,12 +423,19 @@ export default function Home() {
               style={{
                 background:
                   'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.32), transparent 24%), radial-gradient(circle at 70% 35%, rgba(110,88,54,0.08), transparent 26%), linear-gradient(135deg, rgba(239,228,205,0.96) 0%, rgba(225,212,186,0.94) 100%)',
+                touchAction: 'pan-y',
               }}
             >
               <div className="relative overflow-hidden rounded-[1.5rem]">
                 <div
                   className="flex transition-transform duration-700 ease-out"
                   style={{ transform: `translateX(-${noticeIndex * 100}%)` }}
+                  onTouchStart={(event) => handleTouchStart(setNoticeTouch, event)}
+                  onTouchMove={(event) => handleTouchMove(noticeTouch, event)}
+                  onTouchEnd={(event) => {
+                    handleTouchEnd(noticeTouch, event, setNoticeIndex, shownNotices.length)
+                    setNoticeTouch(null)
+                  }}
                 >
                   {shownNotices.map((notice, index) => (
                     <div key={`${notice.title}-${index}`} className="w-full shrink-0 px-1 sm:px-2">
