@@ -16,7 +16,7 @@
   justify-content: center;
   gap: 1.2rem;
   background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(6px);
   overflow: hidden;
 }
@@ -96,17 +96,29 @@
 }
 
 .page-loader-title {
-  color: rgba(44, 39, 68, 0.9);
-  font-size: clamp(0.8rem, 1.7vw, 1.2rem);
+  color: rgba(51, 8, 125, 0.9);
+  font-size: clamp(0.9rem, 3.3vw, 1.2rem);
   font-weight: 800;
+  font-family:'Times New Roman', Times, serif;
   text-shadow: 0 8px 20px rgba(123, 112, 255, 0.12);
 }
 
 .page-loader-subtitle {
   margin-top: 0.35rem;
   color: rgba(58, 52, 79, 0.7);
-  font-size: 0.64rem;
-  letter-spacing: 0.38em;
+  font-size: clamp(0.62rem, 2.2vw, 1rem);
+  letter-spacing: 0.2em;
+}
+
+@media (min-width: 768px) {
+  .page-loader-title {
+    font-size: clamp(1.1rem, 1.7vw, 1.5rem);
+  }
+
+  .page-loader-subtitle {
+    font-size: clamp(0.7rem, 0.9vw, 1rem);
+    letter-spacing: 0.38em;
+  }
 }
 
 .lottie-lock svg {
