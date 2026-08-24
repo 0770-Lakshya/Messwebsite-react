@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { LEADERSHIP, MEAL_TIMINGS } from '../data/siteData'
-import { currentMealSection, dayView, effectiveMenuDayIndex, effectiveMenuDayName, getMealStatus } from '../lib/menu'
+import { currentMealSection, dayView, effectiveMenuDayIndex, effectiveMenuDayName, effectiveMenuWeekIndex, getMealStatus } from '../lib/menu'
 import useMenu, { useVegMenu } from '../lib/useMenu'
 import { useContent } from '../lib/useContent'
 import { useVegMode } from '../lib/vegModeContext'
@@ -40,11 +40,12 @@ export default function Home() {
   const activeWeeks = vegMode ? vegWeeks : weeks
   const activeError = vegMode ? vegError : error
   const activeLoading = vegMode ? vegLoading : loading
-  const todaySections = activeWeeks && activeWeeks[0] ? dayView(activeWeeks[0], menuDayIndex) : []
+  const menuWeekIndex = effectiveMenuWeekIndex()
+  const todaySections = activeWeeks && activeWeeks[menuWeekIndex] ? dayView(activeWeeks[menuWeekIndex], menuDayIndex) : []
   const filteredSections = todaySections.filter((section) => section.name === mealStatus.section)
   const todaySectionsToShow = filteredSections.length ? filteredSections : todaySections
   const menuDayName = effectiveMenuDayName()
-  const week = activeWeeks && activeWeeks[0]
+  const week = activeWeeks && activeWeeks[menuWeekIndex]
   const [activeSlide, setActiveSlide] = useState(0)
   const [noticeIndex, setNoticeIndex] = useState(0)
   const [announcementTouch, setAnnouncementTouch] = useState(null)
