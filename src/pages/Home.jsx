@@ -82,6 +82,8 @@ export default function Home() {
     setDragOffset(0)
   }
 
+  const pauseSliderWhileHeld = (pauseSetter) => pauseSetter(Number.POSITIVE_INFINITY)
+
   const handleTouchMove = (touchData, setTouchData, setDragOffset, event) => {
     if (!touchData) return
 
@@ -304,7 +306,7 @@ export default function Home() {
                   const frameOpacity = offset === 0 ? 1 : distance === 1 ? 0.82 : 0.48
                   const frameScale = offset === 0 ? 1 : distance === 1 ? 0.88 : 0.68
                   const frameHeight = offset === 0 ? 380 : distance === 1 ? 280 : 180
-                  const framePosition = offset === 0 ? 60 : 58 + offset * 15
+                  const framePosition = 59 + offset * 15
 
                   return (
                     <button
@@ -326,7 +328,7 @@ export default function Home() {
                       <img
                         src={src}
                         alt={`Mess gallery ${index + 1}`}
-                        className={`block h-full max-h-full w-full max-w-full object-contain p-1 object-center ${offset === 0 ? '[transform:scaleX(-1)]' : ''}`}
+                        className="block h-full max-h-full w-full max-w-full object-contain p-1 object-center"
                       />
                     </button>
                   )
@@ -402,10 +404,14 @@ export default function Home() {
                   transform: `translate3d(calc(-${announcementIndex * 100}% + ${announcementDrag}px), 0, 0)`,
                   transition: announcementDrag ? 'none' : 'transform 700ms ease-out',
                 }}
-                onTouchStart={(event) => handleTouchStart(setAnnouncementTouch, setAnnouncementDrag, event)}
+                onTouchStart={(event) => {
+                  pauseSliderWhileHeld(setAnnouncementPausedUntil)
+                  handleTouchStart(setAnnouncementTouch, setAnnouncementDrag, event)
+                }}
                 onTouchMove={(event) => handleTouchMove(announcementTouch, setAnnouncementTouch, setAnnouncementDrag, event)}
                 onTouchEnd={(event) => {
                   handleTouchEnd(announcementTouch, event, setAnnouncementIndex, shownAnnouncements.length, setAnnouncementPausedUntil, setAnnouncementDrag)
+                  setAnnouncementPausedUntil(Date.now() + 3000)
                   setAnnouncementTouch(null)
                 }}
               >
@@ -501,10 +507,14 @@ export default function Home() {
                     transform: `translate3d(calc(-${noticeIndex * 100}% + ${noticeDrag}px), 0, 0)`,
                     transition: noticeDrag ? 'none' : 'transform 700ms ease-out',
                   }}
-                  onTouchStart={(event) => handleTouchStart(setNoticeTouch, setNoticeDrag, event)}
+                  onTouchStart={(event) => {
+                    pauseSliderWhileHeld(setNoticePausedUntil)
+                    handleTouchStart(setNoticeTouch, setNoticeDrag, event)
+                  }}
                   onTouchMove={(event) => handleTouchMove(noticeTouch, setNoticeTouch, setNoticeDrag, event)}
                   onTouchEnd={(event) => {
                     handleTouchEnd(noticeTouch, event, setNoticeIndex, shownNotices.length, setNoticePausedUntil, setNoticeDrag)
+                    setNoticePausedUntil(Date.now() + 3000)
                     setNoticeTouch(null)
                   }}
                 >
