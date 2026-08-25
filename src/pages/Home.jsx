@@ -28,6 +28,24 @@ const GALLERY_IMAGES = [
   'images/messphoto/amul.webp',
 ]
 
+const GALLERY_ASPECT_RATIOS = {
+  'images/art.webp': 360 / 412,
+  'images/entrance.webp': 3 / 2,
+  'images/messphoto/night.webp': 650 / 370,
+  'images/messphoto/ballon.webp': 3 / 2,
+  'images/messphoto/millettrain.webp': 3 / 2,
+  'images/messphoto/galav.webp': 507 / 538,
+  'images/messphoto/Galav1.webp': 581 / 676,
+  'images/ShreeSai.webp': 1066 / 1600,
+  'images/messphoto/shree_sai.webp': 432 / 617,
+  'images/messphoto/notice.webp': 3 / 2,
+  'images/messphoto/krishna_kripa.webp': 553 / 698,
+  'images/messphoto/helth.webp': 499 / 335,
+  'images/messphoto/amul.webp': 578 / 671,
+}
+
+const galleryAspectRatio = (src) => GALLERY_ASPECT_RATIOS[src] || 4 / 3
+
 const HERO_IMAGE = 'images/messphoto/mess_enterance.webp'
 
 export default function Home() {
@@ -47,6 +65,9 @@ export default function Home() {
   const menuDayName = effectiveMenuDayName()
   const week = activeWeeks && activeWeeks[menuWeekIndex]
   const [activeSlide, setActiveSlide] = useState(0)
+  const [galleryOpen, setGalleryOpen] = useState(false)
+  const [galleryTouch, setGalleryTouch] = useState(null)
+  const [galleryDrag, setGalleryDrag] = useState(0)
   const [noticeIndex, setNoticeIndex] = useState(0)
   const [announcementTouch, setAnnouncementTouch] = useState(null)
   const [noticeTouch, setNoticeTouch] = useState(null)
@@ -240,66 +261,88 @@ export default function Home() {
 
       {/* Gallery pill navigation */}
       <div className="mt-6 flex w-full justify-start pl-0 md:pl-2">
-        <span
-          className="pill inline-flex items-center bg-white/10 px-5 py-2 text-lg font-bold tracking-[0.12em] text-[#f5f1ff] shadow-md backdrop-blur-sm"
+        <button
+          type="button"
+          onClick={() => setGalleryOpen((isOpen) => !isOpen)}
+          aria-expanded={galleryOpen}
+          aria-controls="mess-gallery"
+          className="pill inline-flex items-center gap-3 bg-white/10 px-5 py-2 text-lg font-bold tracking-[0.12em] text-[#f5f1ff] shadow-md backdrop-blur-sm transition hover:bg-white/20"
           style={{ fontSize: '1.5rem' }}
         >
-          📸 Gallery
-        </span>
+          <span aria-hidden="true">📸</span>
+          <span>Gallery</span>
+          <span aria-hidden="true" className="text-base">{galleryOpen ? '^' : 'v'}</span>
+        </button>
       </div>
 
       {/* Gallery section - below the main content */}
-      <section className="mb-14 md:mb-20 text-center">
-        <div className="mx-auto max-w-6xl px-4">
+      <section id="mess-gallery" className={`mb-14 text-center md:mb-20 ${galleryOpen ? 'block' : 'hidden'}`}>
+        <div className="mx-auto w-full max-w-[1800px] px-4">
           <div className="relative overflow-hidden rounded-[2rem] py-4">
             <div className="hidden overflow-hidden md:block">
               <div
-                className="flex transition-transform duration-700 ease-out"
-                style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+                className="relative h-[500px] w-full touch-pan-y [perspective:500px]"
+                onTouchStart={(event) => handleTouchStart(setGalleryTouch, setGalleryDrag, event)}
+                onTouchMove={(event) => handleTouchMove(galleryTouch, setGalleryTouch, setGalleryDrag, event)}
+                onTouchEnd={(event) => {
+                  handleTouchEnd(galleryTouch, event, setActiveSlide, GALLERY_IMAGES.length, () => {}, setGalleryDrag)
+                  setGalleryTouch(null)
+                }}
+                onWheel={(event) => {
+                  if (Math.abs(event.deltaY) < 12) return
+                  setActiveSlide((prev) => (prev + (event.deltaY > 0 ? 1 : -1) + GALLERY_IMAGES.length) % GALLERY_IMAGES.length)
+                }}
               >
                 {GALLERY_IMAGES.map((src, index) => {
-                  const prevIndex = (index - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length
-                  const nextIndex = (index + 1) % GALLERY_IMAGES.length
+                  let offset = index - activeSlide
+                  if (offset > GALLERY_IMAGES.length / 2) offset -= GALLERY_IMAGES.length
+                  if (offset < -GALLERY_IMAGES.length / 2) offset += GALLERY_IMAGES.length
+                  if (Math.abs(offset) > 2) return null
+
+                  const distance = Math.abs(offset)
+                  const frameWidth = offset === 0 ? 48 : distance === 1 ? 25 : 14
+                  const frameOpacity = offset === 0 ? 1 : distance === 1 ? 0.82 : 0.48
+                  const frameScale = offset === 0 ? 1 : distance === 1 ? 0.88 : 0.68
+                  const frameHeight = offset === 0 ? 380 : distance === 1 ? 280 : 180
+                  const framePosition = offset === 0 ? 60 : 58 + offset * 15
 
                   return (
-                    <div key={`${src}-${index}`} className="min-w-full flex-shrink-0 px-2">
-                      <div className="flex items-center justify-center gap-4">
-                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl opacity-80">
-                          <img
-                            src={GALLERY_IMAGES[prevIndex]}
-                            alt={`Mess gallery ${prevIndex + 1}`}
-                            className="h-full w-full object-contain p-1 object-center"
-                          />
-                        </div>
-
-                        <div className="h-[340px] w-[52%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl">
-                          <img
-                            src={src}
-                            alt={`Mess gallery ${index + 1}`}
-                            className="h-full w-full object-contain p-1 object-center"
-                          />
-                        </div>
-
-                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl opacity-80">
-                          <img
-                            src={GALLERY_IMAGES[nextIndex]}
-                            alt={`Mess gallery ${nextIndex + 1}`}
-                            className="h-full w-full object-contain p-1 object-center"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    <button
+                      key={`${src}-${index}`}
+                      type="button"
+                      onClick={() => setActiveSlide(index)}
+                      aria-label={`Show image ${index + 1}`}
+                      className={`absolute top-3/4 min-w-0 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.5rem] bg-white shadow-2xl transition-all duration-700 ease-out ${offset === 0 ? 'cursor-default' : 'cursor-pointer'}`}
+                      style={{
+                        left: `calc(${framePosition}% + ${galleryDrag}px)`,
+                        width: `min(${frameWidth}%, ${frameHeight * galleryAspectRatio(src)}px)`,
+                        aspectRatio: galleryAspectRatio(src),
+                        maxHeight: `${frameHeight}px`,
+                        opacity: frameOpacity,
+                        transform: `translate3d(-50%, calc(-50% + ${distance * 16}px), 0) scale(${frameScale}) rotateY(${offset * -10}deg)`,
+                        zIndex: offset === 0 ? 50 : 10 - distance,
+                      }}
+                    >
+                      <img
+                        src={src}
+                        alt={`Mess gallery ${index + 1}`}
+                        className={`block h-full max-h-full w-full max-w-full object-contain p-1 object-center ${offset === 0 ? '[transform:scaleX(-1)]' : ''}`}
+                      />
+                    </button>
                   )
                 })}
               </div>
             </div>
 
             <div className="md:hidden">
-              <div className="overflow-hidden rounded-[1.5rem] bg-white px-2 shadow-2xl">
+              <div
+                className="flex max-h-[400px] items-center justify-center overflow-hidden rounded-[1.5rem] bg-white px-2 shadow-2xl"
+                style={{ aspectRatio: galleryAspectRatio(GALLERY_IMAGES[activeSlide]) }}
+              >
                 <img
                   src={GALLERY_IMAGES[activeSlide]}
                   alt={`Mess gallery ${activeSlide + 1}`}
-                  className="h-[400px] w-full rounded-[1.5rem] object-contain p-1 sm:h-[400px] lg:h-[480px]"
+                  className="block h-full max-h-full w-full max-w-full rounded-[1.5rem] object-contain p-1"
                 />
               </div>
             </div>
@@ -310,7 +353,7 @@ export default function Home() {
               className="absolute left-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
               aria-label="Previous image"
             >
-              ←
+              {'<'}
             </button>
             <button
               type="button"
@@ -318,7 +361,7 @@ export default function Home() {
               className="absolute right-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
               aria-label="Next image"
             >
-              →
+              {'>'}
             </button>
 
             <div className="mt-5 flex justify-center gap-2">
