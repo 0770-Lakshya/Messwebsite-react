@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import useMenu, { useVegMenu } from '../lib/useMenu'
+import { effectiveMenuWeekIndex } from '../lib/menu'
 import { useVegMode } from '../lib/vegModeContext'
 import VegToggle from '../components/VegToggle'
 import { LoadingSkeleton, MenuError, WeeklyTable } from '../components/MenuBits'
@@ -8,7 +9,7 @@ export default function WeeklyMenu() {
   const { weeks, error, loading } = useMenu()
   const { weeks: vegWeeks, error: vegError, loading: vegLoading } = useVegMenu()
   const { vegMode } = useVegMode()
-  const [active, setActive] = useState(0)
+  const [active, setActive] = useState(effectiveMenuWeekIndex())
 
   const activeWeeks = vegMode ? vegWeeks : weeks
   const activeError = vegMode ? vegError : error
