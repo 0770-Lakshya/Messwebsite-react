@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { DAYS, MEAL_TIMINGS } from '../data/siteData'
-import { dayView, effectiveMenuDayIndex } from '../lib/menu'
+import { dayView, effectiveMenuDayIndex, effectiveMenuWeekIndex } from '../lib/menu'
 import useMenu, { useVegMenu } from '../lib/useMenu'
 import { useVegMode } from '../lib/vegModeContext'
 import VegToggle from '../components/VegToggle'
@@ -11,6 +11,7 @@ export default function Menu() {
   const { weeks: vegWeeks, error: vegError, loading: vegLoading } = useVegMenu()
   const { vegMode } = useVegMode()
   const [active, setActive] = useState(effectiveMenuDayIndex())
+  const menuWeekIndex = effectiveMenuWeekIndex()
 
   const activeWeeks = vegMode ? vegWeeks : weeks
   const activeError = vegMode ? vegError : error
@@ -37,7 +38,7 @@ export default function Menu() {
 
       {activeLoading ? (
         <LoadingSkeleton />
-      ) : activeWeeks && activeWeeks[0] ? (
+      ) : activeWeeks && activeWeeks[menuWeekIndex] ? (
         <>
           <div className="flex flex-wrap justify-center gap-2">
             {DAYS.map((name, i) => {
@@ -62,7 +63,7 @@ export default function Menu() {
           </div>
 
           <div>
-            {dayView(activeWeeks[0], active).map((section, i) => (
+            {dayView(activeWeeks[menuWeekIndex], active).map((section, i) => (
               <SectionCard key={section.name} name={section.name} index={i}>
                 <SectionRows rows={section.rows} />
               </SectionCard>

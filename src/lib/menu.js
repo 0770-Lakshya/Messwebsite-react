@@ -238,6 +238,27 @@ export function currentMealSection(date = new Date()) {
   return getMealStatus(date).section
 }
 
+export function effectiveMenuWeekIndex(date = new Date()) {
+  const mondayOffset = (date.getDay() + DAYS.length - 1) % DAYS.length
+  const weekStart = new Date(date.getFullYear(), date.getMonth(), date.getDate() - mondayOffset)
+  const monthDays = new Map()
+
+  for (let dayOffset = 0; dayOffset < DAYS.length; dayOffset += 1) {
+    const day = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + dayOffset)
+    const monthKey = `${day.getFullYear()}-${day.getMonth()}`
+    const month = monthDays.get(monthKey) || { count: 0, date: day }
+    month.count += 1
+    monthDays.set(monthKey, month)
+  }
+
+  const majorityMonth = [...monthDays.values()].sort((a, b) => b.count - a.count)[0].date
+  const firstMonday = new Date(majorityMonth.getFullYear(), majorityMonth.getMonth(), 1)
+  const firstMondayOffset = (DAYS.length - firstMonday.getDay() + 1) % DAYS.length
+  firstMonday.setDate(firstMonday.getDate() + firstMondayOffset)
+  const weekOfMonth = Math.max(1, Math.floor((majorityMonth.getDate() - firstMonday.getDate()) / 7) + 1)
+  return (weekOfMonth + 1) % 2
+}
+
 export function effectiveMenuDayIndex(date = new Date()) {
   const name = nameFromDate(date)
   const dayIndex = DAYS.indexOf(name) >= 0 ? DAYS.indexOf(name) : 0

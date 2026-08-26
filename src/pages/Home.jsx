@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { LEADERSHIP, MEAL_TIMINGS } from '../data/siteData'
-import { currentMealSection, dayView, effectiveMenuDayIndex, effectiveMenuDayName, getMealStatus } from '../lib/menu'
+import { currentMealSection, dayView, effectiveMenuDayIndex, effectiveMenuDayName, effectiveMenuWeekIndex, getMealStatus } from '../lib/menu'
 import useMenu, { useVegMenu } from '../lib/useMenu'
 import { useContent } from '../lib/useContent'
 import { useVegMode } from '../lib/vegModeContext'
@@ -28,6 +28,24 @@ const GALLERY_IMAGES = [
   'images/messphoto/amul.webp',
 ]
 
+const GALLERY_ASPECT_RATIOS = {
+  'images/art.webp': 360 / 412,
+  'images/entrance.webp': 3 / 2,
+  'images/messphoto/night.webp': 650 / 370,
+  'images/messphoto/ballon.webp': 3 / 2,
+  'images/messphoto/millettrain.webp': 3 / 2,
+  'images/messphoto/galav.webp': 507 / 538,
+  'images/messphoto/Galav1.webp': 581 / 676,
+  'images/ShreeSai.webp': 1066 / 1600,
+  'images/messphoto/shree_sai.webp': 432 / 617,
+  'images/messphoto/notice.webp': 3 / 2,
+  'images/messphoto/krishna_kripa.webp': 553 / 698,
+  'images/messphoto/helth.webp': 499 / 335,
+  'images/messphoto/amul.webp': 578 / 671,
+}
+
+const galleryAspectRatio = (src) => GALLERY_ASPECT_RATIOS[src] || 4 / 3
+
 const HERO_IMAGE = 'images/messphoto/mess_enterance.webp'
 
 export default function Home() {
@@ -40,13 +58,71 @@ export default function Home() {
   const activeWeeks = vegMode ? vegWeeks : weeks
   const activeError = vegMode ? vegError : error
   const activeLoading = vegMode ? vegLoading : loading
-  const todaySections = activeWeeks && activeWeeks[0] ? dayView(activeWeeks[0], menuDayIndex) : []
+  const menuWeekIndex = effectiveMenuWeekIndex()
+  const todaySections = activeWeeks && activeWeeks[menuWeekIndex] ? dayView(activeWeeks[menuWeekIndex], menuDayIndex) : []
   const filteredSections = todaySections.filter((section) => section.name === mealStatus.section)
   const todaySectionsToShow = filteredSections.length ? filteredSections : todaySections
   const menuDayName = effectiveMenuDayName()
-  const week = activeWeeks && activeWeeks[0]
+  const week = activeWeeks && activeWeeks[menuWeekIndex]
   const [activeSlide, setActiveSlide] = useState(0)
+  const [galleryOpen, setGalleryOpen] = useState(false)
+  const [galleryTouch, setGalleryTouch] = useState(null)
+  const [galleryDrag, setGalleryDrag] = useState(0)
   const [noticeIndex, setNoticeIndex] = useState(0)
+  const [announcementTouch, setAnnouncementTouch] = useState(null)
+  const [noticeTouch, setNoticeTouch] = useState(null)
+  const [announcementDrag, setAnnouncementDrag] = useState(0)
+  const [noticeDrag, setNoticeDrag] = useState(0)
+  const [announcementPausedUntil, setAnnouncementPausedUntil] = useState(0)
+  const [noticePausedUntil, setNoticePausedUntil] = useState(0)
+
+  const handleTouchStart = (setTouchData, setDragOffset, event) => {
+    const touch = event.touches[0]
+    setTouchData({ startX: touch.clientX, startY: touch.clientY })
+    setDragOffset(0)
+  }
+
+  const pauseSliderWhileHeld = (pauseSetter) => pauseSetter(Number.POSITIVE_INFINITY)
+
+  const handleTouchMove = (touchData, setTouchData, setDragOffset, event) => {
+    if (!touchData) return
+
+    const touch = event.touches[0]
+    const deltaX = touch.clientX - touchData.startX
+    const deltaY = touch.clientY - touchData.startY
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      event.preventDefault()
+      setTouchData({ ...touchData, currentX: touch.clientX, currentY: touch.clientY })
+      setDragOffset(deltaX)
+    }
+  }
+
+  const handleTouchEnd = (touchData, event, setIndex, length, pauseSetter, setDragOffset) => {
+    if (!touchData || !length) return
+
+    const touch = event.changedTouches[0]
+    const deltaX = touch.clientX - touchData.startX
+    const deltaY = touch.clientY - touchData.startY
+
+    setDragOffset(0)
+
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) {
+        setIndex((prev) => {
+          const next = (prev + 1) % length
+          pauseSetter(Date.now() + 3000)
+          return next
+        })
+      } else {
+        setIndex((prev) => {
+          const next = (prev - 1 + length) % length
+          pauseSetter(Date.now() + 3000)
+          return next
+        })
+      }
+    }
+  }
 
   useEffect(() => {
     if (GALLERY_IMAGES.length <= 1) return
@@ -68,22 +144,26 @@ export default function Home() {
   useEffect(() => {
     if (!shownAnnouncements.length || shownAnnouncements.length <= 1) return
 
-    const timer = setInterval(() => {
-      setAnnouncementIndex((prev) => (prev + 1) % shownAnnouncements.length)
-    }, 4200)
+    const timer = setTimeout(() => {
+      if (Date.now() >= announcementPausedUntil) {
+        setAnnouncementIndex((prev) => (prev + 1) % shownAnnouncements.length)
+      }
+    }, 3000)
 
-    return () => clearInterval(timer)
-  }, [shownAnnouncements.length])
+    return () => clearTimeout(timer)
+  }, [announcementIndex, announcementPausedUntil, shownAnnouncements.length])
 
   useEffect(() => {
     if (!shownNotices.length || shownNotices.length <= 1) return
 
-    const timer = setInterval(() => {
-      setNoticeIndex((prev) => (prev + 1) % shownNotices.length)
-    }, 4200)
+    const timer = setTimeout(() => {
+      if (Date.now() >= noticePausedUntil) {
+        setNoticeIndex((prev) => (prev + 1) % shownNotices.length)
+      }
+    }, 3000)
 
-    return () => clearInterval(timer)
-  }, [shownNotices.length])
+    return () => clearTimeout(timer)
+  }, [noticeIndex, noticePausedUntil, shownNotices.length])
 
   return (
     <div className="relative">
@@ -183,66 +263,88 @@ export default function Home() {
 
       {/* Gallery pill navigation */}
       <div className="mt-6 flex w-full justify-start pl-0 md:pl-2">
-        <span
-          className="pill inline-flex items-center bg-white/10 px-5 py-2 text-lg font-bold tracking-[0.12em] text-[#f5f1ff] shadow-md backdrop-blur-sm"
+        <button
+          type="button"
+          onClick={() => setGalleryOpen((isOpen) => !isOpen)}
+          aria-expanded={galleryOpen}
+          aria-controls="mess-gallery"
+          className="pill inline-flex items-center gap-3 bg-white/10 px-5 py-2 text-lg font-bold tracking-[0.12em] text-[#f5f1ff] shadow-md backdrop-blur-sm transition hover:bg-white/20"
           style={{ fontSize: '1.5rem' }}
         >
-          📸 Gallery
-        </span>
+          <span aria-hidden="true">📸</span>
+          <span>Gallery</span>
+          <span aria-hidden="true" className="text-base">{galleryOpen ? '^' : 'v'}</span>
+        </button>
       </div>
 
       {/* Gallery section - below the main content */}
-      <section className="mb-14 md:mb-20 text-center">
-        <div className="mx-auto max-w-6xl px-4">
+      <section id="mess-gallery" className={`mb-14 text-center md:mb-20 ${galleryOpen ? 'block' : 'hidden'}`}>
+        <div className="mx-auto w-full max-w-[1800px] px-4">
           <div className="relative overflow-hidden rounded-[2rem] py-4">
             <div className="hidden overflow-hidden md:block">
               <div
-                className="flex transition-transform duration-700 ease-out"
-                style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+                className="relative h-[500px] w-full touch-pan-y [perspective:500px]"
+                onTouchStart={(event) => handleTouchStart(setGalleryTouch, setGalleryDrag, event)}
+                onTouchMove={(event) => handleTouchMove(galleryTouch, setGalleryTouch, setGalleryDrag, event)}
+                onTouchEnd={(event) => {
+                  handleTouchEnd(galleryTouch, event, setActiveSlide, GALLERY_IMAGES.length, () => {}, setGalleryDrag)
+                  setGalleryTouch(null)
+                }}
+                onWheel={(event) => {
+                  if (Math.abs(event.deltaY) < 12) return
+                  setActiveSlide((prev) => (prev + (event.deltaY > 0 ? 1 : -1) + GALLERY_IMAGES.length) % GALLERY_IMAGES.length)
+                }}
               >
                 {GALLERY_IMAGES.map((src, index) => {
-                  const prevIndex = (index - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length
-                  const nextIndex = (index + 1) % GALLERY_IMAGES.length
+                  let offset = index - activeSlide
+                  if (offset > GALLERY_IMAGES.length / 2) offset -= GALLERY_IMAGES.length
+                  if (offset < -GALLERY_IMAGES.length / 2) offset += GALLERY_IMAGES.length
+                  if (Math.abs(offset) > 2) return null
+
+                  const distance = Math.abs(offset)
+                  const frameWidth = offset === 0 ? 48 : distance === 1 ? 25 : 14
+                  const frameOpacity = offset === 0 ? 1 : distance === 1 ? 0.82 : 0.48
+                  const frameScale = offset === 0 ? 1 : distance === 1 ? 0.88 : 0.68
+                  const frameHeight = offset === 0 ? 380 : distance === 1 ? 280 : 180
+                  const framePosition = 59 + offset * 15
 
                   return (
-                    <div key={`${src}-${index}`} className="min-w-full flex-shrink-0 px-2">
-                      <div className="flex items-center justify-center gap-4">
-                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl opacity-80">
-                          <img
-                            src={GALLERY_IMAGES[prevIndex]}
-                            alt={`Mess gallery ${prevIndex + 1}`}
-                            className="h-full w-full object-contain p-1 object-center"
-                          />
-                        </div>
-
-                        <div className="h-[340px] w-[52%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl">
-                          <img
-                            src={src}
-                            alt={`Mess gallery ${index + 1}`}
-                            className="h-full w-full object-contain p-1 object-center"
-                          />
-                        </div>
-
-                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl opacity-80">
-                          <img
-                            src={GALLERY_IMAGES[nextIndex]}
-                            alt={`Mess gallery ${nextIndex + 1}`}
-                            className="h-full w-full object-contain p-1 object-center"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    <button
+                      key={`${src}-${index}`}
+                      type="button"
+                      onClick={() => setActiveSlide(index)}
+                      aria-label={`Show image ${index + 1}`}
+                      className={`absolute top-3/4 min-w-0 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.5rem] bg-white shadow-2xl transition-all duration-700 ease-out ${offset === 0 ? 'cursor-default' : 'cursor-pointer'}`}
+                      style={{
+                        left: `calc(${framePosition}% + ${galleryDrag}px)`,
+                        width: `min(${frameWidth}%, ${frameHeight * galleryAspectRatio(src)}px)`,
+                        aspectRatio: galleryAspectRatio(src),
+                        maxHeight: `${frameHeight}px`,
+                        opacity: frameOpacity,
+                        transform: `translate3d(-50%, calc(-50% + ${distance * 16}px), 0) scale(${frameScale}) rotateY(${offset * -10}deg)`,
+                        zIndex: offset === 0 ? 50 : 10 - distance,
+                      }}
+                    >
+                      <img
+                        src={src}
+                        alt={`Mess gallery ${index + 1}`}
+                        className="block h-full max-h-full w-full max-w-full object-contain p-1 object-center"
+                      />
+                    </button>
                   )
                 })}
               </div>
             </div>
 
             <div className="md:hidden">
-              <div className="overflow-hidden rounded-[1.5rem] bg-white px-2 shadow-2xl">
+              <div
+                className="flex max-h-[400px] items-center justify-center overflow-hidden rounded-[1.5rem] bg-white px-2 shadow-2xl"
+                style={{ aspectRatio: galleryAspectRatio(GALLERY_IMAGES[activeSlide]) }}
+              >
                 <img
                   src={GALLERY_IMAGES[activeSlide]}
                   alt={`Mess gallery ${activeSlide + 1}`}
-                  className="h-[400px] w-full rounded-[1.5rem] object-contain p-1 sm:h-[400px] lg:h-[480px]"
+                  className="block h-full max-h-full w-full max-w-full rounded-[1.5rem] object-contain p-1"
                 />
               </div>
             </div>
@@ -253,7 +355,7 @@ export default function Home() {
               className="absolute left-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
               aria-label="Previous image"
             >
-              ←
+              {'<'}
             </button>
             <button
               type="button"
@@ -261,7 +363,7 @@ export default function Home() {
               className="absolute right-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
               aria-label="Next image"
             >
-              →
+              {'>'}
             </button>
 
             <div className="mt-5 flex justify-center gap-2">
@@ -295,10 +397,23 @@ export default function Home() {
               className="relative overflow-hidden rounded-[2rem] p-[3px]"
               style={{ background: 'linear-gradient(135deg, #7c3aed, #ec4899, #f59e0b, #7c3aed)', backgroundSize: '300% 300%', animation: 'gradientShift 6s ease infinite' }}
             >
-              <div className="relative overflow-hidden rounded-[2rem] py-2" style={{ background: '#150f2e' }}>
+              <div className="relative overflow-hidden rounded-[2rem] py-2" style={{ background: '#150f2e', touchAction: 'pan-y' }}>
               <div
-                className="flex w-full transition-transform duration-700 ease-out"
-                style={{ transform: `translateX(-${announcementIndex * 100}%)` }}
+                className="flex w-full"
+                style={{
+                  transform: `translate3d(calc(-${announcementIndex * 100}% + ${announcementDrag}px), 0, 0)`,
+                  transition: announcementDrag ? 'none' : 'transform 700ms ease-out',
+                }}
+                onTouchStart={(event) => {
+                  pauseSliderWhileHeld(setAnnouncementPausedUntil)
+                  handleTouchStart(setAnnouncementTouch, setAnnouncementDrag, event)
+                }}
+                onTouchMove={(event) => handleTouchMove(announcementTouch, setAnnouncementTouch, setAnnouncementDrag, event)}
+                onTouchEnd={(event) => {
+                  handleTouchEnd(announcementTouch, event, setAnnouncementIndex, shownAnnouncements.length, setAnnouncementPausedUntil, setAnnouncementDrag)
+                  setAnnouncementPausedUntil(Date.now() + 3000)
+                  setAnnouncementTouch(null)
+                }}
               >
                 {shownAnnouncements.map((ann, i) => (
                   <div key={i} className="w-full shrink-0 px-1 sm:px-2">
@@ -382,12 +497,26 @@ export default function Home() {
               style={{
                 background:
                   'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.32), transparent 24%), radial-gradient(circle at 70% 35%, rgba(110,88,54,0.08), transparent 26%), linear-gradient(135deg, rgba(239,228,205,0.96) 0%, rgba(225,212,186,0.94) 100%)',
+                touchAction: 'pan-y',
               }}
             >
               <div className="relative overflow-hidden rounded-[1.5rem]">
                 <div
-                  className="flex transition-transform duration-700 ease-out"
-                  style={{ transform: `translateX(-${noticeIndex * 100}%)` }}
+                  className="flex"
+                  style={{
+                    transform: `translate3d(calc(-${noticeIndex * 100}% + ${noticeDrag}px), 0, 0)`,
+                    transition: noticeDrag ? 'none' : 'transform 700ms ease-out',
+                  }}
+                  onTouchStart={(event) => {
+                    pauseSliderWhileHeld(setNoticePausedUntil)
+                    handleTouchStart(setNoticeTouch, setNoticeDrag, event)
+                  }}
+                  onTouchMove={(event) => handleTouchMove(noticeTouch, setNoticeTouch, setNoticeDrag, event)}
+                  onTouchEnd={(event) => {
+                    handleTouchEnd(noticeTouch, event, setNoticeIndex, shownNotices.length, setNoticePausedUntil, setNoticeDrag)
+                    setNoticePausedUntil(Date.now() + 3000)
+                    setNoticeTouch(null)
+                  }}
                 >
                   {shownNotices.map((notice, index) => (
                     <div key={`${notice.title}-${index}`} className="w-full shrink-0 px-1 sm:px-2">
