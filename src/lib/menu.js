@@ -11,8 +11,8 @@ const VEG_GOOGLE_SHEET_URL =
 // spreadsheet's tabs are still called Sheet1/Sheet2. Renaming them there lets
 // the fallback go away.
 const SHEETS = [
-  [['1&3 Week', 'Sheet1'], 'Week 1 & 3'],
-  [['2&4 Week', 'Sheet2'], 'Week 2 & 4'],
+  ['1&3 Week', 'Week 1 & 3'],
+  ['2&4 Week', 'Week 2 & 4'],
 ]
 
 // Same caching strategy as the Django version:
