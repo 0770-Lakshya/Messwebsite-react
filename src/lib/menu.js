@@ -1,25 +1,29 @@
 import { DAYS, SECTIONS } from '../data/siteData'
 
 const GOOGLE_SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/19orUPC3WDjW31AUQeZbcB6n-6g8f02HtL7MhMF0Qpq8/export?format=xlsx'
+  'https://docs.google.com/spreadsheets/d/1nPuDQTXZiuliWVCLe1juPNxjSv8QYiBHSiXNgm5DHdQ/export?format=xlsx'
 
 const VEG_GOOGLE_SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1TGfLxe9dPgsOY8idcMwjIx_FPUFc9PDiNyJ3vZ1XKwA/export?format=xlsx'
+  'https://docs.google.com/spreadsheets/d/1ocq8-yKbj8-HJMtlZZFTGIefFuHbcDCaRVCyYLgpU0Y/export?format=xlsx'
 
+// [candidate tab names, display label]. The lookup below tries each candidate in
+// order, so put the proper name first and the generic default second: the veg
+// spreadsheet's tabs are still called Sheet1/Sheet2. Renaming them there lets
+// the fallback go away.
 const SHEETS = [
-  ['1&3 Week', 'Week 1 & 3'],
-  ['2&4 Week', 'Week 2 & 4'],
+  [['1&3 Week', 'Sheet1'], 'Week 1 & 3'],
+  [['2&4 Week', 'Sheet2'], 'Week 2 & 4'],
 ]
 
 // Same caching strategy as the Django version:
 // - re-render from cache between probes (20 min), no network at all
 // - at each probe, refetch the file and hash it; re-parse only if changed
-const MENU_CACHE_KEY='mess_menu_weeks_v2'
-const MENU_HASH_KEY='mess_menu_file_hash_v2'
-const MENU_CHECK_KEY='mess_menu_last_check_v2'
-const VEG_MENU_CACHE_KEY='mess_menu_veg_weeks_v2'
-const VEG_MENU_HASH_KEY='mess_menu_veg_file_hash_v2'
-const VEG_MENU_CHECK_KEY='mess_menu_veg_last_check_v2'
+const MENU_CACHE_KEY='mess_menu_weeks_v3'
+const MENU_HASH_KEY='mess_menu_file_hash_v3'
+const MENU_CHECK_KEY='mess_menu_last_check_v3'
+const VEG_MENU_CACHE_KEY='mess_menu_veg_weeks_v3'
+const VEG_MENU_HASH_KEY='mess_menu_veg_file_hash_v3'
+const VEG_MENU_CHECK_KEY='mess_menu_veg_last_check_v3'
 const MENU_CHECK_INTERVAL=20*60*1000
 const MENU_CACHE_TTL=24*60*60*1000
 
