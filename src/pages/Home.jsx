@@ -458,8 +458,8 @@ export default function Home() {
 
       {/* Today's Menu */}
       <section id="live-menu" className="mb-14 scroll-mt-24 text-center">
-        <div className="mb-6">
-          <span className="pill-yellow mb-3 inline-block">{vegMode ? '🥗 Pure Veg' : '🍽️ Fresh & Served'}</span>
+        <div className="mb-6" style={{ paddingTop: '1.5rem' }}>
+          <span className="pill-yellow mb-3 inline-block px-3 py-10"> {vegMode ? '🥗 Pure Veg' : '🍽️ Fresh & Served'}</span>
           <h2 className="font-display text-3xl font-extrabold">Live Menu — {menuDayName}</h2>
           <p className="polaris-muted mt-2 text-sm">
             {mealStatus.type === 'current' ? 'Current' : 'Upcoming'} {mealStatus.label} — {mealStatus.display}

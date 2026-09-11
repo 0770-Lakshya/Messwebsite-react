@@ -242,35 +242,38 @@ export function currentMealSection(date = new Date()) {
   return getMealStatus(date).section
 }
 
+// After 22:00 the mess is shut for the day, so the site rolls forward to
+// tomorrow's menu. Every date-derived value below goes through this one helper,
+// so the day and the week can never disagree - on a Sunday night "tomorrow" is
+// the Monday of the *next* week, which is the other sheet.
+const MENU_ROLLOVER_MINUTES = 22 * 60
+
+export function effectiveMenuDate(date = new Date()) {
+  if (toMinutes(date) < MENU_ROLLOVER_MINUTES) return date
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
+}
+
+// The mess runs a strict fortnightly rotation: the two sheets swap every single
+// week and never repeat back to back. Deriving the week from the calendar month
+// cannot do that - a month spanning five weeks ends on the "1&3" sheet and the
+// next month's first week starts on it again, serving the same food twice.
+// So count weeks continuously from a known anchor instead.
+// Anchor: the week beginning Mon 31 Aug 2026 ran the "1&3" sheet.
+const ROTATION_ANCHOR_UTC = Date.UTC(2026, 7, 31)
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000
+
 export function effectiveMenuWeekIndex(date = new Date()) {
-  const mondayOffset = (date.getDay() + DAYS.length - 1) % DAYS.length
-  const weekStart = new Date(date.getFullYear(), date.getMonth(), date.getDate() - mondayOffset)
-  const monthDays = new Map()
-
-  for (let dayOffset = 0; dayOffset < DAYS.length; dayOffset += 1) {
-    const day = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + dayOffset)
-    const monthKey = `${day.getFullYear()}-${day.getMonth()}`
-    const month = monthDays.get(monthKey) || { count: 0, date: day }
-    month.count += 1
-    monthDays.set(monthKey, month)
-  }
-
-  const majorityMonth = [...monthDays.values()].sort((a, b) => b.count - a.count)[0].date
-  const firstMonday = new Date(majorityMonth.getFullYear(), majorityMonth.getMonth(), 1)
-  const firstMondayOffset = (DAYS.length - firstMonday.getDay() + 1) % DAYS.length
-  firstMonday.setDate(firstMonday.getDate() + firstMondayOffset)
-  const weekOfMonth = Math.max(1, Math.floor((majorityMonth.getDate() - firstMonday.getDate()) / 7) + 1)
-  return (weekOfMonth + 1) % 2
+  const day = effectiveMenuDate(date)
+  const mondayOffset = (day.getDay() + DAYS.length - 1) % DAYS.length
+  // UTC midnight so the subtraction below is never skewed by a DST shift.
+  const weekStart = Date.UTC(day.getFullYear(), day.getMonth(), day.getDate() - mondayOffset)
+  const weeksSinceAnchor = Math.round((weekStart - ROTATION_ANCHOR_UTC) / WEEK_MS)
+  return ((weeksSinceAnchor % 2) + 2) % 2
 }
 
 export function effectiveMenuDayIndex(date = new Date()) {
-  const name = nameFromDate(date)
-  const dayIndex = DAYS.indexOf(name) >= 0 ? DAYS.indexOf(name) : 0
-  const minutes = toMinutes(date)
-  if (minutes >= 22 * 60) {
-    return (dayIndex + 1) % DAYS.length
-  }
-  return dayIndex
+  const dayIndex = DAYS.indexOf(nameFromDate(effectiveMenuDate(date)))
+  return dayIndex >= 0 ? dayIndex : 0
 }
 
 export function effectiveMenuDayName(date = new Date()) {
