@@ -46,6 +46,15 @@ const GALLERY_ASPECT_RATIOS = {
 
 const galleryAspectRatio = (src) => GALLERY_ASPECT_RATIOS[src] || 4 / 3
 
+// pinned highlight shown above the gallery - drop the picture at public/<src>
+const PINNED_POST = {
+  src: 'images/festivals/ganesh-chaturthi.webp',
+  badge: 'Ganesh Chaturthi',
+  title: 'Ganpati Bappa Morya',
+  // caption: 'Festive celebrations at the mess.',
+  // emoji: '🕉️',
+}
+
 const HERO_IMAGE = 'images/messphoto/mess_enterance.webp'
 
 export default function Home() {
@@ -65,7 +74,8 @@ export default function Home() {
   const menuDayName = effectiveMenuDayName()
   const week = activeWeeks && activeWeeks[menuWeekIndex]
   const [activeSlide, setActiveSlide] = useState(0)
-  const [galleryOpen, setGalleryOpen] = useState(false)
+  const [galleryOpen, setGalleryOpen] = useState(true)
+  const [pinnedFailed, setPinnedFailed] = useState(false)
   const [galleryTouch, setGalleryTouch] = useState(null)
   const [galleryDrag, setGalleryDrag] = useState(0)
   const [noticeIndex, setNoticeIndex] = useState(0)
@@ -261,8 +271,66 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Pinned festival highlight - sits above the gallery */}
+      <section className="mb-10 mt-8 text-center sm:mb-12">
+        <div className="mb-4 flex justify-center px-4">
+          <span
+            className="pill inline-flex items-center gap-2 font-bold"
+            style={{
+              fontSize: '1.15rem',
+              background: 'linear-gradient(90deg, #7a5142, #f59e0b)',
+              color: '#fff',
+              boxShadow: '0 0 24px rgba(245, 158, 11, .55)',
+            }}
+          >
+            <span aria-hidden="true" className="mr-1">📌</span>
+            {PINNED_POST.badge}
+          </span>
+        </div>
+
+        <div className="mx-auto max-w-3xl px-2 sm:px-4">
+          <div
+            className="rounded-[2rem] p-[3px]"
+            style={{
+              background: 'linear-gradient(135deg, #d9480f, #f59e0b, #fde68a, #d9480f)',
+              backgroundSize: '300% 300%',
+              animation: 'gradientShift 6s ease infinite',
+            }}
+          >
+            <div
+              className="flex flex-col items-center gap-4 rounded-[1.85rem] px-3 py-5 sm:px-6 sm:py-6"
+              style={{ background: 'linear-gradient(135deg, #fffdf6 0%, #fff4de 100%)' }}
+            >
+              {pinnedFailed ? (
+                <div className="flex aspect-[4/3] w-full max-w-md items-center justify-center rounded-[1.5rem] border border-dashed border-[#d9480f]/35 bg-white/70">
+                  <span aria-hidden="true" className="text-5xl">{PINNED_POST.emoji || '📌'}</span>
+                </div>
+              ) : (
+                <img
+                  src={PINNED_POST.src}
+                  alt={PINNED_POST.badge}
+                  loading="lazy"
+                  onError={() => setPinnedFailed(true)}
+                  className="block max-h-[460px] w-auto max-w-full rounded-[1.5rem] object-contain shadow-[0_18px_40px_-24px_rgba(217,72,15,0.7)]"
+                />
+              )}
+
+              <div className="px-2">
+                <h3 className="font-display text-xl font-extrabold leading-tight text-[#7c2d12] sm:text-2xl">
+                  {PINNED_POST.emoji && <span aria-hidden="true" className="mr-2">{PINNED_POST.emoji}</span>}
+                  {PINNED_POST.title}
+                </h3>
+                {PINNED_POST.caption && (
+                  <p className="mt-2 text-sm font-medium text-[#9a3412] sm:text-base">{PINNED_POST.caption}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Gallery pill navigation */}
-      <div className="mt-6 flex w-full justify-start pl-0 md:pl-2">
+      <div className={`mt-6 flex w-full justify-start pl-0 md:pl-2 ${galleryOpen ? 'mb-2' : 'mb-10 sm:mb-12'}`}>
         <button
           type="button"
           onClick={() => setGalleryOpen((isOpen) => !isOpen)}
@@ -278,7 +346,7 @@ export default function Home() {
       </div>
 
       {/* Gallery section - below the main content */}
-      <section id="mess-gallery" className={`mb-14 text-center md:mb-20 ${galleryOpen ? 'block' : 'hidden'}`}>
+      <section id="mess-gallery" className={`text-center ${galleryOpen ? 'block pb-14 pt-2 md:pb-20' : 'hidden'}`}>
         <div className="mx-auto w-full max-w-[1800px] px-4">
           <div className="relative overflow-hidden rounded-[2rem] py-4">
             <div className="hidden overflow-hidden md:block">
@@ -385,9 +453,9 @@ export default function Home() {
 
       {/* Announcements */}
       {shownAnnouncements.length > 0 && (
-        <section className="mb-8 text-center sm:mb-10">
+        <section className={`mb-8 text-center sm:mb-10 ${galleryOpen ? 'pt-4 sm:pt-6' : 'pt-8 sm:pt-10'}`}>
           <div className="mb-4 flex justify-center px-4 sm:mb-6">
-            <span className="pill inline-flex items-center gap-2 text-lg font-bold" style={{ fontSize: '1.15rem', background: 'linear-gradient(90deg, #7c3aed, #a855f7)' , color: '#fff', boxShadow: '0 0 24px rgba(168, 85, 247, .6)' }}>
+            <span className="pill inline-flex items-center gap-2 text-lg font-bold" style={{ fontSize: '1.15rem', background: 'linear-gradient(90deg, #7d6a9f, #a855f7)' , color: '#fff', boxShadow: '0 0 24px rgba(202, 158, 243, 0.6)' }}>
               📣 Announcements
             </span>
           </div>
@@ -419,7 +487,7 @@ export default function Home() {
                   <div key={i} className="w-full shrink-0 px-1 sm:px-2">
                     <div
                       className="mx-auto flex h-full flex-col items-center justify-center p-5 text-center sm:p-6 md:p-7"
-                      style={{ background: 'linear-gradient(135deg, #241743 0%, #150f2e 100%)' }}
+                      style={{ background: 'linear-gradient(135deg, #5531a7 0%, #442d9f 100%)' }}
                     >
                       <div className="mb-3 flex w-full flex-wrap items-center justify-center gap-2">
                         <span className="shrink-0 font-display text-3xl font-bold leading-none sm:text-4xl">
