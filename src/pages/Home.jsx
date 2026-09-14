@@ -48,7 +48,7 @@ const galleryAspectRatio = (src) => GALLERY_ASPECT_RATIOS[src] || 4 / 3
 
 // pinned highlight shown above the gallery - drop the picture at public/<src>
 const PINNED_POST = {
-  src: 'images/festivals/ganesh-chaturthi.webp',
+  src: 'images/festivals/ganesh-chaturthi.png',
   badge: 'Ganesh Chaturthi',
   title: 'Ganpati Bappa Morya',
   // caption: 'Festive celebrations at the mess.',
