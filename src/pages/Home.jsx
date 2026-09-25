@@ -607,7 +607,7 @@ export default function Home() {
             rel="noreferrer"
             className="btn-primary mt-6"
           >
-            Submit your response <span aria-hidden="true">↗</span>
+            Submit your poll <span aria-hidden="true">↗</span>
           </a>
         </div>
       </section>

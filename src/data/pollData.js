@@ -1,34 +1,34 @@
 // Paste spreadsheet cells here, or put a public Google Sheet URL here.
-export const POLL_SHEET_DATA = 'https://docs.google.com/spreadsheets/d/1g5q1fFmtxdfxk7N6vRFSxOmtZMjeSpiACi4eJp0jqd8/edit?resourcekey=&gid=952643498#gid=952643498'
+export const POLL_SHEET_DATA = 'https://docs.google.com/spreadsheets/d/1LRBW3w75O1n9u3Hfa9kibVz0h4kqoz2JBGQr3RTybjk/edit?usp=sharing'
 
 // Spreadsheet columns to show, in bar-chart order.
-export const POLL_COLUMNS = ['F','G','H','N','I','J','K','L','M']
+export const POLL_COLUMNS = ['K','L','M','N','O','F','G','H','I']
 
 // Group poll columns under the headings shown on the home page.
 export const POLL_GROUPS = {
-  Veg: ['I','J','K','L','M'],
-  'Non Veg': ['F','G','H','N'],
+  Veg: ['K','L','M','N','O'],
+  'Non Veg': ['F','G','H','I'],
 }
 
 // Set the question shown for each column. Add more entries for more poll columns.
 export const POLL_QUESTIONS = {
-    G: 'Do you agree with shifting chicken biryani to lunchtime?',
-    H: 'Do you want fish curry?',
-    I: 'Do you want to remove veg biryani and add paneer dish instead?',
-    J: 'Quality of Veg Biryani:',
-    K: 'Do you agree with adding Kaddu in upcoming mess menu? ',
-    L: 'Do you agree with adding Mushroom in upcoming mess menu?',
-    M: 'Do you agree with adding leafy vegetables in upcoming mess menu?',
-    N: 'Do you agree with adding Leafy Vegetable in upcoming mess menu? ',
     F: 'Do you agree with shifting chicken biryani to lunchtime?',
+    G: 'Quality of Chicken biryani',
+    H: 'Do you agree with adding kadu in upcoming mess menu?',
+    I: 'Do you agree with adding Leafy vegetables in upcoming mess menu?',
+    K: 'Do you agree with shifting veg biryani to lunchtime?',
+    L: 'Quality of Veg Biryani:',
+    M: 'Do you agree with adding Kaddu in upcoming veg mess menu? ',
+    N: 'Do you agree with adding Mushroom in upcoming mess menu?',
+    O: 'Do you agree with adding leafy vegetables in upcoming mess menu?',
 }
 
 // Replace this with the Google Form link used for new responses.
 export const POLL_FORM_URL = 'https://forms.gle/a2TMBDLJ3KLYCunp9'
 
 const normalise = (value) => String(value ?? '').trim().toLowerCase()
-const positiveResponses = new Set(['yes', '1', 'i agree', 'Like'])
-const negativeResponses = new Set(['no', '0', 'i disagree', 'Dislike'])
+const positiveResponses = new Set(['yes', '1', 'i agree', 'like'])
+const negativeResponses = new Set(['no', '0', 'i disagree', 'dislike'])
 
 const splitRow = (row) => {
   if (row.includes('\t')) return row.split('\t')
