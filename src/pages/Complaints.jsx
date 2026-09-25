@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
 import { QRCodeSVG } from 'qrcode.react'
-import { ALLOWED_EMAIL_DOMAIN, COMPLAINTS, DEMO_POLL, POLL, TENTATIVE_MENU } from '../data/siteData'
-import usePollResults from '../lib/usePollResults'
+import { ALLOWED_EMAIL_DOMAIN, COMPLAINTS } from '../data/siteData'
+// Poll + tentative menu are switched off for now. To bring them back, uncomment
+// these imports, `belowComplaints` and its two uses, and the block near the end.
+// import { DEMO_POLL, POLL, TENTATIVE_MENU } from '../data/siteData'
+// import usePollResults from '../lib/usePollResults'
 import LockIcon from '../components/LockIcon'
 
 const SESSION_KEY = 'mess_complaints_user'
@@ -101,12 +104,12 @@ export default function Complaints() {
 
   // Everything below the complaints card is shared by both states: the
   // tentative menu is public, and the poll handles its own signed-out view.
-  const belowComplaints = (
-    <>
-      <TentativeMenuCard />
-      <PollSection user={user} onSignIn={() => signIn('poll')} />
-    </>
-  )
+  // const belowComplaints = (
+  //   <>
+  //     <TentativeMenuCard />
+  //     <PollSection user={user} onSignIn={() => signIn('poll')} />
+  //   </>
+  // )
 
   // Already signed in -> straight to the QR page (no login card)
   if (user) {
@@ -176,7 +179,7 @@ export default function Complaints() {
           </div>
         </div>
 
-        {belowComplaints}
+        {/* {belowComplaints} */}
       </div>
     )
   }
@@ -224,11 +227,12 @@ export default function Complaints() {
         </div>
       </div>
 
-      {belowComplaints}
+      {/* {belowComplaints} */}
     </div>
   )
 }
 
+/* ---- Poll + tentative menu (switched off; uncomment to restore) ----
 // Public: anyone can open the tentative menu, signed in or not.
 function TentativeMenuCard() {
   const { label, note, url } = TENTATIVE_MENU
@@ -470,6 +474,7 @@ function ArrowIcon() {
     </svg>
   )
 }
+*/
 
 function GoogleIcon() {
   return (
