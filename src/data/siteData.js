@@ -201,3 +201,46 @@ export const COMPLAINTS = {
     'Spot a problem or complain at the mess? Sign in with your Institute Google account and you will be redirected to the official feedback form. Every submission goes directly to the mess committee for review.',
   url: 'https://forms.gle/F9sVJp31PGQrodE48',
 }
+// Public link to the tentative (upcoming / draft) menu — a Google Sheet, Doc or
+// Drive PDF shared as "Anyone with the link can view". Shown on the Complaints
+// page to everyone, no sign-in needed. Leave url empty to hide the card.
+export const TENTATIVE_MENU = {
+  label: 'Tentative Menu',
+  note: 'The menu drafted so far. Items may still change subject to availability and feedback.',
+  url: 'https://docs.google.com/spreadsheets/d/1nPuDQTXZiuliWVCLe1juPNxjSv8QYiBHSiXNgm5DHdQ/edit?usp=sharing',
+}
+
+// The poll currently running. One vote per person is enforced by Google Forms
+// itself, not by this site (a static site cannot remember who voted). In the
+// form's Settings -> Responses, turn on BOTH:
+//   - "Restrict to users in IIT Bhilai and its trusted organizations"
+//   - "Limit to 1 response"
+// To start a new poll, make a new form and replace formUrl. Leave it empty
+// when no poll is running.
+export const POLL = {
+  title: '',
+  description: '',
+  // Use the full link from the form's Send -> link tab with "Shorten URL" OFF
+  // (https://docs.google.com/forms/d/e/.../viewform). A forms.gle short link
+  // still works, but only as a button - it cannot be embedded in the page.
+  formUrl: 'https://forms.gle/fTzpDj7tjeZG9WrC8',
+  // Optional public results sheet that holds ONLY vote counts (never the raw
+  // responses, which contain voters' emails). Column A = option, column B =
+  // votes. Leave empty to hide results. Setup steps are in usePollResults.js.
+  resultsSheetUrl: 'https://docs.google.com/spreadsheets/d/1vCsB7OBYhPKOlkSpqftWc6emeImepekxkl1hBBCUIxQ/edit?usp=sharing',
+}
+
+// A sample poll for previewing the poll section on your own computer. It only
+// appears under `npm run dev` while POLL.formUrl is empty, and is never part of
+// the live site. Votes are kept in memory and reset on reload. Set options to
+// [] to turn the preview off.
+export const DEMO_POLL = {
+  title: 'Sunday Special (sample poll)',
+  description: 'Which dish should be the Sunday special next cycle?',
+  options: [
+    // { option: 'Paneer Butter Masala', votes: 42 },
+    // { option: 'Chole Bhature', votes: 35 },
+    // { option: 'Veg Biryani', votes: 28 },
+    // { option: 'Masala Dosa', votes: 17 },
+  ],
+}
