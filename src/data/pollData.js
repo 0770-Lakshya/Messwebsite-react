@@ -2,12 +2,12 @@
 export const POLL_SHEET_DATA = 'https://docs.google.com/spreadsheets/d/1LRBW3w75O1n9u3Hfa9kibVz0h4kqoz2JBGQr3RTybjk/edit?usp=sharing'
 
 // Spreadsheet columns to show, in bar-chart order.
-export const POLL_COLUMNS = ['K','L','M','N','O','F','G','H','I']
+export const POLL_COLUMNS = ['K','L','M','N','O','T','U','V','F','G','H','I','Q','R','S']
 
 // Group poll columns under the headings shown on the home page.
 export const POLL_GROUPS = {
-  Veg: ['K','L','M','N','O'],
-  'Non Veg': ['F','G','H','I'],
+  Veg: ['K','L','M','N','O','T','U','V'],
+  'Non Veg': ['F','G','H','I','Q','R','S'],
 }
 
 // Set the question shown for each column. Add more entries for more poll columns.
@@ -21,6 +21,12 @@ export const POLL_QUESTIONS = {
     M: 'Do you agree with adding Kaddu in upcoming veg mess menu? ',
     N: 'Do you agree with adding Mushroom in upcoming mess menu?',
     O: 'Do you agree with adding leafy vegetables in upcoming mess menu?',
+    Q: 'Do you like khichdi?',
+    R: 'Do you like sevtamater?',
+    S: 'Do you like arbi?',
+    T: 'Do you like Khichdi?',
+    U: 'Do you like Sevtamater?',
+    V: 'Do you like Arbi?',
 }
 
 // Replace this with the Google Form link used for new responses.
