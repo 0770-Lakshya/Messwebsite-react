@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { LEADERSHIP, MEAL_TIMINGS } from '../data/siteData'
+import { POLL_FORM_URL, POLL_GROUPS, POLL_SHEET_DATA, loadPollSheet } from '../data/pollData'
 import { currentMealSection, dayView, effectiveMenuDayIndex, effectiveMenuDayName, effectiveMenuWeekIndex, getMealStatus } from '../lib/menu'
 import useMenu, { useVegMenu } from '../lib/useMenu'
 import { useContent } from '../lib/useContent'
@@ -149,6 +150,8 @@ export default function Home() {
 
   const shownAnnouncements = announcements
   const shownNotices = notices
+  const [pollResults, setPollResults] = useState([])
+  const [pollError, setPollError] = useState('')
   const [announcementIndex, setAnnouncementIndex] = useState(0)
 
   useEffect(() => {
@@ -174,6 +177,27 @@ export default function Home() {
 
     return () => clearTimeout(timer)
   }, [noticeIndex, noticePausedUntil, shownNotices.length])
+
+  useEffect(() => {
+    let cancelled = false
+    loadPollSheet(POLL_SHEET_DATA)
+      .then((results) => {
+        if (!cancelled) {
+          setPollResults(results)
+          setPollError('')
+        }
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setPollResults([])
+          setPollError(error.message || 'Could not load the poll sheet.')
+        }
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   return (
     <div className="relative">
@@ -523,6 +547,70 @@ export default function Home() {
           </div>
         </section>
       )}
+
+{/* Mess Poll */}
+      <section className="mb-14 px-4 text-center sm:px-6">
+        <div className="mx-auto max-w-5xl">
+          <div className="mb-6">
+            <span className="pill mb-3 inline-block">📊 Mess Poll</span>
+            <h2 className="font-display text-2xl font-extrabold">What students are saying</h2>
+            <p className="polaris-muted mt-2 text-sm">Live results from the latest mess feedback.</p>
+          </div>
+
+          {pollResults.length > 0 ? (
+            <div className="space-y-8 text-left">
+              {Object.entries(POLL_GROUPS).map(([groupName, columns]) => {
+                const groupPolls = pollResults.filter((poll) => columns.includes(poll.column))
+                if (!groupPolls.length) return null
+
+                return (
+                  <div key={groupName}>
+                    <h3 className="mb-4 text-center font-display text-2xl font-extrabold">{groupName}</h3>
+                    <div className="grid grid-cols-1 gap-5">
+                      {groupPolls.map((poll) => {
+                        const yesPercent = poll.total ? Math.round((poll.yesCount / poll.total) * 100) : 0
+
+                        return (
+                          <div key={poll.column} className="polaris-card p-5 sm:p-6">
+                            <div className="mb-3 flex items-center justify-between gap-3">
+                              <h4 className="min-w-0 break-words font-display text-xl font-bold">{poll.heading}</h4>
+                              <span className="polaris-muted shrink-0 text-xs">{poll.yesCount} Agree</span>
+                            </div>
+                            <div className="h-4 overflow-hidden rounded-full bg-[#eadfce]" aria-label={`${poll.heading}: ${poll.yesCount}`}>
+                              <div
+                                className="h-full rounded-full bg-[#5aa93c] transition-all duration-500"
+                                style={{ width: `${yesPercent}%` }}
+                              />
+                            </div>
+                            <div className="mt-2 flex justify-between text-xs">
+                              <span className="polaris-muted">{yesPercent}% positive</span>
+                              <span className="polaris-muted">{poll.total} replies</span>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <div className="polaris-card mx-auto max-w-2xl p-6 text-sm">
+              <p className="font-semibold">{pollError || 'Poll results will appear here.'}</p>
+              {!pollError && <p className="polaris-muted mt-2">Paste the response sheet into `POLL_SHEET_DATA` in `src/data/pollData.js`.</p>}
+            </div>
+          )}
+
+          <a
+            href={POLL_FORM_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-primary mt-6"
+          >
+            Submit your poll <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
 
       {/* Today's Menu */}
       <section id="live-menu" className="mb-14 scroll-mt-24 text-center">
