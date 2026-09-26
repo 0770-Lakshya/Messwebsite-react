@@ -1,5 +1,11 @@
-// Paste spreadsheet cells here, or put a public Google Sheet URL here.
-export const POLL_SHEET_DATA = 'https://docs.google.com/spreadsheets/d/1LRBW3w75O1n9u3Hfa9kibVz0h4kqoz2JBGQr3RTybjk/edit?usp=sharing'
+// Public link to the poll TOTALS sheet - never the form's responses sheet.
+// The responses sheet holds everyone's name, ID and email, and whatever link
+// is here gets downloaded by every visitor's browser, so keep that one
+// Restricted. The totals sheet has one row per question:
+//   column letter | agree count | disagree count      e.g.  F | 60 | 99
+// (letters are the question's column in the responses sheet). You can also
+// paste those cells here as text instead of a link.
+export const POLL_SHEET_DATA = 'https://docs.google.com/spreadsheets/d/10rJihh_DPF3tP3F3xhTnaxzp47yjzz2ri7vH5kwh66w/edit?usp=sharing'
 
 // Spreadsheet columns to show, in bar-chart order.
 export const POLL_COLUMNS = ['K','L','M','N','O','T','U','V','F','G','H','I','Q','R','S']
@@ -32,50 +38,27 @@ export const POLL_QUESTIONS = {
 // Replace this with the Google Form link used for new responses.
 export const POLL_FORM_URL = 'https://forms.gle/a2TMBDLJ3KLYCunp9'
 
-const normalise = (value) => String(value ?? '').trim().toLowerCase()
-const positiveResponses = new Set(['yes', '1', 'i agree', 'like'])
-const negativeResponses = new Set(['no', '0', 'i disagree', 'dislike'])
-
 const splitRow = (row) => {
   if (row.includes('\t')) return row.split('\t')
   if (row.includes(',')) return row.split(',')
   return row.split('|')
 }
 
-const columnNumber = (column) => {
-  let number = 0
-  for (const character of String(column).toUpperCase()) {
-    number = number * 26 + character.charCodeAt(0) - 64
-  }
-  return number - 1
-}
-
+// Reads the totals sheet: one [column, agree, disagree] row per question.
+// Rows for columns not in POLL_COLUMNS (headings, suggestions) are ignored.
 export function parsePollSheet(sheetData) {
-  const rows = String(sheetData || '')
-    .split(/\r?\n/)
-    .map((row) => splitRow(row).map((cell) => cell.trim()))
-    .filter((row) => row.some(Boolean))
+  const totals = new Map()
+  for (const line of String(sheetData || '').split(/\r?\n/)) {
+    const [column = '', yes, no] = splitRow(line).map((cell) => cell.trim())
+    const key = column.toUpperCase()
+    if (!POLL_COLUMNS.includes(key)) continue
+    totals.set(key, { yesCount: Number(yes) || 0, noCount: Number(no) || 0 })
+  }
 
-  if (rows.length < 2) return []
-
-  const customLabelRow = rows[0]
-  const formHeaderRow = rows[1]
-  const hasFormHeaderRow = POLL_COLUMNS.some((column) => {
-    const value = normalise(formHeaderRow[columnNumber(column)])
-    return value && !positiveResponses.has(value) && !negativeResponses.has(value)
+  return POLL_COLUMNS.filter((column) => totals.has(column)).map((column) => {
+    const { yesCount, noCount } = totals.get(column)
+    return { column, heading: POLL_QUESTIONS[column] || column, yesCount, noCount, total: yesCount + noCount }
   })
-  const responseRows = rows.slice(hasFormHeaderRow ? 2 : 1)
-
-  return POLL_COLUMNS.map((column) => {
-    const columnIndex = columnNumber(column)
-    const heading = POLL_QUESTIONS[column] || customLabelRow[columnIndex] || (hasFormHeaderRow ? formHeaderRow[columnIndex] : '') || column
-    const responses = responseRows.map((row) => normalise(row[columnIndex]))
-    const yesCount = responses.filter((response) => positiveResponses.has(response)).length
-    const noCount = responses.filter((response) => negativeResponses.has(response)).length
-    const total = yesCount + noCount
-
-    return { column, heading, yesCount, noCount, total }
-  }).filter((poll) => poll.total > 0 || poll.heading)
 }
 
 export async function loadPollSheet(source) {
@@ -83,22 +66,16 @@ export async function loadPollSheet(source) {
 
   if (!/^https?:\/\//i.test(source)) return parsePollSheet(source)
 
-  const gidMatch = source.match(/[?&#]gid=(\d+)/)
   const sheetIdMatch = source.match(/spreadsheets\/d\/([^/]+)/)
-  const exportUrl = source.includes('/edit')
-    ? gidMatch && sheetIdMatch
-      ? `https://docs.google.com/spreadsheets/d/${sheetIdMatch[1]}/gviz/tq?tqx=out:csv&gid=${gidMatch[1]}`
-      : source.replace(/\/edit(?:\?[^#]*)?(?:#.*)?$/, '/export?format=xlsx')
-    : source
+  if (!sheetIdMatch) throw new Error('POLL_SHEET_DATA is not a Google Sheet link.')
+  const gidMatch = source.match(/[?&#]gid=(\d+)/)
+  const exportUrl =
+    `https://docs.google.com/spreadsheets/d/${sheetIdMatch[1]}/export?format=xlsx` + (gidMatch ? `&gid=${gidMatch[1]}` : '')
   const response = await fetch(exportUrl, { cache: 'no-store' })
-  if (!response.ok) throw new Error(`Could not download poll sheet (HTTP ${response.status})`)
+  if (!response.ok) throw new Error(`Could not download poll results (HTTP ${response.status})`)
 
   const XLSX = await import('xlsx')
-  const body = gidMatch ? await response.text() : await response.arrayBuffer()
-  if (gidMatch && body.trimStart().startsWith('<')) {
-    throw new Error('The Google Sheet is not publicly readable. Set General access to Anyone with the link.')
-  }
-  const workbook = gidMatch ? XLSX.read(body, { type: 'string' }) : XLSX.read(body, { type: 'array' })
+  const workbook = XLSX.read(await response.arrayBuffer(), { type: 'array' })
   const firstSheet = workbook.Sheets[workbook.SheetNames[0]]
   const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: '' })
   return parsePollSheet(rows.map((row) => row.join('\t')).join('\n'))

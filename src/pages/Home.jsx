@@ -597,7 +597,7 @@ export default function Home() {
           ) : (
             <div className="polaris-card mx-auto max-w-2xl p-6 text-sm">
               <p className="font-semibold">{pollError || 'Poll results will appear here.'}</p>
-              {!pollError && <p className="polaris-muted mt-2">Paste the response sheet into `POLL_SHEET_DATA` in `src/data/pollData.js`.</p>}
+              {!pollError && <p className="polaris-muted mt-2">Results will be shared soon.</p>}
             </div>
           )}
 
