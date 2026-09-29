@@ -549,7 +549,7 @@ export default function Home() {
       )}
 
 {/* Mess Poll */}
-      <section className="mb-14 px-4 text-center sm:px-6">
+      {/* <section className="mb-14 px-4 text-center sm:px-6">
         <div className="mx-auto max-w-5xl">
           <div className="mb-6">
             <span className="pill mb-3 inline-block">📊 Mess Poll</span>
@@ -610,7 +610,7 @@ export default function Home() {
             Submit your poll <span aria-hidden="true">↗</span>
           </a>
         </div>
-      </section>
+      </section> */}
 
       {/* Today's Menu */}
       <section id="live-menu" className="mb-14 scroll-mt-24 text-center">
