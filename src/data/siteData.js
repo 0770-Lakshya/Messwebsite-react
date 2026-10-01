@@ -8,27 +8,33 @@ export const LEADERSHIP = [
     name: 'Dr Shudhanwa Patra ',
     role: 'Dean of Student Affairs, IIT Bhilai',
     // quote: 'Your well-being at the mess is my priority.',
-    photo: 'images/dosa.jpg',
+    photo: 'images/dosa.webp',
   },
   {
     name: 'Dr Yagnesh Shadangi',
     role: 'Faculty In-Charge (FIC), Mess',
     // quote: 'Good food, great conversations, better days.',
-    photo: 'images/fic.jpg',
+    photo: 'images/fic.webp',
   },
   
   {
     name: 'Dr Milan Kumar Jena ',
     role: 'Associate FIC Mess, IIT Bhilai',
     // quote: 'We listen, we improve, we serve.',
-    photo: 'images/milansir.png',
+    photo: 'images/milansir.webp',
+  },{
+    name: 'Arush Ranjan' ,
+    role: 'President ,COSA IIT Bhilai',
+    // quote: 'We listen, we improve, we serve.',
+    photo: "images/arush.jpg",
   },
   {
     name: 'Manish Kumar' ,
     role: 'Mess Coordinator, IIT Bhilai',
     // quote: 'We listen, we improve, we serve.',
-    photo: "images/coordinator.png",
+    photo: "images/coordinator.webp",
   },
+  
 ]
 
 export const COMMITTEE = [
@@ -36,13 +42,13 @@ export const COMMITTEE = [
     name: 'Manish Kumar ',
     role: 'Mess Coordinator',
     email: 'messcoordinator@iitbhilai.ac.in',
-    photo: "images/coordinator.png",
+    photo: "images/coordinator.webp",
   },
   {
     name: 'Sudhanshu Mishra',
     role: 'Member',
     email: "",
-    photo: "images/sudhanshu.png",
+    photo: "images/sudhanshu.webp",
   },
   {
     name: 'Abhishek Kumar',
@@ -53,67 +59,67 @@ export const COMMITTEE = [
   {
     name: 'Lakshya Soni',
     role: 'Technical Member',
-    photo: "images/Lakshya.png",
+    photo: "images/Lakshya.webp",
   },
   {
     name: 'Krish Shiyani',
     role: 'Technical Member',
-    photo: "images/krish.png",
+    photo: "images/krish.webp",
   },
   {
     name: 'Dheeraj Preetham Reddy',
     role: 'Member',
-    photo: "images/dheeraj.png",
+    photo: "images/dheeraj.webp",
   },
   {
     name: 'Abhishek Singh',
     role: 'Member',
-    photo: "images/abhishekk.png",
+    photo: "images/abhishekk.webp",
   },
   {
-    name: 'Arpit Panday',
+    name: 'Arpit Pandey',
     role: 'Member',
-    photo: "images/arpit.jpg",
+    photo: "images/arpit.webp",
   },
   {
     name: 'Pushkar Surendra Chaudhari',
     role: 'Member',
-    photo: "images/pushkar.png",
+    photo: "images/pushkar.webp",
   },
   {
     name: 'Venna Yaswanth',
     role: 'Member',
-    photo: "images/yaswanth.png",
+    photo: "images/yaswanth.webp",
   },
   {
     name: 'Kavita Negi',
     role: 'Member',
-    photo: "images/kavita.png",
+    photo: "images/kavita.jpg",
   },
   {
     name: 'Bikka Akshara Venus',
     role: 'Member',
-    photo: "images/akshara.png",
+    photo: "images/akshara.webp",
   },
   {
     name: 'Shubham Kumar',
     role: 'Member',
-    photo: "images/shubham.png",
+    photo: "images/shubham.webp",
   },
   {
     name: 'Sadhana Gupta',
     role: 'Member',
-    photo: "images/sadhana.png",
+    photo: "images/sadhana.webp",
   },
   {
     name: 'Sanjay Kumar Verma',
     role: 'Member',
-    photo: "images/sanjay.png",
+    photo: "images/sanjay.webp",
   },
   {
     name: 'Akash Netam',
     role: 'Member',
-    photo: "images/akash.png",
+    photo: "images/akash.webp",
   },
 ]
 
@@ -121,19 +127,19 @@ export const LEADERSHIP_IN_CHARGE = [
   {
     role: 'Dean of Student Affairs, IIT Bhilai',
     email: null,
-    photo: 'images/dosa.jpg',
+    photo: 'images/dosa.webp',
     name: 'Dr Shudhanwa Patra',
   },
   {
     role: 'Faculty In-Charge (FIC), Mess',
     email: null,
-    photo: 'images/fic.jpg',
+    photo: 'images/fic.webp',
     name: 'Dr Yagnesh Shadangi',
   },
   {
     role: 'Associate FIC Mess, IIT Bhilai',
     email: null,
-    photo: 'images/milansir.png',
+    photo: 'images/milansir.webp',
     name: 'Dr Milan Kumar Jena',
   },
 ]
@@ -142,13 +148,13 @@ export const MESS_INCHARGE = [
   {
     role: 'Mess Incharge',
     email: null,
-    photo: 'images/incharge.jpg',
+    photo: 'images/incharge.webp',
     name: 'Mr Mahesh Koli',
   },
   {
     role: 'Mess Incharge',
     email: null,
-    photo: 'images/yaswanthsir.png',
+    photo: 'images/yaswanthsir.webp',
     name: 'Mr Yashavant Kumar',
   },
 ]
@@ -185,7 +191,7 @@ export const CONTACT = {
 
 // Google OAuth — create credentials at https://console.cloud.google.com/apis/credentials
 // (OAuth 2.0 Client ID, Web application) and paste the Client ID here.
-export const GOOGLE_CLIENT_ID = '233144735739-1or3fmoqnn6rkhf4t2s52k62m4evnc63.apps.googleusercontent.com'
+export const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
 // Only emails ending with this domain may use the complaints desk.
 export const ALLOWED_EMAIL_DOMAIN = 'iitbhilai.ac.in'
@@ -194,4 +200,47 @@ export const COMPLAINTS = {
   description:
     'Spot a problem or complain at the mess? Sign in with your Institute Google account and you will be redirected to the official feedback form. Every submission goes directly to the mess committee for review.',
   url: 'https://forms.gle/F9sVJp31PGQrodE48',
+}
+// Public link to the tentative (upcoming / draft) menu — a Google Sheet, Doc or
+// Drive PDF shared as "Anyone with the link can view". Shown on the Complaints
+// page to everyone, no sign-in needed. Leave url empty to hide the card.
+export const TENTATIVE_MENU = {
+  label: 'Tentative Menu',
+  note: 'The menu drafted so far. Items may still change subject to availability and feedback.',
+  url: 'https://docs.google.com/spreadsheets/d/1nPuDQTXZiuliWVCLe1juPNxjSv8QYiBHSiXNgm5DHdQ/edit?usp=sharing',
+}
+
+// The poll currently running. One vote per person is enforced by Google Forms
+// itself, not by this site (a static site cannot remember who voted). In the
+// form's Settings -> Responses, turn on BOTH:
+//   - "Restrict to users in IIT Bhilai and its trusted organizations"
+//   - "Limit to 1 response"
+// To start a new poll, make a new form and replace formUrl. Leave it empty
+// when no poll is running.
+export const POLL = {
+  title: '',
+  description: '',
+  // Use the full link from the form's Send -> link tab with "Shorten URL" OFF
+  // (https://docs.google.com/forms/d/e/.../viewform). A forms.gle short link
+  // still works, but only as a button - it cannot be embedded in the page.
+  formUrl: 'https://forms.gle/fTzpDj7tjeZG9WrC8',
+  // Optional public results sheet that holds ONLY vote counts (never the raw
+  // responses, which contain voters' emails). Column A = option, column B =
+  // votes. Leave empty to hide results. Setup steps are in usePollResults.js.
+  resultsSheetUrl: 'https://docs.google.com/spreadsheets/d/1vCsB7OBYhPKOlkSpqftWc6emeImepekxkl1hBBCUIxQ/edit?usp=sharing',
+}
+
+// A sample poll for previewing the poll section on your own computer. It only
+// appears under `npm run dev` while POLL.formUrl is empty, and is never part of
+// the live site. Votes are kept in memory and reset on reload. Set options to
+// [] to turn the preview off.
+export const DEMO_POLL = {
+  title: 'Sunday Special (sample poll)',
+  description: 'Which dish should be the Sunday special next cycle?',
+  options: [
+    // { option: 'Paneer Butter Masala', votes: 42 },
+    // { option: 'Chole Bhature', votes: 35 },
+    // { option: 'Veg Biryani', votes: 28 },
+    // { option: 'Masala Dosa', votes: 17 },
+  ],
 }

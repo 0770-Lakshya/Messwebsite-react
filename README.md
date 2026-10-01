@@ -54,9 +54,10 @@ including a **"This week"** badge. Update the anchor if the mess breaks its rhyt
 
 ## Photos
 
-Images live in `public/images/`. Any member whose `photo` is `null` or whose file is missing gets a
-gradient initials avatar automatically — nothing breaks. Add photos by dropping files there and setting
-the `photo` field.
+Images live in `public/images/` as **WebP** (original pixel dimensions). Any member whose `photo` is
+`null` or whose file is missing gets a gradient initials avatar automatically — nothing breaks. Add
+photos by dropping JPG/PNG files there, setting the `photo` field, then run `npm run images` to convert
+them to WebP (originals are removed after conversion).
 
 ## Deploy
 

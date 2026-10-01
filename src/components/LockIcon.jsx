@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react'
-import lottie from 'lottie-web'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Player } from '@lordicon/react'
 
 const jsonCache = new Map()
 
@@ -28,59 +28,105 @@ export default function LockIcon({
   className = '',
 }) {
   const containerRef = useRef(null)
-  const instanceRef = useRef(null)
+  const playerRef = useRef(null)
+  const [data, setData] = useState(null)
+  const playingRef = useRef(playing)
+  playingRef.current = playing
 
   useEffect(() => {
-    let raf = null
-    const el = containerRef.current
+    let active = true
     preloadLottie(src)
-      .then((data) => {
-        if (!el || !el.isConnected) return
-        const instance = lottie.loadAnimation({
-          container: el,
-          renderer: 'svg',
-          loop,
-          autoplay: false,
-          animationData: data,
-          rendererSettings: { preserveAspectRatio: 'xMidYMid meet' },
-        })
-        instance.setSpeed(speed)
-        if (playing) instance.play()
-        instanceRef.current = instance
-        // Ensure the rendered SVG always fills the box after layout settles.
-        raf = requestAnimationFrame(() => {
-          const svg = el && el.querySelector('svg')
-          if (svg) {
-            svg.style.width = '100%'
-            svg.style.height = '100%'
-            svg.setAttribute('preserveAspectRatio', 'xMidYMid meet')
-          }
-        })
+      .then((d) => {
+        if (active) setData(d)
       })
       .catch(() => {})
     return () => {
-      if (raf) cancelAnimationFrame(raf)
-      if (instanceRef.current) instanceRef.current.destroy()
-      instanceRef.current = null
+      active = false
     }
-  }, [src, loop, speed])
+  }, [src])
 
-  useEffect(() => {
-    const instance = instanceRef.current
-    if (!instance) return
-    if (playing) {
-      instance.goToAndPlay(0)
-    } else {
-      instance.goToAndStop(0, true)
+  const applyState = useCallback(() => {
+    const player = playerRef.current
+    if (!player) return
+    const lottie = player._lottie
+    if (lottie) {
+      lottie.loop = loop
+      lottie.setSpeed(speed)
     }
-  }, [playing])
+    if (playingRef.current) {
+      if (loop) {
+        player.play()
+      } else {
+        player.playFromBeginning()
+      }
+    } else {
+      player.goToFirstFrame()
+    }
+  }, [loop, speed])
+
+  // Apply immediately when props/data change.
+  useEffect(() => {
+    applyState()
+  }, [applyState, playing, data])
+
+  // Self-heal: the Player creates its animation with loop=false and
+  // autoplay=false, and React StrictMode remounts can leave a freshly
+  // re-created instance paused at frame 0 (applyState runs before the ref is
+  // valid). Keep loop and speed in sync until it is actually playing.
+  useEffect(() => {
+    if (!data) return
+    const id = setInterval(() => {
+      const player = playerRef.current
+      if (!player || !player._lottie) return
+      const lottie = player._lottie
+      if (lottie.loop !== loop) {
+        lottie.loop = loop
+      }
+      if (lottie.playSpeed !== speed) {
+        lottie.setSpeed(speed)
+      }
+      if (playingRef.current && lottie.isPaused) {
+        if (loop) {
+          player.play()
+        } else if (lottie.currentFrame === 0) {
+          player.playFromBeginning()
+        }
+      }
+    }, 250)
+    return () => clearInterval(id)
+  }, [data, loop, speed])
+
+  const containerStyle = {
+    width: size,
+    height: size,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    verticalAlign: 'middle',
+  }
+
+  if (!data) {
+    return <span className={className} style={containerStyle} aria-hidden="true" />
+  }
 
   return (
-    <div
+    <span
       ref={containerRef}
-      className={`lottie-lock inline-block align-middle ${className}`}
-      style={{ width: size, height: size, overflow: 'hidden' }}
+      className={className}
+      style={{ ...containerStyle, overflow: 'hidden' }}
       aria-hidden="true"
-    />
+    >
+      <Player
+        ref={playerRef}
+        icon={data}
+        size={size}
+        onReady={applyState}
+        onComplete={() => {
+          if (loop) {
+            playerRef.current?.playFromBeginning()
+          }
+        }}
+      />
+    </span>
   )
 }

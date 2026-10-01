@@ -18,7 +18,7 @@ export default function Layout() {
             <div>
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white shadow-sm">
-                  <img src="images/logo_IITBhilai.png" alt="IIT Bhilai Logo" className="h-full w-full object-cover" />
+                  <img src="images/logo_IITBhilai.webp" alt="IIT Bhilai Logo" className="h-full w-full object-cover" />
                 </div>
                 <div>
                   <p className="font-display text-xl font-extrabold tracking-tight text-white">Pakadarpanalaya</p>

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { LEADERSHIP, MEAL_TIMINGS } from '../data/siteData'
-import { currentMealSection, dayView, effectiveMenuDayIndex, effectiveMenuDayName, getMealStatus } from '../lib/menu'
+import { POLL_FORM_URL, POLL_GROUPS, POLL_SHEET_DATA, loadPollSheet } from '../data/pollData'
+import { currentMealSection, dayView, effectiveMenuDayIndex, effectiveMenuDayName, effectiveMenuWeekIndex, getMealStatus } from '../lib/menu'
 import useMenu, { useVegMenu } from '../lib/useMenu'
 import { useContent } from '../lib/useContent'
 import { useVegMode } from '../lib/vegModeContext'
@@ -12,23 +13,50 @@ import { LoadingSkeleton, MenuError, SectionCard, SectionRows, WeeklyTable } fro
 const ANN_EMOJI = { special: '🎉', timing: '🕒', meal: '🍛', general: '📢' }
 {/*image container for home page images*/}
 const GALLERY_IMAGES = [
-  'images/art.jpg',
-  'images/entrance.jpg',
-  'images/messphoto/night.jpg',
-  'images/messphoto/ballon.jpg',
-  'images/messphoto/millettrain.jpg',
-  'images/messphoto/galav.png',
-  'images/messphoto/Galav1.png',
-  'images/ShreeSai.jpg',
+  'images/art.webp',
+  'images/entrance.webp',
+  'images/messphoto/night.webp',
+  'images/messphoto/ballon.webp',
+  'images/messphoto/millettrain.webp',
+  'images/messphoto/galav.webp',
+  'images/messphoto/Galav1.webp',
+  'images/ShreeSai.webp',
   
-  'images/messphoto/shree_sai.png',
-  'images/messphoto/notice.jpg',
-  'images/messphoto/krishna_kripa.png',
-  'images/messphoto/helth.png',
-  'images/messphoto/amul.png',
+  'images/messphoto/shree_sai.webp',
+  'images/messphoto/notice.webp',
+  'images/messphoto/krishna_kripa.webp',
+  'images/messphoto/helth.webp',
+  'images/messphoto/amul.webp',
 ]
 
-const HERO_IMAGE = 'images/messphoto/mess_enterance.png'
+const GALLERY_ASPECT_RATIOS = {
+  'images/art.webp': 360 / 412,
+  'images/entrance.webp': 3 / 2,
+  'images/messphoto/night.webp': 650 / 370,
+  'images/messphoto/ballon.webp': 3 / 2,
+  'images/messphoto/millettrain.webp': 3 / 2,
+  'images/messphoto/galav.webp': 507 / 538,
+  'images/messphoto/Galav1.webp': 581 / 676,
+  'images/ShreeSai.webp': 1066 / 1600,
+  'images/messphoto/shree_sai.webp': 432 / 617,
+  'images/messphoto/notice.webp': 3 / 2,
+  'images/messphoto/krishna_kripa.webp': 553 / 698,
+  'images/messphoto/helth.webp': 499 / 335,
+  'images/messphoto/amul.webp': 578 / 671,
+}
+
+const galleryAspectRatio = (src) => GALLERY_ASPECT_RATIOS[src] || 4 / 3
+
+// pinned highlight shown above the gallery - drop the picture at public/<src>
+// const PINNED_POST = {
+//   src: 'images/festivals/ganesh-chaturthi.png',
+//   badge: 'Ganesh Chaturthi',
+//   title: 'Ganpati Bappa Morya',
+//   // caption: 'Festive celebrations at the mess.',
+//   // emoji: '🕉️',
+// }
+
+const HERO_IMAGE = 'images/messphoto/mess_enterance.webp'
 
 export default function Home() {
   const { weeks, error, loading } = useMenu()
@@ -40,13 +68,72 @@ export default function Home() {
   const activeWeeks = vegMode ? vegWeeks : weeks
   const activeError = vegMode ? vegError : error
   const activeLoading = vegMode ? vegLoading : loading
-  const todaySections = activeWeeks && activeWeeks[0] ? dayView(activeWeeks[0], menuDayIndex) : []
+  const menuWeekIndex = effectiveMenuWeekIndex()
+  const todaySections = activeWeeks && activeWeeks[menuWeekIndex] ? dayView(activeWeeks[menuWeekIndex], menuDayIndex) : []
   const filteredSections = todaySections.filter((section) => section.name === mealStatus.section)
   const todaySectionsToShow = filteredSections.length ? filteredSections : todaySections
   const menuDayName = effectiveMenuDayName()
-  const week = activeWeeks && activeWeeks[0]
+  const week = activeWeeks && activeWeeks[menuWeekIndex]
   const [activeSlide, setActiveSlide] = useState(0)
+  const [galleryOpen, setGalleryOpen] = useState(true)
+  const [pinnedFailed, setPinnedFailed] = useState(false)
+  const [galleryTouch, setGalleryTouch] = useState(null)
+  const [galleryDrag, setGalleryDrag] = useState(0)
   const [noticeIndex, setNoticeIndex] = useState(0)
+  const [announcementTouch, setAnnouncementTouch] = useState(null)
+  const [noticeTouch, setNoticeTouch] = useState(null)
+  const [announcementDrag, setAnnouncementDrag] = useState(0)
+  const [noticeDrag, setNoticeDrag] = useState(0)
+  const [announcementPausedUntil, setAnnouncementPausedUntil] = useState(0)
+  const [noticePausedUntil, setNoticePausedUntil] = useState(0)
+
+  const handleTouchStart = (setTouchData, setDragOffset, event) => {
+    const touch = event.touches[0]
+    setTouchData({ startX: touch.clientX, startY: touch.clientY })
+    setDragOffset(0)
+  }
+
+  const pauseSliderWhileHeld = (pauseSetter) => pauseSetter(Number.POSITIVE_INFINITY)
+
+  const handleTouchMove = (touchData, setTouchData, setDragOffset, event) => {
+    if (!touchData) return
+
+    const touch = event.touches[0]
+    const deltaX = touch.clientX - touchData.startX
+    const deltaY = touch.clientY - touchData.startY
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      event.preventDefault()
+      setTouchData({ ...touchData, currentX: touch.clientX, currentY: touch.clientY })
+      setDragOffset(deltaX)
+    }
+  }
+
+  const handleTouchEnd = (touchData, event, setIndex, length, pauseSetter, setDragOffset) => {
+    if (!touchData || !length) return
+
+    const touch = event.changedTouches[0]
+    const deltaX = touch.clientX - touchData.startX
+    const deltaY = touch.clientY - touchData.startY
+
+    setDragOffset(0)
+
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) {
+        setIndex((prev) => {
+          const next = (prev + 1) % length
+          pauseSetter(Date.now() + 3000)
+          return next
+        })
+      } else {
+        setIndex((prev) => {
+          const next = (prev - 1 + length) % length
+          pauseSetter(Date.now() + 3000)
+          return next
+        })
+      }
+    }
+  }
 
   useEffect(() => {
     if (GALLERY_IMAGES.length <= 1) return
@@ -63,27 +150,54 @@ export default function Home() {
 
   const shownAnnouncements = announcements
   const shownNotices = notices
+  const [pollResults, setPollResults] = useState([])
+  const [pollError, setPollError] = useState('')
   const [announcementIndex, setAnnouncementIndex] = useState(0)
 
   useEffect(() => {
     if (!shownAnnouncements.length || shownAnnouncements.length <= 1) return
 
-    const timer = setInterval(() => {
-      setAnnouncementIndex((prev) => (prev + 1) % shownAnnouncements.length)
-    }, 4200)
+    const timer = setTimeout(() => {
+      if (Date.now() >= announcementPausedUntil) {
+        setAnnouncementIndex((prev) => (prev + 1) % shownAnnouncements.length)
+      }
+    }, 3000)
 
-    return () => clearInterval(timer)
-  }, [shownAnnouncements.length])
+    return () => clearTimeout(timer)
+  }, [announcementIndex, announcementPausedUntil, shownAnnouncements.length])
 
   useEffect(() => {
     if (!shownNotices.length || shownNotices.length <= 1) return
 
-    const timer = setInterval(() => {
-      setNoticeIndex((prev) => (prev + 1) % shownNotices.length)
-    }, 4200)
+    const timer = setTimeout(() => {
+      if (Date.now() >= noticePausedUntil) {
+        setNoticeIndex((prev) => (prev + 1) % shownNotices.length)
+      }
+    }, 3000)
 
-    return () => clearInterval(timer)
-  }, [shownNotices.length])
+    return () => clearTimeout(timer)
+  }, [noticeIndex, noticePausedUntil, shownNotices.length])
+
+  useEffect(() => {
+    let cancelled = false
+    loadPollSheet(POLL_SHEET_DATA)
+      .then((results) => {
+        if (!cancelled) {
+          setPollResults(results)
+          setPollError('')
+        }
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setPollResults([])
+          setPollError(error.message || 'Could not load the poll sheet.')
+        }
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   return (
     <div className="relative">
@@ -181,68 +295,148 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Pinned festival highlight - sits above the gallery */}
+      {/* <section className="mb-10 mt-8 text-center sm:mb-12">
+        <div className="mb-4 flex justify-center px-4">
+          <span
+            className="pill inline-flex items-center gap-2 font-bold"
+            style={{
+              fontSize: '1.15rem',
+              background: 'linear-gradient(90deg, #7a5142, #f59e0b)',
+              color: '#fff',
+              boxShadow: '0 0 24px rgba(245, 158, 11, .55)',
+            }}
+          >
+            <span aria-hidden="true" className="mr-1">📌</span>
+            {PINNED_POST.badge}
+          </span>
+        </div>
+
+        <div className="mx-auto max-w-3xl px-2 sm:px-4">
+          <div
+            className="rounded-[2rem] p-[3px]"
+            style={{
+              background: 'linear-gradient(135deg, #d9480f, #f59e0b, #fde68a, #d9480f)',
+              backgroundSize: '300% 300%',
+              animation: 'gradientShift 6s ease infinite',
+            }}
+          >
+            <div
+              className="flex flex-col items-center gap-4 rounded-[1.85rem] px-3 py-5 sm:px-6 sm:py-6"
+              style={{ background: 'linear-gradient(135deg, #fffdf6 0%, #fff4de 100%)' }}
+            >
+              {pinnedFailed ? (
+                <div className="flex aspect-[4/3] w-full max-w-md items-center justify-center rounded-[1.5rem] border border-dashed border-[#d9480f]/35 bg-white/70">
+                  <span aria-hidden="true" className="text-5xl">{PINNED_POST.emoji || '📌'}</span>
+                </div>
+              ) : (
+                <img
+                  src={PINNED_POST.src}
+                  alt={PINNED_POST.badge}
+                  loading="lazy"
+                  onError={() => setPinnedFailed(true)}
+                  className="block max-h-[460px] w-auto max-w-full rounded-[1.5rem] object-contain shadow-[0_18px_40px_-24px_rgba(217,72,15,0.7)]"
+                />
+              )}
+
+              <div className="px-2">
+                <h3 className="font-display text-xl font-extrabold leading-tight text-[#7c2d12] sm:text-2xl">
+                  {PINNED_POST.emoji && <span aria-hidden="true" className="mr-2">{PINNED_POST.emoji}</span>}
+                  {PINNED_POST.title}
+                </h3>
+                {PINNED_POST.caption && (
+                  <p className="mt-2 text-sm font-medium text-[#9a3412] sm:text-base">{PINNED_POST.caption}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> */}
+
       {/* Gallery pill navigation */}
-      <div className="mt-6 flex w-full justify-start pl-0 md:pl-2">
-        <span
-          className="pill inline-flex items-center bg-white/10 px-5 py-2 text-lg font-bold tracking-[0.12em] text-[#f5f1ff] shadow-md backdrop-blur-sm"
+      <div className={`mt-6 flex w-full justify-start pl-0 md:pl-2 ${galleryOpen ? 'mb-2' : 'mb-10 sm:mb-12'}`}>
+        <button
+          type="button"
+          onClick={() => setGalleryOpen((isOpen) => !isOpen)}
+          aria-expanded={galleryOpen}
+          aria-controls="mess-gallery"
+          className="pill inline-flex items-center gap-3 bg-white/10 px-5 py-2 text-lg font-bold tracking-[0.12em] text-[#f5f1ff] shadow-md backdrop-blur-sm transition hover:bg-white/20"
           style={{ fontSize: '1.5rem' }}
         >
-          📸 Gallery
-        </span>
+          <span aria-hidden="true">📸</span>
+          <span>Gallery</span>
+          <span aria-hidden="true" className="text-base">{galleryOpen ? '^' : 'v'}</span>
+        </button>
       </div>
 
       {/* Gallery section - below the main content */}
-      <section className="mb-14 md:mb-20 text-center">
-        <div className="mx-auto max-w-6xl px-4">
+      <section id="mess-gallery" className={`text-center ${galleryOpen ? 'block pb-14 pt-2 md:pb-20' : 'hidden'}`}>
+        <div className="mx-auto w-full max-w-[1800px] px-4">
           <div className="relative overflow-hidden rounded-[2rem] py-4">
             <div className="hidden overflow-hidden md:block">
               <div
-                className="flex transition-transform duration-700 ease-out"
-                style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+                className="relative h-[500px] w-full touch-pan-y [perspective:500px]"
+                onTouchStart={(event) => handleTouchStart(setGalleryTouch, setGalleryDrag, event)}
+                onTouchMove={(event) => handleTouchMove(galleryTouch, setGalleryTouch, setGalleryDrag, event)}
+                onTouchEnd={(event) => {
+                  handleTouchEnd(galleryTouch, event, setActiveSlide, GALLERY_IMAGES.length, () => {}, setGalleryDrag)
+                  setGalleryTouch(null)
+                }}
+                onWheel={(event) => {
+                  if (Math.abs(event.deltaY) < 12) return
+                  setActiveSlide((prev) => (prev + (event.deltaY > 0 ? 1 : -1) + GALLERY_IMAGES.length) % GALLERY_IMAGES.length)
+                }}
               >
                 {GALLERY_IMAGES.map((src, index) => {
-                  const prevIndex = (index - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length
-                  const nextIndex = (index + 1) % GALLERY_IMAGES.length
+                  let offset = index - activeSlide
+                  if (offset > GALLERY_IMAGES.length / 2) offset -= GALLERY_IMAGES.length
+                  if (offset < -GALLERY_IMAGES.length / 2) offset += GALLERY_IMAGES.length
+                  if (Math.abs(offset) > 2) return null
+
+                  const distance = Math.abs(offset)
+                  const frameWidth = offset === 0 ? 48 : distance === 1 ? 25 : 14
+                  const frameOpacity = offset === 0 ? 1 : distance === 1 ? 0.82 : 0.48
+                  const frameScale = offset === 0 ? 1 : distance === 1 ? 0.88 : 0.68
+                  const frameHeight = offset === 0 ? 380 : distance === 1 ? 280 : 180
+                  const framePosition = 59 + offset * 15
 
                   return (
-                    <div key={`${src}-${index}`} className="min-w-full flex-shrink-0 px-2">
-                      <div className="flex items-center justify-center gap-4">
-                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl opacity-80">
-                          <img
-                            src={GALLERY_IMAGES[prevIndex]}
-                            alt={`Mess gallery ${prevIndex + 1}`}
-                            className="h-full w-full object-contain p-1 object-center"
-                          />
-                        </div>
-
-                        <div className="h-[340px] w-[52%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl">
-                          <img
-                            src={src}
-                            alt={`Mess gallery ${index + 1}`}
-                            className="h-full w-full object-contain p-1 object-center"
-                          />
-                        </div>
-
-                        <div className="h-[220px] w-[24%] overflow-hidden rounded-[1.5rem] bg-white shadow-2xl opacity-80">
-                          <img
-                            src={GALLERY_IMAGES[nextIndex]}
-                            alt={`Mess gallery ${nextIndex + 1}`}
-                            className="h-full w-full object-contain p-1 object-center"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    <button
+                      key={`${src}-${index}`}
+                      type="button"
+                      onClick={() => setActiveSlide(index)}
+                      aria-label={`Show image ${index + 1}`}
+                      className={`absolute top-3/4 min-w-0 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[1.5rem] bg-white shadow-2xl transition-all duration-700 ease-out ${offset === 0 ? 'cursor-default' : 'cursor-pointer'}`}
+                      style={{
+                        left: `calc(${framePosition}% + ${galleryDrag}px)`,
+                        width: `min(${frameWidth}%, ${frameHeight * galleryAspectRatio(src)}px)`,
+                        aspectRatio: galleryAspectRatio(src),
+                        maxHeight: `${frameHeight}px`,
+                        opacity: frameOpacity,
+                        transform: `translate3d(-50%, calc(-50% + ${distance * 16}px), 0) scale(${frameScale}) rotateY(${offset * -10}deg)`,
+                        zIndex: offset === 0 ? 50 : 10 - distance,
+                      }}
+                    >
+                      <img
+                        src={src}
+                        alt={`Mess gallery ${index + 1}`}
+                        className="block h-full max-h-full w-full max-w-full object-contain p-1 object-center"
+                      />
+                    </button>
                   )
                 })}
               </div>
             </div>
 
             <div className="md:hidden">
-              <div className="overflow-hidden rounded-[1.5rem] bg-white px-2 shadow-2xl">
+              <div
+                className="flex max-h-[400px] items-center justify-center overflow-hidden rounded-[1.5rem] bg-white px-2 shadow-2xl"
+                style={{ aspectRatio: galleryAspectRatio(GALLERY_IMAGES[activeSlide]) }}
+              >
                 <img
                   src={GALLERY_IMAGES[activeSlide]}
                   alt={`Mess gallery ${activeSlide + 1}`}
-                  className="h-[400px] w-full rounded-[1.5rem] object-contain p-1 sm:h-[400px] lg:h-[480px]"
+                  className="block h-full max-h-full w-full max-w-full rounded-[1.5rem] object-contain p-1"
                 />
               </div>
             </div>
@@ -253,7 +447,7 @@ export default function Home() {
               className="absolute left-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
               aria-label="Previous image"
             >
-              ←
+              {'<'}
             </button>
             <button
               type="button"
@@ -261,7 +455,7 @@ export default function Home() {
               className="absolute right-4 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white shadow-lg transition hover:bg-black/80"
               aria-label="Next image"
             >
-              →
+              {'>'}
             </button>
 
             <div className="mt-5 flex justify-center gap-2">
@@ -283,9 +477,9 @@ export default function Home() {
 
       {/* Announcements */}
       {shownAnnouncements.length > 0 && (
-        <section className="mb-8 text-center sm:mb-10">
+        <section className={`mb-8 text-center sm:mb-10 ${galleryOpen ? 'pt-4 sm:pt-6' : 'pt-8 sm:pt-10'}`}>
           <div className="mb-4 flex justify-center px-4 sm:mb-6">
-            <span className="pill inline-flex items-center gap-2 text-lg font-bold" style={{ fontSize: '1.15rem', background: 'linear-gradient(90deg, #7c3aed, #a855f7)' , color: '#fff', boxShadow: '0 0 24px rgba(168, 85, 247, .6)' }}>
+            <span className="pill inline-flex items-center gap-2 text-lg font-bold" style={{ fontSize: '1.15rem', background: 'linear-gradient(90deg, #7d6a9f, #a855f7)' , color: '#fff', boxShadow: '0 0 24px rgba(202, 158, 243, 0.6)' }}>
               📣 Announcements
             </span>
           </div>
@@ -295,16 +489,29 @@ export default function Home() {
               className="relative overflow-hidden rounded-[2rem] p-[3px]"
               style={{ background: 'linear-gradient(135deg, #7c3aed, #ec4899, #f59e0b, #7c3aed)', backgroundSize: '300% 300%', animation: 'gradientShift 6s ease infinite' }}
             >
-              <div className="relative overflow-hidden rounded-[2rem] py-2" style={{ background: '#150f2e' }}>
+              <div className="relative overflow-hidden rounded-[2rem] py-2" style={{ background: '#150f2e', touchAction: 'pan-y' }}>
               <div
-                className="flex w-full transition-transform duration-700 ease-out"
-                style={{ transform: `translateX(-${announcementIndex * 100}%)` }}
+                className="flex w-full"
+                style={{
+                  transform: `translate3d(calc(-${announcementIndex * 100}% + ${announcementDrag}px), 0, 0)`,
+                  transition: announcementDrag ? 'none' : 'transform 700ms ease-out',
+                }}
+                onTouchStart={(event) => {
+                  pauseSliderWhileHeld(setAnnouncementPausedUntil)
+                  handleTouchStart(setAnnouncementTouch, setAnnouncementDrag, event)
+                }}
+                onTouchMove={(event) => handleTouchMove(announcementTouch, setAnnouncementTouch, setAnnouncementDrag, event)}
+                onTouchEnd={(event) => {
+                  handleTouchEnd(announcementTouch, event, setAnnouncementIndex, shownAnnouncements.length, setAnnouncementPausedUntil, setAnnouncementDrag)
+                  setAnnouncementPausedUntil(Date.now() + 3000)
+                  setAnnouncementTouch(null)
+                }}
               >
                 {shownAnnouncements.map((ann, i) => (
                   <div key={i} className="w-full shrink-0 px-1 sm:px-2">
                     <div
                       className="mx-auto flex h-full flex-col items-center justify-center p-5 text-center sm:p-6 md:p-7"
-                      style={{ background: 'linear-gradient(135deg, #241743 0%, #150f2e 100%)' }}
+                      style={{ background: 'linear-gradient(135deg, #5531a7 0%, #442d9f 100%)' }}
                     >
                       <div className="mb-3 flex w-full flex-wrap items-center justify-center gap-2">
                         <span className="shrink-0 font-display text-3xl font-bold leading-none sm:text-4xl">
@@ -341,10 +548,74 @@ export default function Home() {
         </section>
       )}
 
+{/* Mess Poll */}
+      {/* <section className="mb-14 px-4 text-center sm:px-6">
+        <div className="mx-auto max-w-5xl">
+          <div className="mb-6">
+            <span className="pill mb-3 inline-block">📊 Mess Poll</span>
+            <h2 className="font-display text-2xl font-extrabold">What students are saying</h2>
+            <p className="polaris-muted mt-2 text-sm">Live results from the latest mess feedback.</p>
+          </div>
+
+          {pollResults.length > 0 ? (
+            <div className="space-y-8 text-left">
+              {Object.entries(POLL_GROUPS).map(([groupName, columns]) => {
+                const groupPolls = pollResults.filter((poll) => columns.includes(poll.column))
+                if (!groupPolls.length) return null
+
+                return (
+                  <div key={groupName}>
+                    <h3 className="mb-4 text-center font-display text-2xl font-extrabold">{groupName}</h3>
+                    <div className="grid grid-cols-1 gap-5">
+                      {groupPolls.map((poll) => {
+                        const yesPercent = poll.total ? Math.round((poll.yesCount / poll.total) * 100) : 0
+
+                        return (
+                          <div key={poll.column} className="polaris-card p-5 sm:p-6">
+                            <div className="mb-3 flex items-center justify-between gap-3">
+                              <h4 className="min-w-0 break-words font-display text-xl font-bold">{poll.heading}</h4>
+                              <span className="polaris-muted shrink-0 text-xs">{poll.yesCount} Agree</span>
+                            </div>
+                            <div className="h-4 overflow-hidden rounded-full bg-[#eadfce]" aria-label={`${poll.heading}: ${poll.yesCount}`}>
+                              <div
+                                className="h-full rounded-full bg-[#5aa93c] transition-all duration-500"
+                                style={{ width: `${yesPercent}%` }}
+                              />
+                            </div>
+                            <div className="mt-2 flex justify-between text-xs">
+                              <span className="polaris-muted">{yesPercent}% positive</span>
+                              <span className="polaris-muted">{poll.total} replies</span>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <div className="polaris-card mx-auto max-w-2xl p-6 text-sm">
+              <p className="font-semibold">{pollError || 'Poll results will appear here.'}</p>
+              {!pollError && <p className="polaris-muted mt-2">Results will be shared soon.</p>}
+            </div>
+          )}
+
+          <a
+            href={POLL_FORM_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-primary mt-6"
+          >
+            Submit your poll <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section> */}
+
       {/* Today's Menu */}
       <section id="live-menu" className="mb-14 scroll-mt-24 text-center">
-        <div className="mb-6">
-          <span className="pill-yellow mb-3 inline-block">{vegMode ? '🥗 Pure Veg' : '🍽️ Fresh & Served'}</span>
+        <div className="mb-6" style={{ paddingTop: '1.5rem' }}>
+          <span className="pill-yellow mb-3 inline-block px-3 py-10"> {vegMode ? '🥗 Pure Veg' : '🍽️ Fresh & Served'}</span>
           <h2 className="font-display text-3xl font-extrabold">Live Menu — {menuDayName}</h2>
           <p className="polaris-muted mt-2 text-sm">
             {mealStatus.type === 'current' ? 'Current' : 'Upcoming'} {mealStatus.label} — {mealStatus.display}
@@ -382,12 +653,26 @@ export default function Home() {
               style={{
                 background:
                   'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.32), transparent 24%), radial-gradient(circle at 70% 35%, rgba(110,88,54,0.08), transparent 26%), linear-gradient(135deg, rgba(239,228,205,0.96) 0%, rgba(225,212,186,0.94) 100%)',
+                touchAction: 'pan-y',
               }}
             >
               <div className="relative overflow-hidden rounded-[1.5rem]">
                 <div
-                  className="flex transition-transform duration-700 ease-out"
-                  style={{ transform: `translateX(-${noticeIndex * 100}%)` }}
+                  className="flex"
+                  style={{
+                    transform: `translate3d(calc(-${noticeIndex * 100}% + ${noticeDrag}px), 0, 0)`,
+                    transition: noticeDrag ? 'none' : 'transform 700ms ease-out',
+                  }}
+                  onTouchStart={(event) => {
+                    pauseSliderWhileHeld(setNoticePausedUntil)
+                    handleTouchStart(setNoticeTouch, setNoticeDrag, event)
+                  }}
+                  onTouchMove={(event) => handleTouchMove(noticeTouch, setNoticeTouch, setNoticeDrag, event)}
+                  onTouchEnd={(event) => {
+                    handleTouchEnd(noticeTouch, event, setNoticeIndex, shownNotices.length, setNoticePausedUntil, setNoticeDrag)
+                    setNoticePausedUntil(Date.now() + 3000)
+                    setNoticeTouch(null)
+                  }}
                 >
                   {shownNotices.map((notice, index) => (
                     <div key={`${notice.title}-${index}`} className="w-full shrink-0 px-1 sm:px-2">
@@ -446,17 +731,16 @@ export default function Home() {
         <p className="polaris-muted mb-8 text-sm">Official dignities who run the mess</p>
         <div className="space-y-6">
           {[
-            { people: LEADERSHIP.slice(0, 1), size: 'w-36 h-36 sm:w-40 sm:h-40', textSize: 'text-5xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: null },
-            { people: LEADERSHIP.slice(1, 3), size: 'w-28 h-28 sm:w-32 sm:h-32', textSize: 'text-4xl', cols: 'sm:grid-cols-2 xl:grid-cols-2', label: 'Dean & Faculty In-Charge' },
-            { people: LEADERSHIP.slice(3, 4), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: 'Associate Faculty' },
-            { people: LEADERSHIP.slice(4, 5), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: 'Mess Coordinator' },
+            { people: LEADERSHIP.slice(0, 1), size: 'w-36 h-36 sm:w-40 sm:h-40', textSize: 'text-5xl', cols: 'sm:grid-cols-1 xl:grid-cols-1', label: 'Dean & Faculty In-Charge'},
+            { people: LEADERSHIP.slice(1, 3), size: 'w-28 h-28 sm:w-32 sm:h-32', textSize: 'text-4xl', cols: 'sm:grid-cols-2 xl:grid-cols-2', label: ' FIC and Associate Faculty' },
+            { people: LEADERSHIP.slice(3, 5), size: 'w-24 h-24 sm:w-28 sm:h-28', textSize: 'text-3xl', cols: 'sm:grid-cols-2 xl:grid-cols-2', label: 'Mess Coordinator & President' },
           ].map(
             (tier, ti) => (
               <div key={ti} className="space-y-3">
                 {ti > 0 && tier.label && (
                   <div className="flex flex-col items-center gap-1 text-sm font-bold text-[#45347D]">
                     <span>
-                      {ti === 1 ? '🎓' : ti === 2 ? '👥' : '🛠️'} {tier.label}
+                      {ti === 1 ? '🎓' : ti === 2 ? '👥' : ''} {tier.label}
                     </span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M6 9l6 6 6-6" />

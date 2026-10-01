@@ -6,20 +6,24 @@ const GOOGLE_SHEET_URL =
 const VEG_GOOGLE_SHEET_URL =
   'https://docs.google.com/spreadsheets/d/1ocq8-yKbj8-HJMtlZZFTGIefFuHbcDCaRVCyYLgpU0Y/export?format=xlsx'
 
+// [candidate tab names, display label]. The lookup below tries each candidate in
+// order, so put the proper name first and the generic default second: the veg
+// spreadsheet's tabs are still called Sheet1/Sheet2. Renaming them there lets
+// the fallback go away.
 const SHEETS = [
   ['1&3 Week', 'Week 1 & 3'],
-  ['2&4', 'Week 2 & 4'],
+  ['2&4 Week', 'Week 2 & 4'],
 ]
 
 // Same caching strategy as the Django version:
 // - re-render from cache between probes (20 min), no network at all
 // - at each probe, refetch the file and hash it; re-parse only if changed
-const MENU_CACHE_KEY='mess_menu_weeks_v2'
-const MENU_HASH_KEY='mess_menu_file_hash_v2'
-const MENU_CHECK_KEY='mess_menu_last_check_v2'
-const VEG_MENU_CACHE_KEY='mess_menu_veg_weeks_v2'
-const VEG_MENU_HASH_KEY='mess_menu_veg_file_hash_v2'
-const VEG_MENU_CHECK_KEY='mess_menu_veg_last_check_v2'
+const MENU_CACHE_KEY='mess_menu_weeks_v3'
+const MENU_HASH_KEY='mess_menu_file_hash_v3'
+const MENU_CHECK_KEY='mess_menu_last_check_v3'
+const VEG_MENU_CACHE_KEY='mess_menu_veg_weeks_v3'
+const VEG_MENU_HASH_KEY='mess_menu_veg_file_hash_v3'
+const VEG_MENU_CHECK_KEY='mess_menu_veg_last_check_v3'
 const MENU_CHECK_INTERVAL=20*60*1000
 const MENU_CACHE_TTL=24*60*60*1000
 
@@ -71,9 +75,34 @@ export async function parseMenuWorkbook(buffer) {
   const wb = XLSX.read(buffer, { type: 'array' })
   const weeks = []
 
+  // Provide tolerant lookup for sheet names: accept small variations in spacing,
+  // ampersand usage, punctuation and case. This helps when sheet tab names differ
+  // slightly between the veg and non-veg spreadsheets.
+  const actualSheetNames = wb.SheetNames || []
+  function norm(name) {
+    return String(name || '')
+      .toLowerCase()
+      .replace(/&/g, 'and')
+      .replace(/[^a-z0-9]/g, '')
+  }
+
   for (const [sheetName, label] of SHEETS) {
-    const ws = wb.Sheets[sheetName]
-    if (!ws) continue
+    const nameList = Array.isArray(sheetName) ? sheetName : [sheetName]
+    let ws = null
+    let matchedName = null
+    for (const candidate of nameList) {
+      const nc = norm(candidate)
+      matchedName = actualSheetNames.find((n) => norm(n) === nc)
+      if (matchedName) {
+        ws = wb.Sheets[matchedName]
+        break
+      }
+    }
+    // If worksheet not found, still push an empty week so the UI shows the tab label
+    if (!ws) {
+      weeks.push({ label, sections: [] })
+      continue
+    }
     const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: null })
     const sections = []
     let current = null
@@ -128,10 +157,11 @@ async function fetchMenuFrom({
 
     const weeks = await parseMenuWorkbook(buffer)
     let error = null
-    if (!weeks.length || weeks.every((w) => !w.sections.length)) {
+    // If no sheets were found at all, report notFoundError.
+    // But if sheets exist and are empty, still return them so the UI can show week tabs.
+    if (!weeks.length) {
       error = notFoundError
-      weeks.splice(0, weeks.length)
-      if (!weeks.length) return { weeks: null, error }
+      return { weeks: null, error }
     }
     if (hash) setCache(weekCacheKey, hashKey, checkKey, weeks, hash)
     else localStorage.setItem(checkKey, String(now()))
@@ -212,14 +242,38 @@ export function currentMealSection(date = new Date()) {
   return getMealStatus(date).section
 }
 
+// After 22:00 the mess is shut for the day, so the site rolls forward to
+// tomorrow's menu. Every date-derived value below goes through this one helper,
+// so the day and the week can never disagree - on a Sunday night "tomorrow" is
+// the Monday of the *next* week, which is the other sheet.
+const MENU_ROLLOVER_MINUTES = 22 * 60
+
+export function effectiveMenuDate(date = new Date()) {
+  if (toMinutes(date) < MENU_ROLLOVER_MINUTES) return date
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
+}
+
+// The mess runs a strict fortnightly rotation: the two sheets swap every single
+// week and never repeat back to back. Deriving the week from the calendar month
+// cannot do that - a month spanning five weeks ends on the "1&3" sheet and the
+// next month's first week starts on it again, serving the same food twice.
+// So count weeks continuously from a known anchor instead.
+// Anchor: the week beginning Mon 31 Aug 2026 ran the "1&3" sheet.
+const ROTATION_ANCHOR_UTC = Date.UTC(2026, 7, 31)
+const WEEK_MS = 7 * 24 * 60 * 60 * 1000
+
+export function effectiveMenuWeekIndex(date = new Date()) {
+  const day = effectiveMenuDate(date)
+  const mondayOffset = (day.getDay() + DAYS.length - 1) % DAYS.length
+  // UTC midnight so the subtraction below is never skewed by a DST shift.
+  const weekStart = Date.UTC(day.getFullYear(), day.getMonth(), day.getDate() - mondayOffset)
+  const weeksSinceAnchor = Math.round((weekStart - ROTATION_ANCHOR_UTC) / WEEK_MS)
+  return ((weeksSinceAnchor % 2) + 2) % 2
+}
+
 export function effectiveMenuDayIndex(date = new Date()) {
-  const name = nameFromDate(date)
-  const dayIndex = DAYS.indexOf(name) >= 0 ? DAYS.indexOf(name) : 0
-  const minutes = toMinutes(date)
-  if (minutes >= 22 * 60) {
-    return (dayIndex + 1) % DAYS.length
-  }
-  return dayIndex
+  const dayIndex = DAYS.indexOf(nameFromDate(effectiveMenuDate(date)))
+  return dayIndex >= 0 ? dayIndex : 0
 }
 
 export function effectiveMenuDayName(date = new Date()) {

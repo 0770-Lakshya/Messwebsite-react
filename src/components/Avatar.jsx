@@ -5,7 +5,7 @@ const GRADIENTS = [
   'linear-gradient(135deg, #2541b2, #60a5fa)',
 ]
 
-// "/images/x.jpg" is served from public/; normalize relative paths to absolute
+// "/images/x.webp" is served from public/; normalize relative paths to absolute
 // so they work from any route (e.g. /menu, /committee).
 function normalizeSrc(photo) {
   if (!photo) return null
