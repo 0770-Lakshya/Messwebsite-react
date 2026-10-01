@@ -1,10 +1,10 @@
 import { DAYS, SECTIONS } from '../data/siteData'
 
 const GOOGLE_SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/19orUPC3WDjW31AUQeZbcB6n-6g8f02HtL7MhMF0Qpq8/export?format=xlsx'
+  'https://docs.google.com/spreadsheets/d/1rCznmDswszlkXL9lJI2KlUPJu8U_9taDWZ-KHCbB60E/export?format=xlsx'
 
 const VEG_GOOGLE_SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1TGfLxe9dPgsOY8idcMwjIx_FPUFc9PDiNyJ3vZ1XKwA/export?format=xlsx'
+  'https://docs.google.com/spreadsheets/d/1ocq8-yKbj8-HJMtlZZFTGIefFuHbcDCaRVCyYLgpU0Y/export?format=xlsx'
 
 const SHEETS = [
   ['1&3 Week', 'Week 1 & 3'],
