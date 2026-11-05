@@ -1,10 +1,9 @@
 import { DAYS, SECTIONS } from '../data/siteData'
 
 const GOOGLE_SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1rCznmDswszlkXL9lJI2KlUPJu8U_9taDWZ-KHCbB60E/export?format=xlsx'
-
+  '  https://docs.google.com/spreadsheets/d/1-MJLJ6_U8rzZDoYdPEjJYYey7fNEzOnanlmBd41iq4A/export?format=xlsx'
 const VEG_GOOGLE_SHEET_URL =
-  'https://docs.google.com/spreadsheets/d/1ocq8-yKbj8-HJMtlZZFTGIefFuHbcDCaRVCyYLgpU0Y/export?format=xlsx'
+  'https://docs.google.com/spreadsheets/d/1-0crtkYNemo73jtG94og_AuWogGTm7Nh9eT0QAdiOBE/export?format=xlsx'
 
 // [candidate tab names, display label]. The lookup below tries each candidate in
 // order, so put the proper name first and the generic default second: the veg
