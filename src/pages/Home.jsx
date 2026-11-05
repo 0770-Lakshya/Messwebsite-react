@@ -49,7 +49,7 @@ const galleryAspectRatio = (src) => GALLERY_ASPECT_RATIOS[src] || 4 / 3
 
 //pinned highlight shown above the gallery - drop the picture at public/<src>
 const PINNED_POST = {
-  src: 'images/Diwali_Dinner.webp',
+  src: 'images/Diwali_Dinner.png',
   badge: 'Happy Diwali',
   title: 'Happy Diwali',
   caption: 'Making Diwali a little more special, together.',
