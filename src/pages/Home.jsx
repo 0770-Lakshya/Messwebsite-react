@@ -48,13 +48,13 @@ const GALLERY_ASPECT_RATIOS = {
 const galleryAspectRatio = (src) => GALLERY_ASPECT_RATIOS[src] || 4 / 3
 
 //pinned highlight shown above the gallery - drop the picture at public/<src>
-const PINNED_POST = {
-  src: 'images/Diwali_Dinner.png',
-  badge: 'Happy Diwali',
-  title: 'Happy Diwali',
-  caption: 'Making Diwali a little more special, together.',
-  emoji: '🎇',
-}
+// const PINNED_POST = {
+//   src: 'images/Diwali_Dinner.png',
+//   badge: 'Happy Diwali',
+//   title: 'Happy Diwali',
+//   caption: 'Making Diwali a little more special, together.',
+//   emoji: '🎇',
+// }
 
 const HERO_IMAGE = 'images/messphoto/mess_enterance.webp'
 
@@ -295,7 +295,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pinned festival highlight - sits above the gallery */}
+      {/** Pinned festival highlight - sits above the gallery }
       {<section className="mb-10 mt-8 text-center sm:mb-12">
         <div className="mb-4 flex justify-center px-4">
           <span
@@ -351,7 +351,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>}
+      </section>*/}
 
       {/* Gallery pill navigation */}
       <div className={`mt-6 flex w-full justify-start pl-0 md:pl-2 ${galleryOpen ? 'mb-2' : 'mb-10 sm:mb-12'}`}>
