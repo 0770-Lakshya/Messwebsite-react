@@ -1,7 +1,7 @@
 import { DAYS, SECTIONS } from '../data/siteData'
 
 const GOOGLE_SHEET_URL =
-  '  https://docs.google.com/spreadsheets/d/1-MJLJ6_U8rzZDoYdPEjJYYey7fNEzOnanlmBd41iq4A/export?format=xlsx'
+  '  https://docs.google.com/spreadsheets/d/1CjEKsIXvS-ZbPBBuw-mxdCKlRZXiXJ5e3SSbYXS8p9w/export?format=xlsx'
 const VEG_GOOGLE_SHEET_URL =
   'https://docs.google.com/spreadsheets/d/1-0crtkYNemo73jtG94og_AuWogGTm7Nh9eT0QAdiOBE/export?format=xlsx'
 
